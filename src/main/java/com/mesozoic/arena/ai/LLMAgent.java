@@ -1,64 +1,60 @@
 package com.mesozoic.arena.ai;
 
-import ai.djl.ModelException;
-import ai.djl.modality.nlp.translator.SimpleText2TextTranslator;
-import ai.djl.repository.zoo.Criteria;
-import ai.djl.repository.zoo.ZooModel;
-import ai.djl.translate.TranslateException;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.util.Config;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.List;
+import de.kherud.llama.LlamaModel;
+import de.kherud.llama.ModelParameters;
+import de.kherud.llama.InferenceParameters;
+import de.kherud.llama.LlamaOutput;
+
 import java.util.stream.Collectors;
 
 /**
- * Opponent powered by a local language model.
+ * Opponent powered by a local llama.cpp model via java-llama.cpp v4.1.0
  */
-public class LLMAgent implements OpponentAgent {
-    private static final String MODEL_DIR = Config.llmModelDir();
-    private final ZooModel<String, String> model;
+public class LLMAgent implements OpponentAgent, AutoCloseable {
 
-    /**
-     * Loads the model from the local {@code models} directory.
-     */
-    public LLMAgent() throws IOException, ModelException {
-        model = loadModel();
-    }
+    private final LlamaModel model;
 
-    private static ZooModel<String, String> loadModel()
-            throws IOException, ModelException {
-        System.out.println("Loading LLM model from " + MODEL_DIR);
-        var translator = new SimpleText2TextTranslator();
-        Criteria<String, String> criteria = Criteria.builder()
-                .setTypes(String.class, String.class)
-                .optModelPath(Paths.get(MODEL_DIR))
-                .optTranslator(translator)
-                .build();
-        ZooModel<String, String> loadedModel = criteria.loadModel();
-        System.out.println("LLM model loaded successfully");
-        return loadedModel;
+    public LLMAgent() {
+        String modelPath = Config.llmModelDir() + "/Ministral-3b-instruct.Q4_K_M.gguf";
+
+        System.out.println("Loading llama.cpp model (CPU-only) from " + modelPath);
+        ModelParameters params = new ModelParameters()
+                .setModel(modelPath)
+                .setGpuLayers(0); // CPU-only inference
+        model = new LlamaModel(params);
+        System.out.println("Model loaded successfully");
     }
 
     @Override
     public Move chooseMove(Dinosaur self, Dinosaur enemy) {
-        if (self == null || enemy == null) {
-            return null;
-        }
+        if (self == null || enemy == null) return null;
+
         String prompt = buildPrompt(self, enemy);
-        try (var predictor = model.newPredictor()) {
-            String output = predictor.predict(prompt);
+        InferenceParameters ip = new InferenceParameters(prompt)
+                .setTemperature(0.4f)
+                .setStopStrings("\n");
+
+        try {
+            StringBuilder sb = new StringBuilder();
+            for (LlamaOutput out : model.generate(ip)) {
+                sb.append(out);
+            }
+            String output = sb.toString();
             return parseMove(output, self);
-        } catch (TranslateException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return new RandomOpponent().chooseMove(self, enemy);
         }
     }
 
     private Move parseMove(String output, Dinosaur self) {
+        String lc = output.toLowerCase();
         for (Move move : self.getMoves()) {
-            if (output.toLowerCase().contains(move.getName().toLowerCase())
-                    && self.getStamina() >= move.getStaminaCost()) {
+            if (lc.contains(move.getName().toLowerCase()) &&
+                    self.getStamina() >= move.getStaminaCost()) {
                 return move;
             }
         }
@@ -66,11 +62,16 @@ public class LLMAgent implements OpponentAgent {
     }
 
     private String buildPrompt(Dinosaur self, Dinosaur enemy) {
-        List<String> moveNames = self.getMoves().stream()
+        String moveList = self.getMoves().stream()
                 .map(Move::getName)
-                .collect(Collectors.toList());
-        return "Choose the best move for " + self.getName()
-                + " against " + enemy.getName() + ". Available moves: "
-                + String.join(", ", moveNames) + ".";
+                .collect(Collectors.joining(", "));
+        return "Choose the best move for " + self.getName() +
+                " against " + enemy.getName() + ". Available moves: " +
+                moveList + ".\nMove:";
+    }
+
+    @Override
+    public void close() {
+        model.close();
     }
 }
