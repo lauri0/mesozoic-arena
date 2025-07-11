@@ -7,6 +7,7 @@ import ai.djl.repository.zoo.ZooModel;
 import ai.djl.translate.TranslateException;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.util.Config;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.List;
@@ -16,19 +17,28 @@ import java.util.stream.Collectors;
  * Opponent powered by a local language model.
  */
 public class LLMAgent implements OpponentAgent {
+    private static final String MODEL_DIR = Config.llmModelDir();
     private final ZooModel<String, String> model;
 
     /**
      * Loads the model from the local {@code models} directory.
      */
     public LLMAgent() throws IOException, ModelException {
+        model = loadModel();
+    }
+
+    private static ZooModel<String, String> loadModel()
+            throws IOException, ModelException {
+        System.out.println("Loading LLM model from " + MODEL_DIR);
         var translator = new SimpleText2TextTranslator();
         Criteria<String, String> criteria = Criteria.builder()
                 .setTypes(String.class, String.class)
-                .optModelPath(Paths.get("models/gpt2"))
+                .optModelPath(Paths.get(MODEL_DIR))
                 .optTranslator(translator)
                 .build();
-        model = criteria.loadModel();
+        ZooModel<String, String> loadedModel = criteria.loadModel();
+        System.out.println("LLM model loaded successfully");
+        return loadedModel;
     }
 
     @Override

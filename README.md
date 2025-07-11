@@ -53,6 +53,7 @@ agent:
    full model requires more than 12&nbsp;GB of GPU memory; if your card does not
    have enough VRAM you may need to run on the CPU or use a quantized
    checkpoint.
-2. Edit `data/constants.ini` and set `useLLMAgent=true`.
+2. Edit `data/constants.ini` and set `useLLMAgent=true` and
+   `llmModelDir=models/mistral` (or the directory containing the model files).
 
 If the model cannot be loaded, the game falls back to a random strategy.

@@ -30,4 +30,11 @@ public final class Config {
     public static boolean useLLMAgent() {
         return Boolean.parseBoolean(properties.getProperty("useLLMAgent", "false"));
     }
+
+    /**
+     * Returns the directory that contains the language model.
+     */
+    public static String llmModelDir() {
+        return properties.getProperty("llmModelDir", "models/gpt2");
+    }
 }
