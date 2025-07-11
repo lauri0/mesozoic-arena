@@ -50,7 +50,9 @@ public class Battle {
             try {
                 return new LLMAgent();
             } catch (Exception e) {
-                System.err.println("Failed to load LLM model, falling back to random opponent");
+                System.err.println("Failed to load LLM model: " + e.getMessage());
+                e.printStackTrace();
+                System.err.println("Falling back to random opponent");
             }
         }
         return new RandomOpponent();
