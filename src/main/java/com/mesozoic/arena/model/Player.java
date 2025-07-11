@@ -34,4 +34,35 @@ public class Player {
             this.activeDinosaur = dinosaur;
         }
     }
+
+    /**
+     * Removes the given dinosaur from the player's roster. If the removed
+     * dinosaur was active, the next available dinosaur becomes active.
+     */
+    public void removeDinosaur(Dinosaur dinosaur) {
+        dinosaurs.remove(dinosaur);
+        if (dinosaur.equals(activeDinosaur)) {
+            activateNextDinosaur();
+        }
+    }
+
+    /**
+     * Sets the next dinosaur in the roster as active. Returns the new active
+     * dinosaur or {@code null} if none remain.
+     */
+    public Dinosaur activateNextDinosaur() {
+        if (dinosaurs.isEmpty()) {
+            activeDinosaur = null;
+        } else {
+            activeDinosaur = dinosaurs.get(0);
+        }
+        return activeDinosaur;
+    }
+
+    /**
+     * Indicates whether the player still has dinosaurs remaining.
+     */
+    public boolean hasRemainingDinosaurs() {
+        return !dinosaurs.isEmpty();
+    }
 }
