@@ -1,6 +1,9 @@
 package com.mesozoic.arena.engine;
 
+import com.mesozoic.arena.ai.LLMAgent;
+import com.mesozoic.arena.ai.OpponentAgent;
 import com.mesozoic.arena.ai.RandomOpponent;
+import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
@@ -12,17 +15,28 @@ import com.mesozoic.arena.model.Player;
 public class Battle {
     private final Player playerOne;
     private final Player playerTwo;
-    private final RandomOpponent opponentAI;
+    private final OpponentAgent opponentAI;
     private Player winner;
 
     public Battle(Player playerOne, Player playerTwo) {
-        this(playerOne, playerTwo, new RandomOpponent());
+        this(playerOne, playerTwo, createAgent());
     }
 
-    public Battle(Player playerOne, Player playerTwo, RandomOpponent opponentAI) {
+    public Battle(Player playerOne, Player playerTwo, OpponentAgent opponentAI) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.opponentAI = opponentAI;
+    }
+
+    private static OpponentAgent createAgent() {
+        if (Config.useLLMAgent()) {
+            try {
+                return new LLMAgent();
+            } catch (Exception e) {
+                System.err.println("Failed to load LLM model, falling back to random opponent");
+            }
+        }
+        return new RandomOpponent();
     }
 
     /**
@@ -57,7 +71,8 @@ public class Battle {
      * Executes a round using the AI to select the opponent's move.
      */
     public void executeRound(Move playerOneMove) {
-        Move playerTwoMove = opponentAI.chooseMove(playerTwo.getActiveDinosaur());
+        Move playerTwoMove = opponentAI.chooseMove(playerTwo.getActiveDinosaur(),
+                playerOne.getActiveDinosaur());
         executeRound(playerOneMove, playerTwoMove);
     }
 
