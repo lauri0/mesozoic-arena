@@ -16,6 +16,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 /**
@@ -33,6 +35,8 @@ public class MainWindow extends JFrame {
     private JLabel playerImageLabel;
     private JPanel benchPanel;
     private final JButton[] moveButtons = new JButton[4];
+
+    private JTextArea logArea;
 
     private JLabel opponentNameLabel;
     private JLabel opponentHealthLabel;
@@ -63,13 +67,10 @@ public class MainWindow extends JFrame {
         centerPanel.add(createOpponentPanel());
         add(centerPanel, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.add(createMovesPanel(), BorderLayout.CENTER);
-        benchPanel = new JPanel();
-        bottomPanel.add(benchPanel, BorderLayout.NORTH);
         JButton exitButton = new JButton("Exit Game");
         exitButton.addActionListener(e -> System.exit(0));
-        bottomPanel.add(exitButton, BorderLayout.SOUTH);
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(exitButton);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
@@ -77,6 +78,7 @@ public class MainWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         playerImageLabel = new JLabel();
         panel.add(playerImageLabel, BorderLayout.CENTER);
+        JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
         playerNameLabel = new JLabel();
         stats.add(playerNameLabel);
@@ -86,7 +88,13 @@ public class MainWindow extends JFrame {
         stats.add(playerStaminaLabel);
         playerSpeedLabel = new JLabel();
         stats.add(playerSpeedLabel);
-        panel.add(stats, BorderLayout.SOUTH);
+        lower.add(stats, BorderLayout.NORTH);
+
+        benchPanel = new JPanel();
+        lower.add(benchPanel, BorderLayout.CENTER);
+
+        lower.add(createMovesPanel(), BorderLayout.SOUTH);
+        panel.add(lower, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -94,6 +102,7 @@ public class MainWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         opponentImageLabel = new JLabel();
         panel.add(opponentImageLabel, BorderLayout.CENTER);
+        JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
         opponentNameLabel = new JLabel();
         stats.add(opponentNameLabel);
@@ -103,7 +112,13 @@ public class MainWindow extends JFrame {
         stats.add(opponentStaminaLabel);
         opponentSpeedLabel = new JLabel();
         stats.add(opponentSpeedLabel);
-        panel.add(stats, BorderLayout.SOUTH);
+        lower.add(stats, BorderLayout.NORTH);
+
+        logArea = new JTextArea(10, 20);
+        logArea.setEditable(false);
+        lower.add(new JScrollPane(logArea), BorderLayout.CENTER);
+
+        panel.add(lower, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -123,6 +138,7 @@ public class MainWindow extends JFrame {
                 opponentStaminaLabel, opponentSpeedLabel, opponentImageLabel);
         updateBench();
         updateMoveButtons();
+        updateLogArea();
     }
 
     private void updateDinosaurInfo(Player targetPlayer, JLabel nameLabel,
@@ -196,9 +212,18 @@ public class MainWindow extends JFrame {
         }
     }
 
+    private void updateLogArea() {
+        StringBuilder text = new StringBuilder();
+        for (String entry : battle.getEventLog()) {
+            text.append(entry).append("\n");
+        }
+        logArea.setText(text.toString());
+    }
+
     private void handlePlayerMove(Move playerMove) {
         battle.executeRound(playerMove);
         refreshDisplay();
+        updateLogArea();
         checkWinner();
     }
 
