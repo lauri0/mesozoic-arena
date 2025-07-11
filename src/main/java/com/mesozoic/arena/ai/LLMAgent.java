@@ -25,7 +25,7 @@ public class LLMAgent implements OpponentAgent {
         var translator = new SimpleText2TextTranslator();
         Criteria<String, String> criteria = Criteria.builder()
                 .setTypes(String.class, String.class)
-                .optModelPath(Paths.get("models/mistral"))
+                .optModelPath(Paths.get("models/gpt2"))
                 .optTranslator(translator)
                 .build();
         model = criteria.loadModel();
