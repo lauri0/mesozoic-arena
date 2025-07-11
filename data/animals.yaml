@@ -1,0 +1,56 @@
+{
+  "Allosaurus": {
+    "abilities": [
+      "bite": [
+		"damage": 50,
+		"stamina": 40,
+		"effects": [],
+	  ],
+	  "scratch": [
+		"damage": 20,
+		"stamina": 0,
+		"effects": [],
+	  ],
+	  "roar": [
+		"damage": 0,
+		"stamina": 20,
+		"effects": [],
+	  ],
+	  "tail swipe": [
+		"damage": 35,
+		"stamina": 20,
+		"effects": [],
+	  ],
+    ],
+	"health": 210,
+    "image": "assets/animals/allosaurus.png",
+	"speed": 100
+  },
+  "Stegosaurus": {
+    "abilities": [
+      "bite": [
+		"damage": 20,
+		"stamina": 20,
+		"effects": [],
+	  ],
+	  "stomp": [
+		"damage": 15,
+		"stamina": 10,
+		"effects": [],
+	  ],
+	  "roar": [
+		"damage": 0,
+		"stamina": 10,
+		"effects": [],
+	  ],
+	  "thagomizer swipe": [
+		"damage": 55,
+		"stamina": 40,
+		"effects": [],
+	  ],
+    ],
+	"health": 290,
+    "image": "assets/animals/stegosaurus.png",
+	"speed": 60
+  }
+}
