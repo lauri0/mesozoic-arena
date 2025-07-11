@@ -182,8 +182,8 @@ public class MainWindow extends JFrame {
             p.add(new JLabel(dino.getName()));
             JButton switchButton = new JButton("Switch");
             switchButton.addActionListener(e -> {
-                player.setActiveDinosaur(dino);
-                refreshDisplay();
+                player.queueSwitch(dino);
+                handlePlayerMove(null);
             });
             p.add(switchButton);
             benchPanel.add(p);

@@ -29,8 +29,10 @@ mvn exec:java
 When launched, a window displays your active dinosaur on the left and the
 opponent on the right. Four buttons at the bottom correspond to the moves of the
 currently active dinosaur. Additional dinosaurs appear in the bench area with a
-`Switch` button that swaps them into battle. Use the **Exit Game** button to
-close the window. The match ends when one side has no dinosaurs remaining.
+`Switch` button. Selecting it consumes your turn but the swap happens before any
+attacks are performed, so incoming damage hits the new dinosaur. Use the
+**Exit Game** button to close the window. The match ends when one side has no
+dinosaurs remaining.
 
 ## LLM Opponent
 

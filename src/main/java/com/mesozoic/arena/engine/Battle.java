@@ -65,6 +65,13 @@ public class Battle {
             return;
         }
 
+        if (applyQueuedSwitch(playerOne, "Player")) {
+            playerOneMove = null;
+        }
+        if (applyQueuedSwitch(playerTwo, "Opponent")) {
+            playerTwoMove = null;
+        }
+
         Dinosaur dinoOne = playerOne.getActiveDinosaur();
         Dinosaur dinoTwo = playerTwo.getActiveDinosaur();
         if (dinoOne == null || dinoTwo == null) {
@@ -131,5 +138,16 @@ public class Battle {
                 winner = (player == playerOne) ? playerTwo : playerOne;
             }
         }
+    }
+
+    private boolean applyQueuedSwitch(Player player, String label) {
+        Dinosaur target = player.getQueuedSwitch();
+        if (target == null) {
+            return false;
+        }
+        player.setActiveDinosaur(target);
+        player.clearQueuedSwitch();
+        eventLog.add(label + " switched to " + target.getName() + ".");
+        return true;
     }
 }
