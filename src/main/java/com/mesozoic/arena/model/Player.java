@@ -9,6 +9,7 @@ import java.util.List;
 public class Player {
     private final List<Dinosaur> dinosaurs;
     private Dinosaur activeDinosaur;
+    private Dinosaur queuedSwitch;
 
     public Player(List<Dinosaur> dinosaurs) {
         if (dinosaurs == null) {
@@ -33,6 +34,29 @@ public class Player {
         if (dinosaurs.contains(dinosaur)) {
             this.activeDinosaur = dinosaur;
         }
+    }
+
+    /**
+     * Queues a switch to the specified dinosaur for the next turn.
+     */
+    public void queueSwitch(Dinosaur dinosaur) {
+        if (dinosaurs.contains(dinosaur) && !dinosaur.equals(activeDinosaur)) {
+            queuedSwitch = dinosaur;
+        }
+    }
+
+    /**
+     * Returns the dinosaur selected for switching or {@code null} if none.
+     */
+    public Dinosaur getQueuedSwitch() {
+        return queuedSwitch;
+    }
+
+    /**
+     * Clears any queued switch action.
+     */
+    public void clearQueuedSwitch() {
+        queuedSwitch = null;
     }
 
     /**
