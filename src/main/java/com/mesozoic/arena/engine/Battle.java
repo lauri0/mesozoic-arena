@@ -1,5 +1,6 @@
 package com.mesozoic.arena.engine;
 
+import com.mesozoic.arena.ai.RandomOpponent;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
@@ -11,11 +12,17 @@ import com.mesozoic.arena.model.Player;
 public class Battle {
     private final Player playerOne;
     private final Player playerTwo;
+    private final RandomOpponent opponentAI;
     private Player winner;
 
     public Battle(Player playerOne, Player playerTwo) {
+        this(playerOne, playerTwo, new RandomOpponent());
+    }
+
+    public Battle(Player playerOne, Player playerTwo, RandomOpponent opponentAI) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
+        this.opponentAI = opponentAI;
     }
 
     /**
@@ -44,6 +51,14 @@ public class Battle {
                 performTurn(playerOne, playerTwo, playerOneMove);
             }
         }
+    }
+
+    /**
+     * Executes a round using the AI to select the opponent's move.
+     */
+    public void executeRound(Move playerOneMove) {
+        Move playerTwoMove = opponentAI.chooseMove(playerTwo.getActiveDinosaur());
+        executeRound(playerOneMove, playerTwoMove);
     }
 
     /**

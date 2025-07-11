@@ -7,11 +7,9 @@ import com.mesozoic.arena.model.Player;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,7 +40,6 @@ public class MainWindow extends JFrame {
     private JLabel opponentSpeedLabel;
     private JLabel opponentImageLabel;
 
-    private final Random random = new Random();
 
     public MainWindow(Battle battle, Player player, Player opponent) {
         this.battle = battle;
@@ -200,13 +197,7 @@ public class MainWindow extends JFrame {
     }
 
     private void handlePlayerMove(Move playerMove) {
-        Dinosaur opponentDino = opponent.getActiveDinosaur();
-        Move opponentMove = null;
-        if (opponentDino != null && !opponentDino.getMoves().isEmpty()) {
-            List<Move> moves = opponentDino.getMoves();
-            opponentMove = moves.get(random.nextInt(moves.size()));
-        }
-        battle.executeRound(playerMove, opponentMove);
+        battle.executeRound(playerMove);
         refreshDisplay();
         checkWinner();
     }
