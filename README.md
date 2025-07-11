@@ -44,8 +44,7 @@ agent:
    `pytorch_model.bin` and the related files. A quick option is:
 
    ```bash
-   huggingface-cli download mistralai/Mistral-7B-Instruct-v0.2 \
-       --local-dir models/mistral
+   huggingface-cli download mistralai/Mistral-7B-Instruct-v0.2 --local-dir models/mistral
    ```
 
    or download the archive from the web interface and extract it manually. The
