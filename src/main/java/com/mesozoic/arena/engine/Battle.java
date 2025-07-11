@@ -7,6 +7,8 @@ import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Handles turn management and rule enforcement for a battle between two
@@ -16,6 +18,7 @@ public class Battle {
     private final Player playerOne;
     private final Player playerTwo;
     private final OpponentAgent opponentAI;
+    private final List<String> eventLog = new ArrayList<>();
     private Player winner;
 
     public Battle(Player playerOne, Player playerTwo) {
@@ -26,6 +29,20 @@ public class Battle {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.opponentAI = opponentAI;
+    }
+
+    /**
+     * Returns a copy of the cumulative battle log.
+     */
+    public List<String> getEventLog() {
+        return new ArrayList<>(eventLog);
+    }
+
+    /**
+     * Provides access to the opponent agent for external decision making.
+     */
+    public OpponentAgent getOpponentAI() {
+        return opponentAI;
     }
 
     private static OpponentAgent createAgent() {
@@ -96,7 +113,12 @@ public class Battle {
 
         // apply move effects
         attacker.adjustStamina(-move.getStaminaCost());
+        int before = defender.getHealth();
         defender.adjustHealth(-move.getDamage());
+        int damage = before - defender.getHealth();
+        eventLog.add(attacker.getName() + " used " + move.getName() + " dealing "
+                + damage + " damage. " + defender.getName() + " has "
+                + Math.max(0, defender.getHealth()) + " health left.");
 
         checkFaint(opposingPlayer);
     }

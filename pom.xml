@@ -58,6 +58,7 @@
         <resources>
             <resource>
                 <directory>assets</directory>
+                <targetPath>assets</targetPath>
                 <includes>
                     <include>**/*</include>
                 </includes>
