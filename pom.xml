@@ -54,6 +54,15 @@
                     <release>17</release>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>com.mesozoic.arena.App</mainClass>
+                    <classpathScope>runtime</classpathScope>
+                </configuration>
+            </plugin>
         </plugins>
         <resources>
             <resource>
