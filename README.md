@@ -21,7 +21,7 @@ Start the game through Maven so that all dependencies are automatically added to
 the class path:
 
 ```bash
-mvn exec:java -Dexec.mainClass=com.mesozoic.arena.App -Dexec.classpathScope=runtime
+mvn exec:java
 ```
 
 ## Gameplay
