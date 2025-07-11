@@ -52,7 +52,7 @@ public class MainWindow extends JFrame {
 
     private void setupFrame() {
         setTitle("Mesozoic Arena");
-        setSize(1600, 900);
+        setSize(1400, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
     }
@@ -108,7 +108,7 @@ public class MainWindow extends JFrame {
     }
 
     private JPanel createMovesPanel() {
-        JPanel panel = new JPanel(new GridLayout(1, moveButtons.length));
+        JPanel panel = new JPanel(new GridLayout(moveButtons.length, 1));
         for (int i = 0; i < moveButtons.length; i++) {
             moveButtons[i] = new JButton();
             panel.add(moveButtons[i]);
@@ -151,7 +151,7 @@ public class MainWindow extends JFrame {
             return new ImageIcon();
         }
         ImageIcon raw = new ImageIcon(url);
-        Image scaled = raw.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+        Image scaled = raw.getImage().getScaledInstance(400, 300, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
     }
 
