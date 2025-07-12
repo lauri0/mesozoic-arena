@@ -34,6 +34,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         if (self == null || enemy == null) return null;
 
         String prompt = buildPrompt(self, enemy);
+        System.out.println(prompt);
         InferenceParameters ip = new InferenceParameters(prompt)
                 .setTemperature(0.4f)
                 .setStopStrings("\n");
@@ -45,6 +46,10 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             }
             String output = sb.toString();
             lastResponse = output;
+            System.out.println(output);
+            if (output == null || output.isEmpty()) {
+                System.out.println("No response");
+            }
             return parseMove(output, self);
         } catch (Exception e) {
             e.printStackTrace();
