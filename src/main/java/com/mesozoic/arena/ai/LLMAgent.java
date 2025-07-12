@@ -46,9 +46,9 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             }
             String output = sb.toString();
             lastResponse = output;
-            System.out.println(output);
-            if (output == null || output.isEmpty()) {
-                System.out.println("No response");
+            System.out.println("LLM response: " + output);
+            if (output.isEmpty()) {
+                System.out.println("LLM response: No response");
             }
             return parseMove(output, self);
         } catch (Exception e) {
