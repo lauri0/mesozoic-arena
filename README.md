@@ -57,3 +57,5 @@ agent:
    `llmModelDir=models/mistral` (or the directory containing the model files).
 
 If the model cannot be loaded, the game falls back to a random strategy.
+When the LLM agent responds, its raw output is appended to the in-game log
+displayed in the right-hand text box.

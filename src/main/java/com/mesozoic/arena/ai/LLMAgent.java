@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     private final LlamaModel model;
+    private String lastResponse;
 
     public LLMAgent() {
         String modelPath = Config.llmModelDir() + "/Ministral-3b-instruct.Q4_K_M.gguf";
@@ -43,9 +44,11 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 sb.append(out);
             }
             String output = sb.toString();
+            lastResponse = output;
             return parseMove(output, self);
         } catch (Exception e) {
             e.printStackTrace();
+            lastResponse = "";
             return new RandomOpponent().chooseMove(self, enemy);
         }
     }
@@ -68,6 +71,10 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return "Choose the best move for " + self.getName() +
                 " against " + enemy.getName() + ". Available moves: " +
                 moveList + ".\nMove:";
+    }
+
+    public String getLastResponse() {
+        return lastResponse;
     }
 
     @Override

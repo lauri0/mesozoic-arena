@@ -99,6 +99,7 @@ public class Battle {
     public void executeRound(Move playerOneMove) {
         Move playerTwoMove = opponentAI.chooseMove(playerTwo.getActiveDinosaur(),
                 playerOne.getActiveDinosaur());
+        logLLMResponse();
         executeRound(playerOneMove, playerTwoMove);
     }
 
@@ -138,6 +139,15 @@ public class Battle {
             player.removeDinosaur(active);
             if (!player.hasRemainingDinosaurs()) {
                 winner = (player == playerOne) ? playerTwo : playerOne;
+            }
+        }
+    }
+
+    private void logLLMResponse() {
+        if (opponentAI instanceof LLMAgent llm) {
+            String response = llm.getLastResponse();
+            if (response != null && !response.isBlank()) {
+                eventLog.add("LLM: " + response);
             }
         }
     }
