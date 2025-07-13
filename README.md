@@ -36,26 +36,12 @@ dinosaurs remaining.
 
 ## LLM Opponent
 
-The project can use a language model to drive the opponent AI. Mistral&nbsp;7B
-Instruct provides much stronger responses than the originally suggested GPT-2
-model. The weights are not bundled with the repository. To enable the LLM based
-agent:
+The opponent AI can use Google's Gemini Flash model. To enable it:
 
-1. Download the `Mistral-7B-Instruct-v0.2` model from Hugging Face and extract
-   it to `models/mistral` so that the directory contains `config.json`,
-   `pytorch_model.bin` and the related files. A quick option is:
+1. Open the `gemini.env` file in the project root and add your API key after
+   `API_KEY=`.
+2. Ensure `useLLMAgent=true` in `data/constants.ini`.
 
-   ```bash
-   huggingface-cli download mistralai/Mistral-7B-Instruct-v0.2 --local-dir models/mistral
-   ```
-
-   or download the archive from the web interface and extract it manually. The
-   full model requires more than 12&nbsp;GB of GPU memory; if your card does not
-   have enough VRAM you may need to run on the CPU or use a quantized
-   checkpoint.
-2. Edit `data/constants.ini` and set `useLLMAgent=true` and
-   `llmModelDir=models/mistral` (or the directory containing the model files).
-
-If the model cannot be loaded, the game falls back to a random strategy.
-When the LLM agent responds, its raw output is appended to the in-game log
-displayed in the right-hand text box.
+If the API request fails, the game falls back to a random strategy. The raw
+response from the model is appended to the in-game log displayed on the right
+side of the window.
