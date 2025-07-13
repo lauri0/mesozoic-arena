@@ -5,8 +5,10 @@ import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -22,43 +24,55 @@ public final class DinosaurLoader {
      */
     public static List<Dinosaur> load() {
         Yaml yaml = new Yaml();
-        try (InputStream stream = DinosaurLoader.class.getClassLoader()
-                .getResourceAsStream("animals.yaml")) {
-            if (stream == null) {
+        try (InputStream moveStream = DinosaurLoader.class.getClassLoader()
+                .getResourceAsStream("moves.yaml");
+                InputStream dinoStream = DinosaurLoader.class.getClassLoader()
+                        .getResourceAsStream("animals.yaml")) {
+            if (moveStream == null || dinoStream == null) {
                 return new ArrayList<>();
             }
-            Map<String, Object> data = yaml.load(stream);
+            Map<String, Object> moveData = yaml.load(moveStream);
+            Map<String, Move> moves = new HashMap<>();
+            for (Entry<String, Object> entry : moveData.entrySet()) {
+                String name = entry.getKey();
+                Map<String, Object> val = castMap(entry.getValue());
+                int damage = toInt(val.get("damage"));
+                int stamina = toInt(val.get("stamina"));
+                int priority = toInt(val.getOrDefault("priority", 0));
+                List<Effect> effects = new ArrayList<>();
+                List<?> eff = castObjectList(val.get("effects"));
+                if (eff != null) {
+                    for (Object obj : eff) {
+                        if (obj != null) {
+                            effects.add(new Effect(String.valueOf(obj)));
+                        }
+                    }
+                }
+                moves.put(name, new Move(name, damage, stamina, priority, effects));
+            }
+
+            Map<String, Object> data = yaml.load(dinoStream);
             List<Dinosaur> dinosaurs = new ArrayList<>();
-            for (Map.Entry<String, Object> entry : data.entrySet()) {
+            for (Entry<String, Object> entry : data.entrySet()) {
                 String name = entry.getKey();
                 Map<String, Object> dinoData = castMap(entry.getValue());
                 int health = toInt(dinoData.get("health"));
                 int speed = toInt(dinoData.get("speed"));
+                int attack = toInt(dinoData.getOrDefault("attack", 10));
                 String image = String.valueOf(dinoData.get("image"));
-                List<Map<String, Object>> abilityList = castList(
-                        dinoData.get("abilities"));
-                List<Move> moves = new ArrayList<>();
-                if (abilityList != null) {
-                    for (Map<String, Object> ability : abilityList) {
-                        String moveName = String.valueOf(ability.get("name"));
-                        int damage = toInt(ability.get("damage"));
-                        int stamina = toInt(ability.get("stamina"));
-                        int priority = toInt(ability.getOrDefault("priority", 0));
-                        List<Effect> effects = new ArrayList<>();
-                        List<?> effectNames = castObjectList(ability.get("effects"));
-                        if (effectNames != null) {
-                            for (Object obj : effectNames) {
-                                if (obj != null) {
-                                    effects.add(new Effect(String.valueOf(obj)));
-                                }
-                            }
+                List<?> moveNames = castObjectList(dinoData.get("moves"));
+                List<Move> dinoMoves = new ArrayList<>();
+                if (moveNames != null) {
+                    for (Object n : moveNames) {
+                        Move m = moves.get(String.valueOf(n));
+                        if (m != null) {
+                            dinoMoves.add(new Move(m.getName(), m.getDamage(),
+                                    m.getStaminaChange(), m.getPriority(), m.getEffects()));
                         }
-                        moves.add(new Move(moveName, damage, stamina, priority,
-                                effects));
                     }
                 }
-                dinosaurs.add(new Dinosaur(name, health, speed, image, 100,
-                        moves));
+                dinosaurs.add(new Dinosaur(name, health, speed, image, 100, attack,
+                        dinoMoves));
             }
             return dinosaurs;
         } catch (Exception e) {

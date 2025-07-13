@@ -1,0 +1,41 @@
+bite:
+  damage: 5
+  stamina: -40
+  priority: 0
+  effects: []
+
+scratch:
+  damage: 2
+  stamina: 0
+  priority: 0
+  effects: []
+
+roar:
+  damage: 0
+  stamina: -20
+  priority: 0
+  effects: []
+
+tail swipe:
+  damage: 3
+  stamina: -20
+  priority: 0
+  effects: []
+
+brace:
+  damage: 0
+  stamina: -10
+  priority: 1
+  effects: [brace]
+
+stomp:
+  damage: 1
+  stamina: 0
+  priority: 0
+  effects: []
+
+thagomizer swipe:
+  damage: 5
+  stamina: -30
+  priority: 0
+  effects: []
