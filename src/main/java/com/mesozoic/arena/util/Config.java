@@ -2,6 +2,8 @@ package com.mesozoic.arena.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 
 /**
@@ -14,19 +16,22 @@ public final class Config {
     private static final Properties secrets = new Properties();
 
     static {
+        loadProperties(CONFIG_FILE, properties);
+        loadProperties(GEMINI_ENV_FILE, secrets);
+    }
+
+    private static void loadProperties(String fileName, Properties target) {
         try (InputStream in = Config.class.getClassLoader()
-                .getResourceAsStream(CONFIG_FILE)) {
+                .getResourceAsStream(fileName)) {
             if (in != null) {
-                properties.load(in);
+                target.load(in);
+                return;
             }
         } catch (IOException ignored) {
         }
 
-        try (InputStream in = Config.class.getClassLoader()
-                .getResourceAsStream(GEMINI_ENV_FILE)) {
-            if (in != null) {
-                secrets.load(in);
-            }
+        try (InputStream in = Files.newInputStream(Path.of(fileName))) {
+            target.load(in);
         } catch (IOException ignored) {
         }
     }
