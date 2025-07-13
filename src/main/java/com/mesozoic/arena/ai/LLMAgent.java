@@ -3,48 +3,37 @@ package com.mesozoic.arena.ai;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.util.Config;
-import de.kherud.llama.LlamaModel;
-import de.kherud.llama.ModelParameters;
-import de.kherud.llama.InferenceParameters;
-import de.kherud.llama.LlamaOutput;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * Opponent powered by a local llama.cpp model via java-llama.cpp v4.1.0
+ * Opponent powered by the Gemini Flash API.
  */
 public class LLMAgent implements OpponentAgent, AutoCloseable {
 
-    private final LlamaModel model;
+    private static final String API_URL =
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+
+    private final HttpClient httpClient = HttpClient.newHttpClient();
     private String lastResponse;
-
-    public LLMAgent() {
-        String modelPath = Config.llmModelDir() + "/Ministral-3b-instruct.Q4_K_M.gguf";
-
-        System.out.println("Loading llama.cpp model (CPU-only) from " + modelPath);
-        ModelParameters params = new ModelParameters()
-                .setModel(modelPath)
-                .setGpuLayers(0); // CPU-only inference
-        model = new LlamaModel(params);
-        System.out.println("Model loaded successfully");
-    }
 
     @Override
     public Move chooseMove(Dinosaur self, Dinosaur enemy) {
-        if (self == null || enemy == null) return null;
+        if (self == null || enemy == null) {
+            return null;
+        }
 
         String prompt = buildPrompt(self, enemy);
         System.out.println(prompt);
-        InferenceParameters ip = new InferenceParameters(prompt)
-                .setTemperature(0.4f)
-                .setStopStrings("\n");
-
         try {
-            StringBuilder sb = new StringBuilder();
-            for (LlamaOutput out : model.generate(ip)) {
-                sb.append(out);
-            }
-            String output = sb.toString();
+            String output = sendPrompt(prompt);
             lastResponse = output;
             System.out.println("LLM response: " + output);
             if (output.isEmpty()) {
@@ -58,10 +47,42 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         }
     }
 
+    private String sendPrompt(String prompt) throws IOException, InterruptedException {
+        String apiKey = Config.geminiApiKey();
+        if (apiKey.isBlank()) {
+            System.err.println("Gemini API key missing. Provide it in gemini.env");
+            return "";
+        }
+
+        String escaped = escapeJson(prompt);
+        String body = "{\"contents\":[{\"parts\":[{\"text\":\"" + escaped + "\"}]}]}";
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(API_URL + "?key=" + apiKey))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        HttpResponse<String> response =
+                httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        return extractText(response.body());
+    }
+
+    private String extractText(String json) {
+        Matcher matcher = Pattern.compile("\\\"text\\\"\\s*:\\s*\\\"(.*?)\\\"",
+                Pattern.DOTALL).matcher(json);
+        if (matcher.find()) {
+            return matcher.group(1).replace("\\n", "\n");
+        }
+        return "";
+    }
+
+    private String escapeJson(String text) {
+        return text.replace("\\", "\\\\").replace("\"", "\\\"");
+    }
+
     private Move parseMove(String output, Dinosaur self) {
-        String lc = output.toLowerCase();
+        String lowerCase = output.toLowerCase();
         for (Move move : self.getMoves()) {
-            if (lc.contains(move.getName().toLowerCase()) &&
+            if (lowerCase.contains(move.getName().toLowerCase()) &&
                     self.getStamina() >= move.getStaminaCost()) {
                 return move;
             }
@@ -84,6 +105,6 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     @Override
     public void close() {
-        model.close();
+        // nothing to close
     }
 }

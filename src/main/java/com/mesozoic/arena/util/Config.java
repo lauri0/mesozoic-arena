@@ -9,13 +9,23 @@ import java.util.Properties;
  */
 public final class Config {
     private static final String CONFIG_FILE = "constants.ini";
+    private static final String GEMINI_ENV_FILE = "gemini.env";
     private static final Properties properties = new Properties();
+    private static final Properties secrets = new Properties();
 
     static {
         try (InputStream in = Config.class.getClassLoader()
                 .getResourceAsStream(CONFIG_FILE)) {
             if (in != null) {
                 properties.load(in);
+            }
+        } catch (IOException ignored) {
+        }
+
+        try (InputStream in = Config.class.getClassLoader()
+                .getResourceAsStream(GEMINI_ENV_FILE)) {
+            if (in != null) {
+                secrets.load(in);
             }
         } catch (IOException ignored) {
         }
@@ -31,10 +41,12 @@ public final class Config {
         return Boolean.parseBoolean(properties.getProperty("useLLMAgent", "false"));
     }
 
+
     /**
-     * Returns the directory that contains the language model.
+     * Returns the Gemini API key from {@code gemini.env} or an empty string if
+     * none is provided.
      */
-    public static String llmModelDir() {
-        return properties.getProperty("llmModelDir", "models/gpt2");
+    public static String geminiApiKey() {
+        return secrets.getProperty("API_KEY", "");
     }
 }
