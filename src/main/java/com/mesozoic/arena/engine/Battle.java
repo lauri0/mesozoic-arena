@@ -7,6 +7,7 @@ import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.Effect;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class Battle {
 
     /**
      * Executes a single round where each player performs the provided move.
-     * The order of execution is determined by the active dinosaurs' speed.
+     * The order of execution is determined by move priority and speed.
      */
     public void executeRound(Move playerOneMove, Move playerTwoMove) {
         if (winner != null) {
@@ -80,15 +81,31 @@ public class Battle {
             return;
         }
 
-        if (dinoOne.getSpeed() >= dinoTwo.getSpeed()) {
-            boolean fainted = performTurn(playerOne, playerTwo, playerOneMove);
+        int p1Priority = playerOneMove == null ? Integer.MIN_VALUE : playerOneMove.getPriority();
+        int p2Priority = playerTwoMove == null ? Integer.MIN_VALUE : playerTwoMove.getPriority();
+        boolean p1First;
+        if (p1Priority != p2Priority) {
+            p1First = p1Priority > p2Priority;
+        } else {
+            p1First = dinoOne.getSpeed() >= dinoTwo.getSpeed();
+        }
+
+        boolean p1Braced = false;
+        boolean p2Braced = false;
+
+        if (p1First) {
+            p1Braced = hasBraceEffect(playerOneMove);
+            boolean fainted = performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
             if (winner == null && !fainted) {
-                performTurn(playerTwo, playerOne, playerTwoMove);
+                p2Braced = hasBraceEffect(playerTwoMove);
+                performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
             }
         } else {
-            boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove);
+            p2Braced = hasBraceEffect(playerTwoMove);
+            boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
             if (winner == null && !fainted) {
-                performTurn(playerOne, playerTwo, playerOneMove);
+                p1Braced = hasBraceEffect(playerOneMove);
+                performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
             }
         }
     }
@@ -110,7 +127,8 @@ public class Battle {
         return winner;
     }
 
-    private boolean performTurn(Player actingPlayer, Player opposingPlayer, Move move) {
+    private boolean performTurn(Player actingPlayer, Player opposingPlayer, Move move,
+            boolean defenderBraced) {
         Dinosaur attacker = actingPlayer.getActiveDinosaur();
         Dinosaur defender = opposingPlayer.getActiveDinosaur();
         if (attacker == null || defender == null || move == null) {
@@ -119,12 +137,17 @@ public class Battle {
 
         // apply move effects
         attacker.adjustStamina(move.getStaminaChange());
-        int before = defender.getHealth();
-        defender.adjustHealth(-move.getDamage());
-        int damage = before - defender.getHealth();
-        eventLog.add(attacker.getName() + " used " + move.getName() + " dealing "
-                + damage + " damage. " + defender.getName() + " has "
-                + Math.max(0, defender.getHealth()) + " health left.");
+        if (!defenderBraced) {
+            int before = defender.getHealth();
+            defender.adjustHealth(-move.getDamage());
+            int damage = before - defender.getHealth();
+            eventLog.add(attacker.getName() + " used " + move.getName() + " dealing "
+                    + damage + " damage. " + defender.getName() + " has "
+                    + Math.max(0, defender.getHealth()) + " health left.");
+        } else {
+            eventLog.add(attacker.getName() + " used " + move.getName()
+                    + " but " + defender.getName() + " braced and took no damage.");
+        }
 
         Dinosaur beforeDefender = defender;
         checkFaint(opposingPlayer);
@@ -159,5 +182,17 @@ public class Battle {
         player.clearQueuedSwitch();
         eventLog.add(label + " switched to " + target.getName() + ".");
         return true;
+    }
+
+    private boolean hasBraceEffect(Move move) {
+        if (move == null) {
+            return false;
+        }
+        for (Effect effect : move.getEffects()) {
+            if ("brace".equalsIgnoreCase(effect.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

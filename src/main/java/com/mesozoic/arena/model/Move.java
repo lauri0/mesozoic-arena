@@ -10,12 +10,14 @@ public class Move {
     private final String name;
     private final int damage;
     private final int staminaChange;
+    private final int priority;
     private final List<Effect> effects;
 
-    public Move(String name, int damage, int staminaChange, List<Effect> effects) {
+    public Move(String name, int damage, int staminaChange, int priority, List<Effect> effects) {
         this.name = name;
         this.damage = damage;
         this.staminaChange = staminaChange;
+        this.priority = priority;
         if (effects == null) {
             this.effects = new ArrayList<>();
         } else {
@@ -33,6 +35,10 @@ public class Move {
 
     public int getStaminaChange() {
         return staminaChange;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 
     public List<Effect> getEffects() {

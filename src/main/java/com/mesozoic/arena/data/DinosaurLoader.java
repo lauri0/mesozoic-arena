@@ -98,8 +98,22 @@ public class DinosaurLoader {
         String name = (String) map.get("name");
         int damage = ((Number) map.getOrDefault("damage", 0)).intValue();
         int staminaCost = ((Number) map.getOrDefault("stamina", 0)).intValue();
-        List<Effect> effects = new ArrayList<>();
-        return new Move(name, damage, staminaCost, effects);
+        int priority = ((Number) map.getOrDefault("priority", 0)).intValue();
+        List<Effect> effects = parseEffects(map.get("effects"));
+        return new Move(name, damage, staminaCost, priority, effects);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Effect> parseEffects(Object raw) {
+        List<Effect> list = new ArrayList<>();
+        if (raw instanceof List<?> items) {
+            for (Object item : items) {
+                if (item != null) {
+                    list.add(new Effect(String.valueOf(item)));
+                }
+            }
+        }
+        return list;
     }
 
     private void validateImageExists(String path) throws IOException {
@@ -112,7 +126,8 @@ public class DinosaurLoader {
     private Dinosaur copyDinosaur(Dinosaur source) {
         List<Move> copiedMoves = new ArrayList<>();
         for (Move move : source.getMoves()) {
-            copiedMoves.add(new Move(move.getName(), move.getDamage(), move.getStaminaChange(), move.getEffects()));
+            copiedMoves.add(new Move(move.getName(), move.getDamage(),
+                    move.getStaminaChange(), move.getPriority(), move.getEffects()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(), source.getStamina(), copiedMoves);
     }
