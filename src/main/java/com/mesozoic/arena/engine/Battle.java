@@ -138,8 +138,9 @@ public class Battle {
         // apply move effects
         attacker.adjustStamina(move.getStaminaChange());
         if (!defenderBraced) {
+            int totalDamage = move.getDamage() * attacker.getAttack();
             int before = defender.getHealth();
-            defender.adjustHealth(-move.getDamage());
+            defender.adjustHealth(-totalDamage);
             int damage = before - defender.getHealth();
             eventLog.add(attacker.getName() + " used " + move.getName() + " dealing "
                     + damage + " damage. " + defender.getName() + " has "

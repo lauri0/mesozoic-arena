@@ -5,6 +5,8 @@ import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
 import org.yaml.snakeyaml.Yaml;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,14 +25,17 @@ import java.util.Random;
  */
 public class DinosaurLoader {
     private static final String DATA_FILE = "data/animals.yaml";
+    private static final String MOVE_FILE = "data/moves.yaml";
     private static final String IMAGE_DIR = "assets/animals";
 
     private final List<Dinosaur> availableDinosaurs;
+    private final Map<String, Move> moveTemplates;
 
     /**
      * Parses the YAML data file at construction time.
      */
     public DinosaurLoader() throws IOException {
+        moveTemplates = loadMoves();
         availableDinosaurs = Collections.unmodifiableList(loadDinosaurs());
     }
 
@@ -59,7 +64,7 @@ public class DinosaurLoader {
         try (InputStream input = Files.newInputStream(path)) {
             Map<String, Object> root = yaml.load(input);
             if (root != null) {
-                for (Map.Entry<String, Object> entry : root.entrySet()) {
+                for (Entry<String, Object> entry : root.entrySet()) {
                     String name = entry.getKey();
                     @SuppressWarnings("unchecked")
                     Map<String, Object> values = (Map<String, Object>) entry.getValue();
@@ -73,34 +78,30 @@ public class DinosaurLoader {
     private Dinosaur parseDinosaur(String name, Map<String, Object> values) throws IOException {
         int health = ((Number) values.get("health")).intValue();
         int speed = ((Number) values.get("speed")).intValue();
+        int attack = ((Number) values.getOrDefault("attack", 10)).intValue();
         String imagePath = (String) values.get("image");
         validateImageExists(imagePath);
 
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> moveMaps = (List<Map<String, Object>>) values.get("abilities");
-        List<Move> moves = parseMoves(moveMaps);
+        List<String> moveNames = (List<String>) values.get("moves");
+        List<Move> moves = resolveMoves(moveNames);
 
-        // starting stamina defaults to 100
-        return new Dinosaur(name, health, speed, imagePath, 100, moves);
+        return new Dinosaur(name, health, speed, imagePath, 100, attack, moves);
     }
 
-    private List<Move> parseMoves(List<Map<String, Object>> moveMaps) {
+    private List<Move> resolveMoves(List<String> names) {
         List<Move> moves = new ArrayList<>();
-        if (moveMaps != null) {
-            for (Map<String, Object> map : moveMaps) {
-                moves.add(createMove(map));
+        if (names != null) {
+            for (String moveName : names) {
+                Move template = moveTemplates.get(moveName);
+                if (template != null) {
+                    moves.add(new Move(template.getName(), template.getDamage(),
+                            template.getStaminaChange(), template.getPriority(),
+                            template.getEffects()));
+                }
             }
         }
         return moves;
-    }
-
-    private Move createMove(Map<String, Object> map) {
-        String name = (String) map.get("name");
-        int damage = ((Number) map.getOrDefault("damage", 0)).intValue();
-        int staminaCost = ((Number) map.getOrDefault("stamina", 0)).intValue();
-        int priority = ((Number) map.getOrDefault("priority", 0)).intValue();
-        List<Effect> effects = parseEffects(map.get("effects"));
-        return new Move(name, damage, staminaCost, priority, effects);
     }
 
     @SuppressWarnings("unchecked")
@@ -129,6 +130,29 @@ public class DinosaurLoader {
             copiedMoves.add(new Move(move.getName(), move.getDamage(),
                     move.getStaminaChange(), move.getPriority(), move.getEffects()));
         }
-        return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(), source.getStamina(), copiedMoves);
+        return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
+                source.getStamina(), source.getAttack(), copiedMoves);
+    }
+
+    private Map<String, Move> loadMoves() throws IOException {
+        Map<String, Move> map = new HashMap<>();
+        Yaml yaml = new Yaml();
+        Path path = Paths.get(MOVE_FILE);
+        try (InputStream input = Files.newInputStream(path)) {
+            Map<String, Object> root = yaml.load(input);
+            if (root != null) {
+                for (Entry<String, Object> entry : root.entrySet()) {
+                    String name = entry.getKey();
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> values = (Map<String, Object>) entry.getValue();
+                    int damage = ((Number) values.getOrDefault("damage", 0)).intValue();
+                    int stamina = ((Number) values.getOrDefault("stamina", 0)).intValue();
+                    int priority = ((Number) values.getOrDefault("priority", 0)).intValue();
+                    List<Effect> effects = parseEffects(values.get("effects"));
+                    map.put(name, new Move(name, damage, stamina, priority, effects));
+                }
+            }
+        }
+        return map;
     }
 }

@@ -1,77 +1,32 @@
 Allosaurus:
   health: 210
   speed: 100
+  attack: 10
   image: assets/animals/allosaurus.png
-  abilities:
-    - name: bite
-      damage: 50
-      stamina: -40
-      priority: 0
-      effects: []
-    - name: scratch
-      damage: -20
-      stamina: 0
-      priority: 0
-      effects: []
-    - name: roar
-      damage: 0
-      stamina: -20
-      priority: 0
-      effects: []
-    - name: tail swipe
-      damage: 35
-      stamina: -20
-      priority: 0
-      effects: []
+  moves:
+    - bite
+    - scratch
+    - roar
+    - tail swipe
 
 Ceratosaurus:
   health: 210
   speed: 130
+  attack: 10
   image: assets/animals/ceratosaurus.png
-  abilities:
-    - name: bite
-      damage: 50
-      stamina: -40
-      priority: 0
-      effects: []
-    - name: scratch
-      damage: 20
-      stamina: 0
-      priority: 0
-      effects: []
-    - name: roar
-      damage: 0
-      stamina: -20
-      priority: 0
-      effects: []
-    - name: tail swipe
-      damage: 35
-      stamina: -20
-      priority: 0
-      effects: []
+  moves:
+    - bite
+    - scratch
+    - roar
+    - tail swipe
 
 Stegosaurus:
   health: 290
   speed: 60
+  attack: 10
   image: assets/animals/stegosaurus.png
-  abilities:
-    - name: brace
-      damage: 0
-      stamina: -10
-      priority: 1
-      effects: [brace]
-    - name: stomp
-      damage: 15
-      stamina: 0
-      priority: 0
-      effects: []
-    - name: roar
-      damage: 0
-      stamina: 20
-      priority: 0
-      effects: []
-    - name: thagomizer swipe
-      damage: 55
-      stamina: -30
-      priority: 0
-      effects: []
+  moves:
+    - brace
+    - stomp
+    - roar
+    - thagomizer swipe

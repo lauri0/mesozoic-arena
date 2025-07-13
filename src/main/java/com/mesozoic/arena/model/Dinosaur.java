@@ -11,14 +11,17 @@ public class Dinosaur {
     private int health;
     private final int speed;
     private final String imagePath;
+    private final int attack;
     private int stamina;
     private final List<Move> moves;
 
-    public Dinosaur(String name, int health, int speed, String imagePath, int stamina, List<Move> moves) {
+    public Dinosaur(String name, int health, int speed, String imagePath, int stamina, int attack,
+            List<Move> moves) {
         this.name = name;
         this.health = health;
         this.speed = speed;
         this.imagePath = imagePath;
+        this.attack = attack;
         this.stamina = stamina;
         if (moves == null) {
             this.moves = new ArrayList<>();
@@ -41,6 +44,10 @@ public class Dinosaur {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public int getAttack() {
+        return attack;
     }
 
     public int getStamina() {
