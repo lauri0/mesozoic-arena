@@ -38,7 +38,7 @@ dinosaurs remaining.
 
 The opponent AI can use Google's Gemini Flash model. To enable it:
 
-1. Open the `gemini.env` file in the project root and add your API key after
+1. Copy the `gemini.env.example` file to `gemini.env`. Open the `gemini.env` file in the project root and add your API key after
    `API_KEY=`.
 2. Ensure `useLLMAgent=true` in `data/constants.ini`.
 
