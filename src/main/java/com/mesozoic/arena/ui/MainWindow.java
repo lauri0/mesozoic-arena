@@ -28,6 +28,10 @@ public class MainWindow extends JFrame {
     private final Player player;
     private final Player opponent;
 
+    private static final int STAT_ICON_SIZE = 24;
+    private static final int DINO_IMAGE_WIDTH = 400;
+    private static final int DINO_IMAGE_HEIGHT = 300;
+
     private JLabel playerNameLabel;
     private JLabel playerHealthLabel;
     private JLabel playerStaminaLabel;
@@ -43,6 +47,11 @@ public class MainWindow extends JFrame {
     private JLabel opponentStaminaLabel;
     private JLabel opponentSpeedLabel;
     private JLabel opponentImageLabel;
+
+    private void setStatLabel(JLabel label, String iconPath, int value) {
+        label.setIcon(loadIcon(iconPath, STAT_ICON_SIZE, STAT_ICON_SIZE));
+        label.setText(String.valueOf(value));
+    }
 
 
     public MainWindow(Battle battle, Player player, Player opponent) {
@@ -67,16 +76,23 @@ public class MainWindow extends JFrame {
         centerPanel.add(createOpponentPanel());
         add(centerPanel, BorderLayout.CENTER);
 
+        logArea = new JTextArea(10, 20);
+        logArea.setEditable(false);
+
         JButton exitButton = new JButton("Exit Game");
         exitButton.addActionListener(e -> System.exit(0));
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.add(exitButton);
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(new JScrollPane(logArea), BorderLayout.CENTER);
+        bottomPanel.add(exitButton, BorderLayout.EAST);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private JPanel createPlayerPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         playerImageLabel = new JLabel();
+        playerImageLabel.setHorizontalAlignment(JLabel.CENTER);
+        playerImageLabel.setVerticalAlignment(JLabel.CENTER);
         panel.add(playerImageLabel, BorderLayout.CENTER);
         JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
@@ -101,6 +117,8 @@ public class MainWindow extends JFrame {
     private JPanel createOpponentPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         opponentImageLabel = new JLabel();
+        opponentImageLabel.setHorizontalAlignment(JLabel.CENTER);
+        opponentImageLabel.setVerticalAlignment(JLabel.CENTER);
         panel.add(opponentImageLabel, BorderLayout.CENTER);
         JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
@@ -113,11 +131,6 @@ public class MainWindow extends JFrame {
         opponentSpeedLabel = new JLabel();
         stats.add(opponentSpeedLabel);
         lower.add(stats, BorderLayout.NORTH);
-
-        logArea = new JTextArea(10, 20);
-        logArea.setEditable(false);
-        lower.add(new JScrollPane(logArea), BorderLayout.CENTER);
-
         panel.add(lower, BorderLayout.SOUTH);
         return panel;
     }
@@ -147,28 +160,36 @@ public class MainWindow extends JFrame {
         Dinosaur dino = targetPlayer.getActiveDinosaur();
         if (dino == null) {
             nameLabel.setText("None");
-            healthLabel.setText("Health: 0");
-            staminaLabel.setText("Stamina: 0");
-            speedLabel.setText("Speed: 0");
+            setStatLabel(healthLabel, "assets/icons/health.png", 0);
+            setStatLabel(staminaLabel, "assets/icons/stamina.png", 0);
+            setStatLabel(speedLabel, "assets/icons/speed.png", 0);
             imageLabel.setIcon(null);
             return;
         }
         nameLabel.setText(dino.getName());
-        healthLabel.setText("Health: " + dino.getHealth());
-        staminaLabel.setText("Stamina: " + dino.getStamina());
-        speedLabel.setText("Speed: " + dino.getSpeed());
-        ImageIcon icon = loadIcon(dino.getImagePath());
+        setStatLabel(healthLabel, "assets/icons/health.png", dino.getHealth());
+        setStatLabel(staminaLabel, "assets/icons/stamina.png", dino.getStamina());
+        setStatLabel(speedLabel, "assets/icons/speed.png", dino.getSpeed());
+        ImageIcon icon = loadIcon(dino.getImagePath(), DINO_IMAGE_WIDTH, DINO_IMAGE_HEIGHT);
         imageLabel.setIcon(icon);
     }
 
-    private ImageIcon loadIcon(String path) {
+    private ImageIcon loadIcon(String path, int width, int height) {
         java.net.URL url = getClass().getClassLoader().getResource(path);
         if (url == null) {
             return new ImageIcon();
         }
         ImageIcon raw = new ImageIcon(url);
-        Image scaled = raw.getImage().getScaledInstance(400, 300, Image.SCALE_SMOOTH);
+        Image scaled = raw.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
+    }
+
+    private String buildImageHtml(String path, int width, int height) {
+        java.net.URL url = getClass().getClassLoader().getResource(path);
+        if (url == null) {
+            return "";
+        }
+        return "<img src='" + url + "' width='" + width + "' height='" + height + "'>";
     }
 
     private void updateBench() {
@@ -179,7 +200,14 @@ public class MainWindow extends JFrame {
                 continue;
             }
             JPanel p = new JPanel();
-            p.add(new JLabel(dino.getName()));
+            p.add(new JLabel(dino.getName() + " {"));
+            JLabel hp = new JLabel(String.valueOf(dino.getHealth()),
+                    loadIcon("assets/icons/health.png", 16, 16), JLabel.LEFT);
+            p.add(hp);
+            JLabel st = new JLabel(String.valueOf(dino.getStamina()),
+                    loadIcon("assets/icons/stamina.png", 16, 16), JLabel.LEFT);
+            p.add(st);
+            p.add(new JLabel("}"));
             JButton switchButton = new JButton("Switch");
             switchButton.addActionListener(e -> {
                 player.queueSwitch(dino);
@@ -217,8 +245,10 @@ public class MainWindow extends JFrame {
     }
 
     private String formatMoveLabel(Move move) {
-        return move.getName() + " (" + move.getDamage() + " dmg / "
-                + move.getStaminaChange() + " sp)";
+        String dmgImg = buildImageHtml("assets/icons/damage.png", STAT_ICON_SIZE, STAT_ICON_SIZE);
+        String staminaImg = buildImageHtml("assets/icons/stamina.png", STAT_ICON_SIZE, STAT_ICON_SIZE);
+        return "<html>" + move.getName() + " (" + move.getDamage() + " " + dmgImg
+                + " / " + move.getStaminaChange() + " " + staminaImg + ")</html>";
     }
 
     private void updateLogArea() {
