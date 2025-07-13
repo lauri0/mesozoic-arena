@@ -168,37 +168,45 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 .collect(Collectors.joining(", "));
     }
 
-    private String describeDinosaur(Dinosaur dino) {
-        return dino.getName() + " (HP: " + dino.getHealth() + ", Sta: "
-                + dino.getStamina() + ", Spd: " + dino.getSpeed() + ", Atk: "
-                + dino.getAttack() + ") Moves: " + formatMoves(dino);
+    private String describeDinosaurStats(Dinosaur dino) {
+        return dino.getName() + " (HP: " + dino.getHealth() + ", Stamina: "
+                + dino.getStamina() + ", Speed: " + dino.getSpeed() + ")\n";
     }
 
     private String buildPrompt(Player selfPlayer, Player enemyPlayer) {
-        Dinosaur self = selfPlayer.getActiveDinosaur();
-        Dinosaur enemy = enemyPlayer.getActiveDinosaur();
-
-        StringBuilder allInfo = new StringBuilder();
-        allInfo.append("Dinosaurs this battle:\n");
-        for (Dinosaur d : selfPlayer.getDinosaurs()) {
-            allInfo.append("Your - ").append(describeDinosaur(d)).append("\n");
-        }
-        for (Dinosaur d : enemyPlayer.getDinosaurs()) {
-            allInfo.append("Opponent - ").append(describeDinosaur(d)).append("\n");
-        }
-
-        return "You are playing Mesozoic Arena, a turn based dinosaur battle. " +
+        return "You are playing Mesozoic Arena, a turn based dinosaur battle game. " +
                 "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
                 "dinosaurs using lower priority moves regardless of speed. " +
                 "Damage is calculated as your dinosaur's attack multiplied by the move damage. " +
-                "You may also switch dinosaurs, which happens before attacks but skips using a move.\n" +
-                allInfo +
-                "Your active dinosaur: " + self.getName() + " (HP: " + self.getHealth() +
-                ", Sta: " + self.getStamina() + ")\n" +
-                "Opponent active dinosaur: " + enemy.getName() + " (HP: " + enemy.getHealth() +
-                ", Sta: " + enemy.getStamina() + ")\n" +
+                "You may also switch your active dinosaur, which happens before moves but skips using a move.\n" +
+                getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
+                getAllDinosaurInfos(selfPlayer, enemyPlayer) +
                 "Respond with the move name to attack or 'Switch to <name>' to switch. " +
                 "End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
+    }
+
+    private StringBuilder getActiveDinosaurInfos(Player selfPlayer, Player enemyPlayer) {
+        Dinosaur ownActiveDino = selfPlayer.getActiveDinosaur();
+        Dinosaur opponentActiveDino = enemyPlayer.getActiveDinosaur();
+        StringBuilder activeInfos = new StringBuilder();
+        activeInfos.append("Your active dinosaur: ").append(describeDinosaurStats(ownActiveDino));
+        activeInfos.append("Your dino's possible moves: ").append(formatMoves(ownActiveDino));
+        activeInfos.append("Opponent's active dinosaur: ").append(describeDinosaurStats(opponentActiveDino));
+        activeInfos.append("Opponent dino's possible moves: ").append(formatMoves(opponentActiveDino));
+        return activeInfos;
+    }
+
+    private StringBuilder getAllDinosaurInfos(Player selfPlayer, Player enemyPlayer) {
+        StringBuilder allInfos = new StringBuilder();
+        allInfos.append("Your inactive dinosaurs which you could switch into your active slot:\n");
+        for (Dinosaur dinosaur : selfPlayer.getDinosaurs()) {
+            allInfos.append("Your - ").append(describeDinosaurStats(dinosaur));
+        }
+        allInfos.append("Your opponent's inactive dinosaurs which they could switch into their active slot:\n");
+        for (Dinosaur dinosaur : enemyPlayer.getDinosaurs()) {
+            allInfos.append("Opponent - ").append(describeDinosaurStats(dinosaur));
+        }
+        return allInfos;
     }
 
     public String getLastResponse() {
