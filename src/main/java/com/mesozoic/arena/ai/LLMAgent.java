@@ -164,7 +164,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     private String formatMoves(Dinosaur dino) {
         return dino.getMoves().stream()
                 .map(m -> m.getName() + " (" + m.getDamage() + " dmg, "
-                        + m.getStaminaChange() + " sta)")
+                        + m.getStaminaChange() + " sta, " + m.getPriority() + " prio)")
                 .collect(Collectors.joining(", "));
     }
 
@@ -188,12 +188,12 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 "Your dinosaur: " + self.getName() + " (HP: " + self.getHealth() +
                 ", Stamina: " + self.getStamina() + ", Speed: " + self.getSpeed() + ")\n" +
                 "Opponent dinosaur: " + enemy.getName() + " (HP: " + enemy.getHealth() +
-                ", Stamina: " + enemy.getStamina() + ", Speed: " + self.getSpeed() + ")\n" +
+                ", Stamina: " + enemy.getStamina() + ", Speed: " + enemy.getSpeed() + ")\n" +
                 "Your moves (sta refers to stamina change when using the move, which can be positive or negative): " + selfMoves + "\n" +
                 "Opponent moves: " + enemyMoves + "\n" +
                 "You can also switch to: " + bench + ".\n" +
-                "Respond with the move name to attack or 'Switch to <name>' to switch." +
-                " End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
+                "Respond with the move name to attack or 'Switch to <name>' to switch. " +
+                "End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
     }
 
     public String getLastResponse() {
