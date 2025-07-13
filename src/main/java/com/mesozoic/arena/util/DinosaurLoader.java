@@ -43,8 +43,18 @@ public final class DinosaurLoader {
                         String moveName = String.valueOf(ability.get("name"));
                         int damage = toInt(ability.get("damage"));
                         int stamina = toInt(ability.get("stamina"));
-                        moves.add(new Move(moveName, damage, stamina,
-                                new ArrayList<Effect>()));
+                        int priority = toInt(ability.getOrDefault("priority", 0));
+                        List<Effect> effects = new ArrayList<>();
+                        List<?> effectNames = castObjectList(ability.get("effects"));
+                        if (effectNames != null) {
+                            for (Object obj : effectNames) {
+                                if (obj != null) {
+                                    effects.add(new Effect(String.valueOf(obj)));
+                                }
+                            }
+                        }
+                        moves.add(new Move(moveName, damage, stamina, priority,
+                                effects));
                     }
                 }
                 dinosaurs.add(new Dinosaur(name, health, speed, image, 100,
@@ -64,6 +74,11 @@ public final class DinosaurLoader {
     @SuppressWarnings("unchecked")
     private static List<Map<String, Object>> castList(Object value) {
         return (List<Map<String, Object>>) value;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static List<Object> castObjectList(Object value) {
+        return (List<Object>) value;
     }
 
     private static int toInt(Object value) {
