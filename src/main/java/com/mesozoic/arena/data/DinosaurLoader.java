@@ -112,7 +112,7 @@ public class DinosaurLoader {
     private Dinosaur copyDinosaur(Dinosaur source) {
         List<Move> copiedMoves = new ArrayList<>();
         for (Move move : source.getMoves()) {
-            copiedMoves.add(new Move(move.getName(), move.getDamage(), move.getStaminaCost(), move.getEffects()));
+            copiedMoves.add(new Move(move.getName(), move.getDamage(), move.getStaminaChange(), move.getEffects()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(), source.getStamina(), copiedMoves);
     }

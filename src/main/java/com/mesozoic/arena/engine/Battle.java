@@ -117,11 +117,8 @@ public class Battle {
             return;
         }
 
-        // regenerate stamina at the start of the turn
-        attacker.adjustStamina(10);
-
         // apply move effects
-        attacker.adjustStamina(-move.getStaminaCost());
+        attacker.adjustStamina(move.getStaminaChange());
         int before = defender.getHealth();
         defender.adjustHealth(-move.getDamage());
         int damage = before - defender.getHealth();

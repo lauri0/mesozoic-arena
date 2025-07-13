@@ -5,19 +5,49 @@ Allosaurus:
   abilities:
     - name: bite
       damage: 50
-      stamina: 40
+      stamina: -40
+      priority: 0
+      effects: []
+    - name: scratch
+      damage: -20
+      stamina: 0
+      priority: 0
+      effects: []
+    - name: roar
+      damage: 0
+      stamina: -20
+      priority: 0
+      effects: []
+    - name: tail swipe
+      damage: 35
+      stamina: -20
+      priority: 0
+      effects: []
+
+Ceratosaurus:
+  health: 210
+  speed: 130
+  image: assets/animals/ceratosaurus.png
+  abilities:
+    - name: bite
+      damage: 50
+      stamina: -40
+      priority: 0
       effects: []
     - name: scratch
       damage: 20
       stamina: 0
+      priority: 0
       effects: []
     - name: roar
       damage: 0
-      stamina: 20
+      stamina: -20
+      priority: 0
       effects: []
     - name: tail swipe
       damage: 35
-      stamina: 20
+      stamina: -20
+      priority: 0
       effects: []
 
 Stegosaurus:
@@ -25,19 +55,23 @@ Stegosaurus:
   speed: 60
   image: assets/animals/stegosaurus.png
   abilities:
-    - name: bite
-      damage: 20
-      stamina: 20
-      effects: []
+    - name: brace
+      damage: 0
+      stamina: -10
+      priority: 1
+      effects: [brace]
     - name: stomp
       damage: 15
-      stamina: 10
+      stamina: 0
+      priority: 0
       effects: []
     - name: roar
       damage: 0
-      stamina: 0
+      stamina: 20
+      priority: 0
       effects: []
     - name: thagomizer swipe
       damage: 55
-      stamina: 40
+      stamina: -30
+      priority: 0
       effects: []

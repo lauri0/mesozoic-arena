@@ -125,7 +125,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         }
         for (Move move : active.getMoves()) {
             if (move.getName().equalsIgnoreCase(name) &&
-                    active.getStamina() >= move.getStaminaCost()) {
+                    active.getStamina() >= move.getStaminaChange()) {
                 return move;
             }
         }
@@ -138,7 +138,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         }
         for (Move move : active.getMoves()) {
             if (text.contains(move.getName().toLowerCase()) &&
-                    active.getStamina() >= move.getStaminaCost()) {
+                    active.getStamina() >= move.getStaminaChange()) {
                 return move;
             }
         }
@@ -164,7 +164,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     private String formatMoves(Dinosaur dino) {
         return dino.getMoves().stream()
                 .map(m -> m.getName() + " (" + m.getDamage() + " dmg, "
-                        + m.getStaminaCost() + " sta)")
+                        + m.getStaminaChange() + " sta)")
                 .collect(Collectors.joining(", "));
     }
 
@@ -180,15 +180,16 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 .collect(Collectors.joining(", "));
 
         return "You are playing Mesozoic Arena, a turn based dinosaur battle. " +
-                "Each turn your active dinosaur regains 10 stamina before acting. " +
-                "Using a move costs stamina and deals damage equal to that move. " +
+                "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
+                "dinosaurs using lower priority moves regardless of speed. " +
+                "Using a move changes your dinosaur's available stamina and deals damage equal to that move. " +
                 "You may also switch dinosaurs, which happens before attacks but " +
                 "skips using a move.\n" +
                 "Your dinosaur: " + self.getName() + " (HP: " + self.getHealth() +
-                ", Stamina: " + self.getStamina() + ")\n" +
+                ", Stamina: " + self.getStamina() + ", Speed: " + self.getSpeed() + ")\n" +
                 "Opponent dinosaur: " + enemy.getName() + " (HP: " + enemy.getHealth() +
-                ", Stamina: " + enemy.getStamina() + ")\n" +
-                "Your moves: " + selfMoves + "\n" +
+                ", Stamina: " + enemy.getStamina() + ", Speed: " + self.getSpeed() + ")\n" +
+                "Your moves (sta refers to stamina change when using the move, which can be positive or negative): " + selfMoves + "\n" +
                 "Opponent moves: " + enemyMoves + "\n" +
                 "You can also switch to: " + bench + ".\n" +
                 "Respond with the move name to attack or 'Switch to <name>' to switch." +

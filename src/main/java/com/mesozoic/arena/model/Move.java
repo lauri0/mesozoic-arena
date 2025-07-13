@@ -9,13 +9,13 @@ import java.util.List;
 public class Move {
     private final String name;
     private final int damage;
-    private final int staminaCost;
+    private final int staminaChange;
     private final List<Effect> effects;
 
-    public Move(String name, int damage, int staminaCost, List<Effect> effects) {
+    public Move(String name, int damage, int staminaChange, List<Effect> effects) {
         this.name = name;
         this.damage = damage;
-        this.staminaCost = staminaCost;
+        this.staminaChange = staminaChange;
         if (effects == null) {
             this.effects = new ArrayList<>();
         } else {
@@ -31,8 +31,8 @@ public class Move {
         return damage;
     }
 
-    public int getStaminaCost() {
-        return staminaCost;
+    public int getStaminaChange() {
+        return staminaChange;
     }
 
     public List<Effect> getEffects() {

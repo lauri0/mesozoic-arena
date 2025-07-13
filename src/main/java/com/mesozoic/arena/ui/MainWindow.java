@@ -204,7 +204,7 @@ public class MainWindow extends JFrame {
             if (i < moves.size()) {
                 Move move = moves.get(i);
                 button.setText(formatMoveLabel(move));
-                boolean canUseMove = stamina >= move.getStaminaCost();
+                boolean canUseMove = stamina >= move.getStaminaChange();
                 button.setEnabled(canUseMove);
                 if (canUseMove) {
                     button.addActionListener(e -> handlePlayerMove(move));
@@ -218,7 +218,7 @@ public class MainWindow extends JFrame {
 
     private String formatMoveLabel(Move move) {
         return move.getName() + " (" + move.getDamage() + " dmg / "
-                + move.getStaminaCost() + " sp)";
+                + move.getStaminaChange() + " sp)";
     }
 
     private void updateLogArea() {
