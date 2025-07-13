@@ -97,8 +97,7 @@ public class Battle {
      * Executes a round using the AI to select the opponent's move.
      */
     public void executeRound(Move playerOneMove) {
-        Move playerTwoMove = opponentAI.chooseMove(playerTwo.getActiveDinosaur(),
-                playerOne.getActiveDinosaur());
+        Move playerTwoMove = opponentAI.chooseMove(playerTwo, playerOne);
         logLLMResponse();
         executeRound(playerOneMove, playerTwoMove);
     }

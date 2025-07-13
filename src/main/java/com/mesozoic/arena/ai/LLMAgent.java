@@ -2,6 +2,7 @@ package com.mesozoic.arena.ai;
 
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.util.Config;
 
 import java.io.IOException;
@@ -25,8 +26,10 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     private String lastResponse;
 
     @Override
-    public Move chooseMove(Dinosaur self, Dinosaur enemy) {
-        if (self == null || enemy == null) {
+    public Move chooseMove(Player self, Player enemy) {
+        Dinosaur activeSelf = self.getActiveDinosaur();
+        Dinosaur activeEnemy = enemy.getActiveDinosaur();
+        if (activeSelf == null || activeEnemy == null) {
             return null;
         }
 
@@ -79,24 +82,72 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return text.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
-    private Move parseMove(String output, Dinosaur self) {
+    private Move parseMove(String output, Player selfPlayer) {
         String lowerCase = output.toLowerCase();
-        for (Move move : self.getMoves()) {
-            if (lowerCase.contains(move.getName().toLowerCase()) &&
-                    self.getStamina() >= move.getStaminaCost()) {
-                return move;
+
+        if (trySwitch(lowerCase, selfPlayer)) {
+            return null;
+        }
+
+        Dinosaur active = selfPlayer.getActiveDinosaur();
+        if (active != null) {
+            for (Move move : active.getMoves()) {
+                if (lowerCase.contains(move.getName().toLowerCase()) &&
+                        active.getStamina() >= move.getStaminaCost()) {
+                    return move;
+                }
             }
         }
-        return new RandomOpponent().chooseMove(self, null);
+        return new RandomOpponent().chooseMove(selfPlayer, null);
     }
 
-    private String buildPrompt(Dinosaur self, Dinosaur enemy) {
-        String moveList = self.getMoves().stream()
-                .map(Move::getName)
+    private boolean trySwitch(String text, Player selfPlayer) {
+        if (!text.contains("switch")) {
+            return false;
+        }
+        for (Dinosaur dino : selfPlayer.getDinosaurs()) {
+            if (dino.equals(selfPlayer.getActiveDinosaur())) {
+                continue;
+            }
+            if (text.contains(dino.getName().toLowerCase())) {
+                selfPlayer.queueSwitch(dino);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String formatMoves(Dinosaur dino) {
+        return dino.getMoves().stream()
+                .map(m -> m.getName() + " (" + m.getDamage() + " dmg, "
+                        + m.getStaminaCost() + " sta)")
                 .collect(Collectors.joining(", "));
-        return "Choose the best move for " + self.getName() +
-                " against " + enemy.getName() + ". Available moves: " +
-                moveList + ".\nMove:";
+    }
+
+    private String buildPrompt(Player selfPlayer, Player enemyPlayer) {
+        Dinosaur self = selfPlayer.getActiveDinosaur();
+        Dinosaur enemy = enemyPlayer.getActiveDinosaur();
+        String selfMoves = formatMoves(self);
+        String enemyMoves = formatMoves(enemy);
+
+        String bench = selfPlayer.getDinosaurs().stream()
+                .filter(d -> !d.equals(self))
+                .map(Dinosaur::getName)
+                .collect(Collectors.joining(", "));
+
+        return "You are playing Mesozoic Arena, a turn based dinosaur battle. " +
+                "Each turn your active dinosaur regains 10 stamina before acting. " +
+                "Using a move costs stamina and deals damage equal to that move. " +
+                "You may also switch dinosaurs, which happens before attacks but " +
+                "skips using a move.\n" +
+                "Your dinosaur: " + self.getName() + " (HP: " + self.getHealth() +
+                ", Stamina: " + self.getStamina() + ")\n" +
+                "Opponent dinosaur: " + enemy.getName() + " (HP: " + enemy.getHealth() +
+                ", Stamina: " + enemy.getStamina() + ")\n" +
+                "Your moves: " + selfMoves + "\n" +
+                "Opponent moves: " + enemyMoves + "\n" +
+                "You can also switch to: " + bench + ".\n" +
+                "Respond with the move name to attack or 'Switch to <name>' to switch.\nAction:";
     }
 
     public String getLastResponse() {
