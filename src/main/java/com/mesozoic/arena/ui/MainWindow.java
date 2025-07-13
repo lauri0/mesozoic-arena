@@ -4,9 +4,8 @@ import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
+
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +47,11 @@ public class MainWindow extends JFrame {
     private JLabel opponentSpeedLabel;
     private JLabel opponentImageLabel;
 
+    public static String HEALTH_ICON_PATH = "assets/icons/health.png";
+    public static String STAMINA_ICON_PATH = "assets/icons/energy.png";
+    public static String SPEED_ICON_PATH = "assets/icons/speed.png";
+    public static String DAMAGE_ICON_PATH = "assets/icons/attack.png";
+
     private void setStatLabel(JLabel label, String iconPath, int value) {
         label.setIcon(loadIcon(iconPath, STAT_ICON_SIZE, STAT_ICON_SIZE));
         label.setText(String.valueOf(value));
@@ -65,7 +69,7 @@ public class MainWindow extends JFrame {
 
     private void setupFrame() {
         setTitle("Mesozoic Arena");
-        setSize(1400, 800);
+        setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
     }
@@ -92,11 +96,13 @@ public class MainWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         playerImageLabel = new JLabel();
         playerImageLabel.setHorizontalAlignment(JLabel.CENTER);
-        playerImageLabel.setVerticalAlignment(JLabel.CENTER);
+        playerImageLabel.setVerticalAlignment(JLabel.NORTH);
         panel.add(playerImageLabel, BorderLayout.CENTER);
         JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
         playerNameLabel = new JLabel();
+        playerNameLabel.setFont(new Font(playerNameLabel.getFont().getName(), playerNameLabel.getFont().getStyle(),
+                playerNameLabel.getFont().getSize() + 6));
         stats.add(playerNameLabel);
         playerHealthLabel = new JLabel();
         stats.add(playerHealthLabel);
@@ -118,7 +124,7 @@ public class MainWindow extends JFrame {
         JPanel panel = new JPanel(new BorderLayout());
         opponentImageLabel = new JLabel();
         opponentImageLabel.setHorizontalAlignment(JLabel.CENTER);
-        opponentImageLabel.setVerticalAlignment(JLabel.CENTER);
+        opponentImageLabel.setVerticalAlignment(JLabel.NORTH);
         panel.add(opponentImageLabel, BorderLayout.CENTER);
         JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
@@ -160,16 +166,16 @@ public class MainWindow extends JFrame {
         Dinosaur dino = targetPlayer.getActiveDinosaur();
         if (dino == null) {
             nameLabel.setText("None");
-            setStatLabel(healthLabel, "assets/icons/health.png", 0);
-            setStatLabel(staminaLabel, "assets/icons/stamina.png", 0);
-            setStatLabel(speedLabel, "assets/icons/speed.png", 0);
+            setStatLabel(healthLabel, HEALTH_ICON_PATH, 0);
+            setStatLabel(staminaLabel, STAMINA_ICON_PATH, 0);
+            setStatLabel(speedLabel, SPEED_ICON_PATH, 0);
             imageLabel.setIcon(null);
             return;
         }
         nameLabel.setText(dino.getName());
-        setStatLabel(healthLabel, "assets/icons/health.png", dino.getHealth());
-        setStatLabel(staminaLabel, "assets/icons/stamina.png", dino.getStamina());
-        setStatLabel(speedLabel, "assets/icons/speed.png", dino.getSpeed());
+        setStatLabel(healthLabel, HEALTH_ICON_PATH, dino.getHealth());
+        setStatLabel(staminaLabel, STAMINA_ICON_PATH, dino.getStamina());
+        setStatLabel(speedLabel, SPEED_ICON_PATH, dino.getSpeed());
         ImageIcon icon = loadIcon(dino.getImagePath(), DINO_IMAGE_WIDTH, DINO_IMAGE_HEIGHT);
         imageLabel.setIcon(icon);
     }
@@ -202,10 +208,10 @@ public class MainWindow extends JFrame {
             JPanel p = new JPanel();
             p.add(new JLabel(dino.getName() + " {"));
             JLabel hp = new JLabel(String.valueOf(dino.getHealth()),
-                    loadIcon("assets/icons/health.png", 16, 16), JLabel.LEFT);
+                    loadIcon(HEALTH_ICON_PATH, 16, 16), JLabel.LEFT);
             p.add(hp);
             JLabel st = new JLabel(String.valueOf(dino.getStamina()),
-                    loadIcon("assets/icons/stamina.png", 16, 16), JLabel.LEFT);
+                    loadIcon(STAMINA_ICON_PATH, 16, 16), JLabel.LEFT);
             p.add(st);
             p.add(new JLabel("}"));
             JButton switchButton = new JButton("Switch");
@@ -245,8 +251,8 @@ public class MainWindow extends JFrame {
     }
 
     private String formatMoveLabel(Move move) {
-        String dmgImg = buildImageHtml("assets/icons/damage.png", STAT_ICON_SIZE, STAT_ICON_SIZE);
-        String staminaImg = buildImageHtml("assets/icons/stamina.png", STAT_ICON_SIZE, STAT_ICON_SIZE);
+        String dmgImg = buildImageHtml(DAMAGE_ICON_PATH, STAT_ICON_SIZE, STAT_ICON_SIZE);
+        String staminaImg = buildImageHtml(STAMINA_ICON_PATH, STAT_ICON_SIZE, STAT_ICON_SIZE);
         return "<html>" + move.getName() + " (" + move.getDamage() + " " + dmgImg
                 + " / " + move.getStaminaChange() + " " + staminaImg + ")</html>";
     }
