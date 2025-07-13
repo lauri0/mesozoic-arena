@@ -42,6 +42,8 @@ The opponent AI can use Google's Gemini Flash model. To enable it:
    `API_KEY=`.
 2. Ensure `useLLMAgent=true` in `data/constants.ini`.
 
+The application first looks for `gemini.env` on the class path but also falls back to the current working directory. Place the file next to the JAR when running a packaged build.
+
 If the API request fails, the game falls back to a random strategy. The raw
 response from the model is appended to the in-game log displayed on the right
 side of the window.
