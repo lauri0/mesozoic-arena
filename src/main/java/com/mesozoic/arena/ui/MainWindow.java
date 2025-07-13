@@ -101,8 +101,7 @@ public class MainWindow extends JFrame {
         JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
         playerNameLabel = new JLabel();
-        playerNameLabel.setFont(new Font(playerNameLabel.getFont().getName(), playerNameLabel.getFont().getStyle(),
-                playerNameLabel.getFont().getSize() + 6));
+        changeFontSize(playerNameLabel, 8);
         stats.add(playerNameLabel);
         playerHealthLabel = new JLabel();
         stats.add(playerHealthLabel);
@@ -129,6 +128,7 @@ public class MainWindow extends JFrame {
         JPanel lower = new JPanel(new BorderLayout());
         JPanel stats = new JPanel(new GridLayout(4, 1));
         opponentNameLabel = new JLabel();
+        changeFontSize(opponentNameLabel, 8);
         stats.add(opponentNameLabel);
         opponentHealthLabel = new JLabel();
         stats.add(opponentHealthLabel);
@@ -145,6 +145,7 @@ public class MainWindow extends JFrame {
         JPanel panel = new JPanel(new GridLayout(moveButtons.length, 1));
         for (int i = 0; i < moveButtons.length; i++) {
             moveButtons[i] = new JButton();
+            changeFontSize(moveButtons[i], 4);
             panel.add(moveButtons[i]);
         }
         return panel;
@@ -237,7 +238,7 @@ public class MainWindow extends JFrame {
             }
             if (i < moves.size()) {
                 Move move = moves.get(i);
-                button.setText(formatMoveLabel(move));
+                button.setText(formatMoveLabel(dino, move));
                 boolean canUseMove = stamina >= move.getStaminaChange();
                 button.setEnabled(canUseMove);
                 if (canUseMove) {
@@ -250,10 +251,10 @@ public class MainWindow extends JFrame {
         }
     }
 
-    private String formatMoveLabel(Move move) {
+    private String formatMoveLabel(Dinosaur dino, Move move) {
         String dmgImg = buildImageHtml(DAMAGE_ICON_PATH, STAT_ICON_SIZE, STAT_ICON_SIZE);
         String staminaImg = buildImageHtml(STAMINA_ICON_PATH, STAT_ICON_SIZE, STAT_ICON_SIZE);
-        return "<html>" + move.getName() + " (" + move.getDamage() + " " + dmgImg
+        return "<html>" + move.getName() + " (" + move.getDamage() * dino.getAttack() + " " + dmgImg
                 + " / " + move.getStaminaChange() + " " + staminaImg + ")</html>";
     }
 
@@ -287,5 +288,15 @@ public class MainWindow extends JFrame {
             MainWindow window = new MainWindow(battle, player, opponent);
             window.setVisible(true);
         });
+    }
+
+    private void changeFontSize(JLabel label, int changeAmount) {
+        label.setFont(new Font(label.getFont().getName(), label.getFont().getStyle(),
+                label.getFont().getSize() + changeAmount));
+    }
+
+    private void changeFontSize(JButton button, int changeAmount) {
+        button.setFont(new Font(button.getFont().getName(), button.getFont().getStyle(),
+                button.getFont().getSize() + changeAmount));
     }
 }

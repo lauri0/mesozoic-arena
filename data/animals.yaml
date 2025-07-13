@@ -4,21 +4,21 @@ Allosaurus:
   attack: 10
   image: assets/animals/allosaurus.png
   moves:
-    - bite
-    - scratch
-    - roar
-    - tail swipe
+    - Bite
+    - Scratch
+    - Roar
+    - Tail Swipe
 
 Ceratosaurus:
-  health: 210
+  health: 140
   speed: 130
   attack: 10
   image: assets/animals/ceratosaurus.png
   moves:
-    - bite
-    - scratch
-    - roar
-    - tail swipe
+    - Bite
+    - Scratch
+    - Roar
+    - Tail Swipe
 
 Stegosaurus:
   health: 290
@@ -26,7 +26,7 @@ Stegosaurus:
   attack: 10
   image: assets/animals/stegosaurus.png
   moves:
-    - brace
-    - stomp
-    - roar
-    - thagomizer swipe
+    - Brace
+    - Stomp
+    - Roar
+    - Thagomizer Swipe

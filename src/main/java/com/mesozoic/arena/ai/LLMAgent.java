@@ -163,7 +163,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     private String formatMoves(Dinosaur dino) {
         return dino.getMoves().stream()
-                .map(m -> m.getName() + " (" + m.getDamage() + " dmg, "
+                .map(m -> m.getName() + " (" + m.getDamage() * dino.getAttack() + " dmg, "
                         + m.getStaminaChange() + " sta, " + m.getPriority() + " prio)")
                 .collect(Collectors.joining(", "));
     }
@@ -177,7 +177,6 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return "You are playing Mesozoic Arena, a turn based dinosaur battle game. " +
                 "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
                 "dinosaurs using lower priority moves regardless of speed. " +
-                "Damage is calculated as your dinosaur's attack multiplied by the move damage. " +
                 "You may also switch your active dinosaur, which happens before moves but skips using a move.\n" +
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllDinosaurInfos(selfPlayer, enemyPlayer) +
@@ -190,9 +189,9 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         Dinosaur opponentActiveDino = enemyPlayer.getActiveDinosaur();
         StringBuilder activeInfos = new StringBuilder();
         activeInfos.append("Your active dinosaur: ").append(describeDinosaurStats(ownActiveDino));
-        activeInfos.append("Your dino's possible moves: ").append(formatMoves(ownActiveDino));
+        activeInfos.append("Your dino's possible moves: ").append(formatMoves(ownActiveDino)).append("\n");
         activeInfos.append("Opponent's active dinosaur: ").append(describeDinosaurStats(opponentActiveDino));
-        activeInfos.append("Opponent dino's possible moves: ").append(formatMoves(opponentActiveDino));
+        activeInfos.append("Opponent's dinosaur's possible moves: ").append(formatMoves(opponentActiveDino)).append("\n");
         return activeInfos;
     }
 
@@ -200,11 +199,11 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         StringBuilder allInfos = new StringBuilder();
         allInfos.append("Your inactive dinosaurs which you could switch into your active slot:\n");
         for (Dinosaur dinosaur : selfPlayer.getDinosaurs()) {
-            allInfos.append("Your - ").append(describeDinosaurStats(dinosaur));
+            allInfos.append("Your ").append(describeDinosaurStats(dinosaur));
         }
         allInfos.append("Your opponent's inactive dinosaurs which they could switch into their active slot:\n");
         for (Dinosaur dinosaur : enemyPlayer.getDinosaurs()) {
-            allInfos.append("Opponent - ").append(describeDinosaurStats(dinosaur));
+            allInfos.append("Opponent's ").append(describeDinosaurStats(dinosaur));
         }
         return allInfos;
     }
