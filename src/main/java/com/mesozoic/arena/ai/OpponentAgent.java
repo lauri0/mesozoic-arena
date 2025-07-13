@@ -1,7 +1,7 @@
 package com.mesozoic.arena.ai;
 
-import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.Player;
 
 /**
  * Strategy interface for selecting a move in battle.
@@ -14,5 +14,5 @@ public interface OpponentAgent {
      * @param enemy the opposing dinosaur
      * @return the selected move or {@code null} if none can be performed
      */
-    Move chooseMove(Dinosaur self, Dinosaur enemy);
+    Move chooseMove(Player self, Player enemy);
 }
