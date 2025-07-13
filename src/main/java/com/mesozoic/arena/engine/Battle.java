@@ -81,13 +81,13 @@ public class Battle {
         }
 
         if (dinoOne.getSpeed() >= dinoTwo.getSpeed()) {
-            performTurn(playerOne, playerTwo, playerOneMove);
-            if (winner == null) {
+            boolean fainted = performTurn(playerOne, playerTwo, playerOneMove);
+            if (winner == null && !fainted) {
                 performTurn(playerTwo, playerOne, playerTwoMove);
             }
         } else {
-            performTurn(playerTwo, playerOne, playerTwoMove);
-            if (winner == null) {
+            boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove);
+            if (winner == null && !fainted) {
                 performTurn(playerOne, playerTwo, playerOneMove);
             }
         }
@@ -110,11 +110,11 @@ public class Battle {
         return winner;
     }
 
-    private void performTurn(Player actingPlayer, Player opposingPlayer, Move move) {
+    private boolean performTurn(Player actingPlayer, Player opposingPlayer, Move move) {
         Dinosaur attacker = actingPlayer.getActiveDinosaur();
         Dinosaur defender = opposingPlayer.getActiveDinosaur();
         if (attacker == null || defender == null || move == null) {
-            return;
+            return false;
         }
 
         // regenerate stamina at the start of the turn
@@ -129,7 +129,9 @@ public class Battle {
                 + damage + " damage. " + defender.getName() + " has "
                 + Math.max(0, defender.getHealth()) + " health left.");
 
+        Dinosaur beforeDefender = defender;
         checkFaint(opposingPlayer);
+        return beforeDefender != opposingPlayer.getActiveDinosaur();
     }
 
     private void checkFaint(Player player) {
