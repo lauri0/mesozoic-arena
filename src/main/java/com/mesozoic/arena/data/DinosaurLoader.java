@@ -41,17 +41,19 @@ public class DinosaurLoader {
 
     /**
      * Returns a new player containing three randomly selected dinosaurs.
-     * Duplicate selections are allowed.
+     * Selections will not include duplicates.
      */
     public Player createRandomPlayer() {
         return new Player(selectRandomDinosaurs(3));
     }
 
     private List<Dinosaur> selectRandomDinosaurs(int count) {
-        Random random = new Random();
+        List<Dinosaur> shuffledDinosaurs = new ArrayList<>(availableDinosaurs);
+        Collections.shuffle(shuffledDinosaurs, new Random());
         List<Dinosaur> selection = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            Dinosaur template = availableDinosaurs.get(random.nextInt(availableDinosaurs.size()));
+        int limit = Math.min(count, shuffledDinosaurs.size());
+        for (int index = 0; index < limit; index++) {
+            Dinosaur template = shuffledDinosaurs.get(index);
             selection.add(copyDinosaur(template));
         }
         return selection;
