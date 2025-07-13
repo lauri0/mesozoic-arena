@@ -195,6 +195,7 @@ public class MainWindow extends JFrame {
     private void updateMoveButtons() {
         Dinosaur dino = player.getActiveDinosaur();
         List<Move> moves = dino == null ? new ArrayList<>() : dino.getMoves();
+        int stamina = dino == null ? 0 : dino.getStamina();
         for (int i = 0; i < moveButtons.length; i++) {
             JButton button = moveButtons[i];
             for (ActionListener l : button.getActionListeners()) {
@@ -202,14 +203,22 @@ public class MainWindow extends JFrame {
             }
             if (i < moves.size()) {
                 Move move = moves.get(i);
-                button.setText(move.getName());
-                button.setEnabled(true);
-                button.addActionListener(e -> handlePlayerMove(move));
+                button.setText(formatMoveLabel(move));
+                boolean canUseMove = stamina >= move.getStaminaCost();
+                button.setEnabled(canUseMove);
+                if (canUseMove) {
+                    button.addActionListener(e -> handlePlayerMove(move));
+                }
             } else {
                 button.setText("N/A");
                 button.setEnabled(false);
             }
         }
+    }
+
+    private String formatMoveLabel(Move move) {
+        return move.getName() + " (" + move.getDamage() + " dmg / "
+                + move.getStaminaCost() + " sp)";
     }
 
     private void updateLogArea() {
