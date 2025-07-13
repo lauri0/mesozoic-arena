@@ -47,3 +47,7 @@ The application first looks for `gemini.env` on the class path but also falls ba
 If the API request fails, the game falls back to a random strategy. The raw
 response from the model is appended to the in-game log displayed on the right
 side of the window.
+
+When producing a move the model may include reasoning or multiple lines in its
+response. The final action should be provided on a line starting with
+`Answer:` followed by either the move name or `Switch to <dinosaur>`.
