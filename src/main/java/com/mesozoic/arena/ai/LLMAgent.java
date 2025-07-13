@@ -83,22 +83,66 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     }
 
     private Move parseMove(String output, Player selfPlayer) {
-        String lowerCase = output.toLowerCase();
+        String answer = extractAnswer(output);
+        if (answer != null) {
+            String lower = answer.toLowerCase();
+            if (trySwitch(lower, selfPlayer)) {
+                return null;
+            }
+            Move move = findNamedMove(answer, selfPlayer.getActiveDinosaur());
+            if (move != null) {
+                return move;
+            }
+        }
 
+        String lowerCase = output.toLowerCase();
         if (trySwitch(lowerCase, selfPlayer)) {
             return null;
         }
-
-        Dinosaur active = selfPlayer.getActiveDinosaur();
-        if (active != null) {
-            for (Move move : active.getMoves()) {
-                if (lowerCase.contains(move.getName().toLowerCase()) &&
-                        active.getStamina() >= move.getStaminaCost()) {
-                    return move;
-                }
-            }
+        Move move = findMoveInText(lowerCase, selfPlayer.getActiveDinosaur());
+        if (move != null) {
+            return move;
         }
         return new RandomOpponent().chooseMove(selfPlayer, null);
+    }
+
+    private String extractAnswer(String text) {
+        Matcher matcher = Pattern.compile("(?i)answer:\\s*(.+)").matcher(text);
+        if (matcher.find()) {
+            String result = matcher.group(1).trim();
+            int newline = result.indexOf('\n');
+            if (newline >= 0) {
+                result = result.substring(0, newline).trim();
+            }
+            return result;
+        }
+        return null;
+    }
+
+    private Move findNamedMove(String name, Dinosaur active) {
+        if (active == null) {
+            return null;
+        }
+        for (Move move : active.getMoves()) {
+            if (move.getName().equalsIgnoreCase(name) &&
+                    active.getStamina() >= move.getStaminaCost()) {
+                return move;
+            }
+        }
+        return null;
+    }
+
+    private Move findMoveInText(String text, Dinosaur active) {
+        if (active == null) {
+            return null;
+        }
+        for (Move move : active.getMoves()) {
+            if (text.contains(move.getName().toLowerCase()) &&
+                    active.getStamina() >= move.getStaminaCost()) {
+                return move;
+            }
+        }
+        return null;
     }
 
     private boolean trySwitch(String text, Player selfPlayer) {
@@ -147,7 +191,8 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 "Your moves: " + selfMoves + "\n" +
                 "Opponent moves: " + enemyMoves + "\n" +
                 "You can also switch to: " + bench + ".\n" +
-                "Respond with the move name to attack or 'Switch to <name>' to switch.\nAction:";
+                "Respond with the move name to attack or 'Switch to <name>' to switch." +
+                " End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
     }
 
     public String getLastResponse() {
