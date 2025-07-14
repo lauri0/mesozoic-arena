@@ -78,12 +78,7 @@ public class MainWindow extends JFrame {
             panel.bench.removeAll();
             for (Dinosaur dd : player.getDinosaurs()) {
                 if (dd.equals(d)) continue;
-                JButton btn = new JButton("Switch to " + dd.getName());
-                btn.addActionListener(e -> {
-                    player.queueSwitch(dd);
-                    doRound(null);
-                });
-                panel.bench.add(btn);
+                panel.bench.add(createBenchItem(dd));
             }
 
             panel.moves.removeAll();
@@ -132,6 +127,44 @@ public class MainWindow extends JFrame {
         return new ImageIcon(img);
     }
 
+    /**
+     * Creates the detailed bench entry for the given dinosaur.
+     */
+    private JPanel createBenchItem(Dinosaur dino) {
+        JPanel column = new JPanel();
+        column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
+        column.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        JLabel img = new JLabel(loadIcon(dino.getImagePath(), 120, 90));
+        img.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel n = new JLabel(dino.getName());
+        n.setAlignmentX(Component.CENTER_ALIGNMENT);
+        n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
+
+        JLabel hp = new JLabel();
+        setStatLabel(hp, HEALTH_ICON_PATH, dino.getHealth());
+        JLabel sp = new JLabel();
+        setStatLabel(sp, STAMINA_ICON_PATH, dino.getStamina());
+        JPanel stats = new JPanel(new GridLayout(1,2,5,0));
+        stats.add(hp);
+        stats.add(sp);
+        stats.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton sw = new JButton("Switch");
+        sw.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sw.addActionListener(e -> {
+            player.queueSwitch(dino);
+            doRound(null);
+        });
+
+        column.add(img);
+        column.add(n);
+        column.add(stats);
+        column.add(sw);
+        return column;
+    }
+
     public static void launch(Battle b, Player p, Player o) {
         SwingUtilities.invokeLater(() -> new MainWindow(b,p,o));
     }
@@ -158,12 +191,17 @@ public class MainWindow extends JFrame {
             image.setHorizontalAlignment(JLabel.CENTER);
             add(image, BorderLayout.NORTH);
 
+            name.setHorizontalAlignment(JLabel.CENTER);
+            name.setFont(name.getFont().deriveFont(Font.BOLD, 24f));
+
             // Center: stats + (maybe) bench & moves
             Box info = Box.createVerticalBox();
-            info.add(makeRow("", name));
-            info.add(makeRow("", health));   // icon + number
-            info.add(makeRow("", stamina));  // icon + number
-            info.add(makeRow("", speed));    // icon + number
+            info.add(name);
+            JPanel statsRow = new JPanel(new GridLayout(1,3,5,0));
+            statsRow.add(health);
+            statsRow.add(stamina);
+            statsRow.add(speed);
+            info.add(statsRow);
 
             if (isPlayerSide) {
                 info.add(Box.createVerticalStrut(10));
@@ -182,13 +220,5 @@ public class MainWindow extends JFrame {
             add(info, BorderLayout.CENTER);
         }
 
-        private JPanel makeRow(String labelText, JLabel value) {
-            JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 5,0));
-            if (!labelText.isEmpty()) {
-                row.add(new JLabel(labelText));
-            }
-            row.add(value);
-            return row;
-        }
     }
 }
