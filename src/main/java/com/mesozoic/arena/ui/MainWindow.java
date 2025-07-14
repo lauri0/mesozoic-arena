@@ -14,6 +14,7 @@ public class MainWindow extends JFrame {
     private static final String SPEED_ICON_PATH   = "assets/icons/speed.png";
 
     private static final int   BASE_STAT_ICON_SIZE   = 24;
+    private static final int   BASE_STAT_FONT_SIZE   = 16;
     private static final float STAT_FONT_SCALE       = 1.5f;
 
     private final Battle   battle;
@@ -125,7 +126,7 @@ public class MainWindow extends JFrame {
         label.setText(String.valueOf(value));
         float fontSize = label.getFont().getSize2D();
         if (large) {
-            fontSize *= STAT_FONT_SCALE;
+            fontSize = BASE_STAT_FONT_SIZE;
         }
         label.setFont(label.getFont().deriveFont(fontSize));
     }
@@ -225,6 +226,7 @@ public class MainWindow extends JFrame {
 
             name.setHorizontalAlignment(JLabel.CENTER);
             name.setFont(name.getFont().deriveFont(Font.BOLD, 24f));
+            name.setAlignmentX(Component.CENTER_ALIGNMENT);
 
             // Center: stats + bench & moves
             Box info = Box.createVerticalBox();
@@ -233,6 +235,7 @@ public class MainWindow extends JFrame {
             statsRow.add(health);
             statsRow.add(stamina);
             statsRow.add(speed);
+            statsRow.setAlignmentX(Component.CENTER_ALIGNMENT);
             info.add(statsRow);
             info.add(Box.createVerticalStrut(10));
             info.add(new JLabel("Bench:"));
