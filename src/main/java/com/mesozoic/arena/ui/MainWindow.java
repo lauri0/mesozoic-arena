@@ -15,7 +15,7 @@ public class MainWindow extends JFrame {
 
     private static final int   BASE_STAT_ICON_SIZE   = 24;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
-    private static final float STAT_FONT_SCALE       = 1.5f;
+    private static final float STAT_LARGE_ICON_SIZE_MULT = 1.5f;
 
     private final Battle   battle;
     private final Player   player, opponent;
@@ -121,7 +121,7 @@ public class MainWindow extends JFrame {
      * Helper to put a colored icon + number into a JLabel
      */
     private void setStatLabel(JLabel label, String iconPath, int value, boolean large) {
-        int iconSize = large ? Math.round(BASE_STAT_ICON_SIZE * STAT_FONT_SCALE) : BASE_STAT_ICON_SIZE;
+        int iconSize = large ? Math.round(BASE_STAT_ICON_SIZE * STAT_LARGE_ICON_SIZE_MULT) : BASE_STAT_ICON_SIZE;
         label.setIcon(loadIcon(iconPath, iconSize, iconSize));
         label.setText(String.valueOf(value));
         float fontSize = label.getFont().getSize2D();
