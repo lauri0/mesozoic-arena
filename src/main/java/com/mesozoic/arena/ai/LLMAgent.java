@@ -175,6 +175,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return "You are playing Mesozoic Arena, a turn based dinosaur battle game. " +
                 "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
                 "dinosaurs using lower priority moves regardless of speed. " +
+                "A dinosaur can only use moves which they have enoughs stamina for. " +
                 "You may also switch your active dinosaur, which happens before moves but skips using a move.\n" +
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllDinosaurInfos(selfPlayer, enemyPlayer) +
