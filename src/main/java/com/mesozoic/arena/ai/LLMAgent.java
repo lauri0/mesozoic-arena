@@ -167,7 +167,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     private String formatMoves(Dinosaur dino) {
         return dino.getMoves().stream()
                 .map(m -> m.getName() + " (" + m.getDamage() * dino.getAttack() + " dmg, "
-                        + m.getStaminaChange() + " sta, " + m.getPriority() + " prio)")
+                        + m.getStaminaChange() + " stamina, " + m.getPriority() + " priority)")
                 .collect(Collectors.joining(", "));
     }
 
@@ -180,6 +180,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return "You are playing Mesozoic Arena, a turn based dinosaur battle game. " +
                 "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
                 "dinosaurs using lower priority moves regardless of speed. " +
+                "Moves can cost (move's stamina amount negative) or in some cases provide stamina (move's stamina positive) to their users. " +
                 "A dinosaur can only use moves which they have enough stamina for. " +
                 "Benched dinosaurs regain 10 stamina at the end of each turn. " +
                 "You may also switch your active dinosaur, which happens before moves but skips using a move. " +
