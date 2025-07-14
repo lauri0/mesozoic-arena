@@ -124,8 +124,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             return null;
         }
         for (Move move : active.getMoves()) {
-            if (move.getName().equalsIgnoreCase(name) &&
-                    active.getStamina() >= move.getStaminaChange()) {
+            if (move.getName().equalsIgnoreCase(name) && active.canUse(move)) {
                 return move;
             }
         }
@@ -137,8 +136,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             return null;
         }
         for (Move move : active.getMoves()) {
-            if (text.contains(move.getName().toLowerCase()) &&
-                    active.getStamina() >= move.getStaminaChange()) {
+            if (text.contains(move.getName().toLowerCase()) && active.canUse(move)) {
                 return move;
             }
         }
