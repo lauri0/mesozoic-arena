@@ -22,6 +22,7 @@ public class MainWindow extends JFrame {
     private final DinoPanel playerPanel;
     private final DinoPanel opponentPanel;
     private final JTextArea logArea = new JTextArea(10,20);
+    private final JTextArea npcArea = new JTextArea(10,20);
 
     public MainWindow(Battle battle, Player player, Player opponent) {
         super("Mesozoic Arena");
@@ -40,6 +41,16 @@ public class MainWindow extends JFrame {
         split.setResizeWeight(0.5);
         add(split, BorderLayout.CENTER);
 
+        npcArea.setEditable(false);
+        npcArea.setLineWrap(true);
+        npcArea.setWrapStyleWord(true);
+        JPanel npcPanel = new JPanel(new BorderLayout());
+        JLabel npcLabel = new JLabel("NPC's thoughts", JLabel.CENTER);
+        npcPanel.add(npcLabel, BorderLayout.NORTH);
+        npcPanel.add(new JScrollPane(npcArea), BorderLayout.CENTER);
+        npcPanel.setPreferredSize(new Dimension(250, 100));
+        add(npcPanel, BorderLayout.EAST);
+
         logArea.setEditable(false);
         JButton exit = new JButton("Exit Game");
         exit.addActionListener(e -> System.exit(0));
@@ -56,6 +67,7 @@ public class MainWindow extends JFrame {
         updateDinoPanel(playerPanel,   player);
         updateDinoPanel(opponentPanel, opponent);
         logArea.setText(String.join("\n", battle.getEventLog()));
+        npcArea.setText(String.join("\n", battle.getAiLog()));
     }
 
     private void updateDinoPanel(DinoPanel panel, Player who) {
