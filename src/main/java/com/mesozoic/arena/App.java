@@ -41,7 +41,7 @@ public class App {
     private static void announceWinner(Battle battle, Player player, Player opponent) {
         Player winner = battle.getWinner();
         if (winner != null) {
-            String label = winner == player ? "Player" : "Opponent";
+            String label = winner == player ? "Player" : "NPC";
             System.out.println(label + " wins!");
         }
     }

@@ -20,6 +20,8 @@ public class Battle {
     private final Player playerTwo;
     private final OpponentAgent opponentAI;
     private final List<String> eventLog = new ArrayList<>();
+    private final List<String> aiLog = new ArrayList<>();
+    private int turn = 1;
     private Player winner;
 
     public Battle(Player playerOne, Player playerTwo) {
@@ -37,6 +39,13 @@ public class Battle {
      */
     public List<String> getEventLog() {
         return new ArrayList<>(eventLog);
+    }
+
+    /**
+     * Returns a copy of the AI reasoning log.
+     */
+    public List<String> getAiLog() {
+        return new ArrayList<>(aiLog);
     }
 
     /**
@@ -59,6 +68,14 @@ public class Battle {
         return new RandomOpponent();
     }
 
+    private void addEvent(String message) {
+        eventLog.add("Turn " + turn + ": " + message);
+    }
+
+    private void addAiLog(String message) {
+        aiLog.add("Turn " + turn + ": " + message);
+    }
+
     /**
      * Executes a single round where each player performs the provided move.
      * The order of execution is determined by move priority and speed.
@@ -71,7 +88,7 @@ public class Battle {
         if (applyQueuedSwitch(playerOne, "Player")) {
             playerOneMove = null;
         }
-        if (applyQueuedSwitch(playerTwo, "Opponent")) {
+        if (applyQueuedSwitch(playerTwo, "NPC")) {
             playerTwoMove = null;
         }
 
@@ -120,6 +137,7 @@ public class Battle {
         Move playerTwoMove = opponentAI.chooseMove(playerTwo, playerOne);
         logLLMResponse();
         executeRound(playerOneMove, playerTwoMove);
+        turn++;
     }
 
     /**
@@ -145,12 +163,18 @@ public class Battle {
             int before = defender.getHealth();
             defender.adjustHealth(-totalDamage);
             int damage = before - defender.getHealth();
-            eventLog.add(attacker.getName() + " used " + move.getName() + " dealing "
-                    + damage + " damage. " + defender.getName() + " has "
-                    + Math.max(0, defender.getHealth()) + " health left.");
+            String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
+            String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
+            addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
+                    " dealing " + damage + " damage. " + defenderLabel +
+                    defender.getName() + " has " + Math.max(0, defender.getHealth()) +
+                    " health left.");
         } else {
-            eventLog.add(attacker.getName() + " used " + move.getName()
-                    + " but " + defender.getName() + " braced and took no damage.");
+            String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
+            String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
+            addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
+                    " but " + defenderLabel + defender.getName() +
+                    " braced and took no damage.");
         }
 
         Dinosaur beforeDefender = defender;
@@ -172,7 +196,7 @@ public class Battle {
         if (opponentAI instanceof LLMAgent llm) {
             String response = llm.getLastResponse();
             if (response != null && !response.isBlank()) {
-                eventLog.add("LLM: " + response);
+                addAiLog(response);
             }
         }
     }
@@ -184,7 +208,7 @@ public class Battle {
         }
         player.setActiveDinosaur(target);
         player.clearQueuedSwitch();
-        eventLog.add(label + " switched to " + target.getName() + ".");
+        addEvent(label + " switched to " + target.getName() + ".");
         return true;
     }
 
