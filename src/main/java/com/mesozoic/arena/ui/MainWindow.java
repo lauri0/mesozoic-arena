@@ -160,7 +160,7 @@ public class MainWindow extends JFrame {
 
             // Center: stats + (maybe) bench & moves
             Box info = Box.createVerticalBox();
-            info.add(makeRow("Name:", name));
+            info.add(makeRow("", name));
             info.add(makeRow("", health));   // icon + number
             info.add(makeRow("", stamina));  // icon + number
             info.add(makeRow("", speed));    // icon + number
