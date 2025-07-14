@@ -3,13 +3,18 @@ package com.mesozoic.arena.ai;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.util.Config;
+import com.mesozoic.arena.util.EffectLoader;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -177,9 +182,10 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 "dinosaurs using lower priority moves regardless of speed. " +
                 "A dinosaur can only use moves which they have enough stamina for. " +
                 "You may also switch your active dinosaur, which happens before moves but skips using a move. " +
-                "The player who knocks out all of the opponent's dinosaurs first wins the match. " + 
+                "The player who knocks out all of the opponent's dinosaurs first wins the match. " +
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllDinosaurInfos(selfPlayer, enemyPlayer) +
+                getAllEffectInfos(selfPlayer, enemyPlayer) +
                 "Respond with the move name to attack or 'Switch to <name>' to switch. " +
                 "End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
     }
@@ -206,6 +212,38 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             allInfos.append("Opponent's ").append(describeDinosaurStats(dinosaur));
         }
         return allInfos;
+    }
+
+    private StringBuilder getAllEffectInfos(Player selfPlayer, Player enemyPlayer) {
+        Map<String, String> descriptions = EffectLoader.loadDescriptions();
+        Set<String> effectNames = collectEffectNames(selfPlayer, enemyPlayer);
+        StringBuilder info = new StringBuilder();
+        if (!effectNames.isEmpty()) {
+            info.append("Effects in play:\n");
+            for (String name : effectNames.stream().sorted().toList()) {
+                String desc = descriptions.getOrDefault(name, "");
+                info.append(name);
+                if (!desc.isBlank()) {
+                    info.append(": ").append(desc);
+                }
+                info.append("\n");
+            }
+        }
+        return info;
+    }
+
+    private Set<String> collectEffectNames(Player... players) {
+        Set<String> names = new HashSet<>();
+        for (Player player : players) {
+            for (Dinosaur dinosaur : player.getDinosaurs()) {
+                for (Move move : dinosaur.getMoves()) {
+                    for (Effect effect : move.getEffects()) {
+                        names.add(effect.getName());
+                    }
+                }
+            }
+        }
+        return names;
     }
 
     public String getLastResponse() {
