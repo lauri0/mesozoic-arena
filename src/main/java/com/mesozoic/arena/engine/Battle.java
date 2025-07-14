@@ -108,6 +108,9 @@ public class Battle {
                 performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
             }
         }
+
+        regenerateBenchStamina(playerOne);
+        regenerateBenchStamina(playerTwo);
     }
 
     /**
@@ -195,5 +198,14 @@ public class Battle {
             }
         }
         return false;
+    }
+
+    private void regenerateBenchStamina(Player player) {
+        Dinosaur active = player.getActiveDinosaur();
+        for (Dinosaur dinosaur : player.getDinosaurs()) {
+            if (!dinosaur.equals(active)) {
+                dinosaur.adjustStamina(10);
+            }
+        }
     }
 }
