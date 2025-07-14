@@ -54,6 +54,17 @@ public class Dinosaur {
         return stamina;
     }
 
+    /**
+     * Indicates whether this dinosaur has enough stamina to perform the given
+     * move.
+     */
+    public boolean canUse(Move move) {
+        if (move == null) {
+            return false;
+        }
+        return stamina + move.getStaminaChange() >= 0;
+    }
+
     public List<Move> getMoves() {
         return new ArrayList<>(moves);
     }

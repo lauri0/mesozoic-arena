@@ -29,7 +29,7 @@ public class RandomOpponent implements OpponentAgent {
     private List<Move> getUsableMoves(Dinosaur dinosaur) {
         List<Move> usable = new ArrayList<>();
         for (Move move : dinosaur.getMoves()) {
-            if (dinosaur.getStamina() >= move.getStaminaChange()) {
+            if (dinosaur.canUse(move)) {
                 usable.add(move);
             }
         }
