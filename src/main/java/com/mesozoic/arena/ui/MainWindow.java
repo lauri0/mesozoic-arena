@@ -147,7 +147,7 @@ public class MainWindow extends JFrame {
         final JLabel stamina = new JLabel();
         final JLabel speed   = new JLabel();
         final JPanel bench   = new JPanel(new FlowLayout(FlowLayout.LEFT, 5,5));
-        final JPanel moves   = new JPanel(new GridLayout(0,1,5,5));
+        final JPanel moves   = new JPanel(new GridLayout(0,2,5,5));
 
         DinoPanel(boolean isPlayer) {
             this.isPlayerSide = isPlayer;
@@ -175,8 +175,8 @@ public class MainWindow extends JFrame {
             } else {
                 // placeholders to keep heights aligned
                 bench.setPreferredSize(new Dimension(0, 50));
-                moves.setPreferredSize(new Dimension(0, 200));
-                info.add(Box.createVerticalStrut(260));
+                moves.setPreferredSize(new Dimension(0, 100));
+                info.add(Box.createVerticalStrut(210));
             }
 
             add(info, BorderLayout.CENTER);
