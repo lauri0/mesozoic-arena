@@ -12,8 +12,13 @@ public class Move {
     private final int staminaChange;
     private final int priority;
     private final List<Effect> effects;
+    private final String description;
 
     public Move(String name, int damage, int staminaChange, int priority, List<Effect> effects) {
+        this(name, damage, staminaChange, priority, "", effects);
+    }
+
+    public Move(String name, int damage, int staminaChange, int priority, String description, List<Effect> effects) {
         this.name = name;
         this.damage = damage;
         this.staminaChange = staminaChange;
@@ -23,6 +28,7 @@ public class Move {
         } else {
             this.effects = new ArrayList<>(effects);
         }
+        this.description = description == null ? "" : description;
     }
 
     public String getName() {
@@ -43,5 +49,14 @@ public class Move {
 
     public List<Effect> getEffects() {
         return new ArrayList<>(effects);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getDescriptionWithDamage(Dinosaur user) {
+        long realDamage = Math.round(damage * user.getEffectiveAttack());
+        return description.replace("X", String.valueOf(realDamage));
     }
 }

@@ -106,7 +106,7 @@ public class DinosaurLoader {
                 if (template != null) {
                     moves.add(new Move(template.getName(), template.getDamage(),
                             template.getStaminaChange(), template.getPriority(),
-                            template.getEffects()));
+                            template.getDescription(), template.getEffects()));
                 }
             }
         }
@@ -137,7 +137,8 @@ public class DinosaurLoader {
         List<Move> copiedMoves = new ArrayList<>();
         for (Move move : source.getMoves()) {
             copiedMoves.add(new Move(move.getName(), move.getDamage(),
-                    move.getStaminaChange(), move.getPriority(), move.getEffects()));
+                    move.getStaminaChange(), move.getPriority(),
+                    move.getDescription(), move.getEffects()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
                 source.getStamina(), source.getAttack(), copiedMoves, source.getAbility());
@@ -157,8 +158,9 @@ public class DinosaurLoader {
                     int damage = ((Number) values.getOrDefault("damage", 0)).intValue();
                     int stamina = ((Number) values.getOrDefault("stamina", 0)).intValue();
                     int priority = ((Number) values.getOrDefault("priority", 0)).intValue();
+                    String description = String.valueOf(values.getOrDefault("description", ""));
                     List<Effect> effects = parseEffects(values.get("effects"));
-                    map.put(name, new Move(name, damage, stamina, priority, effects));
+                    map.put(name, new Move(name, damage, stamina, priority, description, effects));
                 }
             }
         }
