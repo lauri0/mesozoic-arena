@@ -12,6 +12,7 @@ public class MainWindow extends JFrame {
     private static final String HEALTH_ICON_PATH  = "assets/icons/health.png";
     private static final String STAMINA_ICON_PATH = "assets/icons/energy.png";
     private static final String SPEED_ICON_PATH   = "assets/icons/speed.png";
+    private static final String ATTACK_ICON_PATH  = "assets/icons/attack.png";
 
     private static final int   BASE_STAT_ICON_SIZE   = 24;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
@@ -74,8 +75,15 @@ public class MainWindow extends JFrame {
     private void updateDinoPanel(DinoPanel panel, Player who) {
         Dinosaur d = who.getActiveDinosaur();
 
-        // Name
-        panel.name.setText(d == null ? "None" : d.getName());
+        // Name with stage icons
+        if (d == null) {
+            panel.name.setText("None");
+        } else {
+            StringBuilder nameText = new StringBuilder(d.getName());
+            nameText.append(stageFragment(d.getAttackStage(), ATTACK_ICON_PATH));
+            nameText.append(stageFragment(d.getSpeedStage(), SPEED_ICON_PATH));
+            panel.name.setText("<html>" + nameText + "</html>");
+        }
 
         // Stats with icons
         setStatLabel(panel.health,  HEALTH_ICON_PATH,  d == null ? 0 : d.getHealth(),  true);
@@ -137,6 +145,19 @@ public class MainWindow extends JFrame {
         Image img = new ImageIcon(url).getImage()
                 .getScaledInstance(w, h, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
+    }
+
+    private String stageFragment(int stage, String iconPath) {
+        if (stage == 0) {
+            return "";
+        }
+        java.net.URL url = getClass().getClassLoader().getResource(iconPath);
+        if (url == null) {
+            return " " + stage;
+        }
+        int size = Math.round(BASE_STAT_ICON_SIZE * 0.75f);
+        return " " + stage + "<img src='" + url + "' width='" + size
+                + "' height='" + size + "'/>";
     }
 
     /**
