@@ -10,9 +10,11 @@ public class Dinosaur {
     private final String name;
     private int health;
     private final int speed;
+    private int speedStage = 0;
     private final String imagePath;
     private final Ability ability;
     private final int attack;
+    private int attackStage = 0;
     private int stamina;
     private final List<Move> moves;
 
@@ -84,5 +86,51 @@ public class Dinosaur {
         if (stamina > 100) {
             stamina = 100;
         }
+    }
+
+    public int getAttackStage() {
+        return attackStage;
+    }
+
+    public int getSpeedStage() {
+        return speedStage;
+    }
+
+    public void adjustAttackStage(int amount) {
+        attackStage = clampStage(attackStage + amount);
+    }
+
+    public void adjustSpeedStage(int amount) {
+        speedStage = clampStage(speedStage + amount);
+    }
+
+    public void resetStages() {
+        attackStage = 0;
+        speedStage = 0;
+    }
+
+    public int getEffectiveAttack() {
+        return Math.round((float) attack * stageMultiplier(attackStage));
+    }
+
+    public int getEffectiveSpeed() {
+        return Math.round((float) speed * stageMultiplier(speedStage));
+    }
+
+    private int clampStage(int stage) {
+        if (stage > 6) {
+            return 6;
+        }
+        if (stage < -6) {
+            return -6;
+        }
+        return stage;
+    }
+
+    private static float stageMultiplier(int stage) {
+        if (stage >= 0) {
+            return (2f + stage) / 2f;
+        }
+        return 2f / (2 - stage);
     }
 }

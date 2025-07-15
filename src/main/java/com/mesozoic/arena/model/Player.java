@@ -32,6 +32,9 @@ public class Player {
 
     public void setActiveDinosaur(Dinosaur dinosaur) {
         if (dinosaurs.contains(dinosaur)) {
+            if (activeDinosaur != null && !activeDinosaur.equals(dinosaur)) {
+                activeDinosaur.resetStages();
+            }
             this.activeDinosaur = dinosaur;
         }
     }
