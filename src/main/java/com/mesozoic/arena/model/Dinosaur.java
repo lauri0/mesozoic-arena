@@ -18,6 +18,7 @@ public class Dinosaur {
     private int attackStage = 0;
     private int stamina;
     private final List<Move> moves;
+    private final List<Ailment> ailments = new ArrayList<>();
 
     public Dinosaur(String name, int health, int speed, String imagePath, int stamina, double attack,
                     List<Move> moves, Ability ability) {
@@ -81,6 +82,35 @@ public class Dinosaur {
 
     public List<Move> getMoves() {
         return new ArrayList<>(moves);
+    }
+
+    public List<Ailment> getAilments() {
+        return new ArrayList<>(ailments);
+    }
+
+    public boolean hasAilment(String ailmentName) {
+        if (ailmentName == null) {
+            return false;
+        }
+        for (Ailment ailment : ailments) {
+            if (ailmentName.equalsIgnoreCase(ailment.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addAilment(Ailment ailment) {
+        if (ailment != null && !hasAilment(ailment.getName())) {
+            ailments.add(ailment);
+        }
+    }
+
+    public void removeAilment(String ailmentName) {
+        if (ailmentName == null) {
+            return;
+        }
+        ailments.removeIf(a -> ailmentName.equalsIgnoreCase(a.getName()));
     }
 
     public void adjustHealth(int amount) {
