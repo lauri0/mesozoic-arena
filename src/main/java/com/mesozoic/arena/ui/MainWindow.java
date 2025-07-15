@@ -238,11 +238,11 @@ public class MainWindow extends JFrame {
             statsRow.setAlignmentX(Component.CENTER_ALIGNMENT);
             info.add(statsRow);
             info.add(Box.createVerticalStrut(10));
-            info.add(new JLabel("Bench:"));
-            info.add(bench);
-            info.add(Box.createVerticalStrut(10));
             info.add(new JLabel("Moves:"));
             info.add(moves);
+            info.add(Box.createVerticalStrut(10));
+            info.add(new JLabel("Bench:"));
+            info.add(bench);
 
             add(info, BorderLayout.CENTER);
         }

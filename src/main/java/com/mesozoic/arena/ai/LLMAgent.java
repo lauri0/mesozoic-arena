@@ -190,7 +190,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllEffectInfos(selfPlayer, enemyPlayer) +
-                formatHistory(history) +
+                formatHistory(history, 2) +
                 "Respond with the move name to attack or 'Switch to <name>' to switch. " +
                 "End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
     }
@@ -251,12 +251,13 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return names;
     }
 
-    private String formatHistory(List<TurnRecord> history) {
+    private String formatHistory(List<TurnRecord> history, int queriedHistoryTurns) {
         if (history.isEmpty()) {
             return "";
         }
-        StringBuilder info = new StringBuilder("Last turns:\n");
-        int start = Math.max(0, history.size() - 2);
+        int actualHistoryTurns = Math.max(history.size(), queriedHistoryTurns);
+        StringBuilder info = new StringBuilder("History of the last " + actualHistoryTurns + " turns:\n");
+        int start = Math.max(0, history.size() - queriedHistoryTurns);
         for (int i = start; i < history.size(); i++) {
             TurnRecord rec = history.get(i);
             info.append("Turn ").append(i + 1).append(": You ")
