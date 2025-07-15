@@ -55,8 +55,9 @@ public class Move {
         return description;
     }
 
-    public String getDescriptionWithDamage(Dinosaur user) {
+    public String getDescriptionWithDamageAndStamina(Dinosaur user) {
         long realDamage = Math.round(damage * user.getEffectiveAttack());
-        return description.replace("X", String.valueOf(realDamage));
+        String descriptionWithStamina = description.replace("YY", String.valueOf(Math.abs(staminaChange)));
+        return descriptionWithStamina.replace("XX", String.valueOf(realDamage));
     }
 }

@@ -3,81 +3,81 @@ Bite:
   stamina: -30
   priority: 0
   effects: []
-  description: "Bite the opponent for X damage."
+  description: "Deal XX damage. Costs YY stamina."
 
 Brace:
   damage: 0
   stamina: -10
   priority: 2
   effects: [brace]
-  description: "Brace yourself to reduce incoming attacks for X damage."
+  description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority. Costs YY stamina."
 
 Charge:
   damage: 40
   stamina: -40
   priority: 1
   effects: []
-  description: "Charge forward to slam the foe for X damage."
+  description: "Deal XX damage. +1 Priority. Costs YY stamina."
 
 Double Scratch:
   damage: 18
   stamina: -25
   priority: 0
   effects: [double attack]
-  description: "Scratch twice for a total of X damage."
+  description: "Attack twice for XX damage each. Costs YY stamina."
 
 Kick:
   damage: 30
   stamina: -20
   priority: 0
   effects: []
-  description: "Deliver a powerful kick for X damage."
+  description: "Deal XX damage. Costs YY stamina."
 
 Heal:
   damage: 0
   stamina: -20
   priority: 1
   effects: [heal]
-  description: "Recover health while dealing X damage."
+  description: "Recover 30 health. +1 Priority."
 
 Impale:
   damage: 40
   stamina: -30
   priority: 0
   effects: []
-  description: "Impale the foe with your horns for X damage."
+  description: "Deal XX damage. Costs YY stamina."
 
 Roar:
   damage: 0
   stamina: 30
   priority: 0
   effects: []
-  description: "Roar loudly to intimidate for X damage."
+  description: "Gain YY stamina."
 
 Scratch:
   damage: 20
   stamina: 0
   priority: 0
   effects: []
-  description: "Scratch the target for X damage."
+  description: "Deal XX damage. Costs YY stamina."
 
 Tail Swipe:
   damage: 30
   stamina: -20
   priority: 0
   effects: []
-  description: "Swipe your tail for X damage."
+  description: "Deal XX damage. Costs YY stamina."
 
 Thagomizer Swipe:
   damage: 40
   stamina: -30
   priority: 0
   effects: []
-  description: "Swing your spiked tail for X damage."
+  description: "Deal XX damage. Costs YY stamina."
 
 Stomp:
   damage: 10
   stamina: 0
   priority: 0
   effects: []
-  description: "Stomp the ground for X damage."
+  description: "Deal XX damage. Costs YY stamina."

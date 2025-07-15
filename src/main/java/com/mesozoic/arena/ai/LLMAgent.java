@@ -168,8 +168,8 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     private String formatMoves(Dinosaur dino) {
         return dino.getMoves().stream()
-                .map(m -> m.getName() + ": " + m.getDescriptionWithDamage(dino))
-                .collect(Collectors.joining(", "));
+                .map(m -> m.getName() + ": " + m.getDescriptionWithDamageAndStamina(dino))
+                .collect(Collectors.joining("\n"));
     }
 
     private String describeDinosaurStatsAndAbility(Dinosaur dino) {
@@ -200,9 +200,9 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         Dinosaur opponentActiveDino = enemyPlayer.getActiveDinosaur();
         StringBuilder activeInfos = new StringBuilder();
         activeInfos.append("Your active dinosaur: ").append(describeDinosaurStatsAndAbility(ownActiveDino));
-        activeInfos.append("Your dino's possible moves: ").append(formatMoves(ownActiveDino)).append("\n");
+        activeInfos.append("Your possible moves:\n").append(formatMoves(ownActiveDino)).append("\n");
         activeInfos.append("Opponent's active dinosaur: ").append(describeDinosaurStatsAndAbility(opponentActiveDino));
-        activeInfos.append("Opponent's dinosaur's possible moves: ").append(formatMoves(opponentActiveDino)).append("\n");
+        activeInfos.append("Their possible moves:\n").append(formatMoves(opponentActiveDino)).append("\n");
         return activeInfos;
     }
 
