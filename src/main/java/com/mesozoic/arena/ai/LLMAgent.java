@@ -173,9 +173,10 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 .collect(Collectors.joining(", "));
     }
 
-    private String describeDinosaurStats(Dinosaur dino) {
+    private String describeDinosaurStatsAndAbility(Dinosaur dino) {
         return dino.getName() + " (HP: " + dino.getHealth() + ", Stamina: "
-                + dino.getStamina() + ", Speed: " + dino.getEffectiveSpeed() + ")\n";
+                + dino.getStamina() + ", Speed: " + dino.getEffectiveSpeed() + ", Ability: "
+                + dino.getAbility().getDescription() + ").\n";
     }
 
     private String buildPrompt(Player selfPlayer, Player enemyPlayer, List<TurnRecord> history) {
@@ -188,7 +189,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 "You may also switch your active dinosaur, which happens before moves but skips using a move. " +
                 "The player who knocks out all of the opponent's dinosaurs first wins the match. " +
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
-                getAllDinosaurInfos(selfPlayer, enemyPlayer) +
+                getInactiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllEffectInfos(selfPlayer, enemyPlayer) +
                 formatHistory(history, 2) +
                 "Respond with the move name to attack or 'Switch to <name>' to switch. " +
@@ -199,22 +200,28 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         Dinosaur ownActiveDino = selfPlayer.getActiveDinosaur();
         Dinosaur opponentActiveDino = enemyPlayer.getActiveDinosaur();
         StringBuilder activeInfos = new StringBuilder();
-        activeInfos.append("Your active dinosaur: ").append(describeDinosaurStats(ownActiveDino));
+        activeInfos.append("Your active dinosaur: ").append(describeDinosaurStatsAndAbility(ownActiveDino));
         activeInfos.append("Your dino's possible moves: ").append(formatMoves(ownActiveDino)).append("\n");
-        activeInfos.append("Opponent's active dinosaur: ").append(describeDinosaurStats(opponentActiveDino));
+        activeInfos.append("Opponent's active dinosaur: ").append(describeDinosaurStatsAndAbility(opponentActiveDino));
         activeInfos.append("Opponent's dinosaur's possible moves: ").append(formatMoves(opponentActiveDino)).append("\n");
         return activeInfos;
     }
 
-    private StringBuilder getAllDinosaurInfos(Player selfPlayer, Player enemyPlayer) {
+    private StringBuilder getInactiveDinosaurInfos(Player selfPlayer, Player enemyPlayer) {
         StringBuilder allInfos = new StringBuilder();
         allInfos.append("Your inactive dinosaurs which you could switch into your active slot:\n");
         for (Dinosaur dinosaur : selfPlayer.getDinosaurs()) {
-            allInfos.append("Your ").append(describeDinosaurStats(dinosaur));
+            if (dinosaur.equals(selfPlayer.getActiveDinosaur())) {
+                continue;
+            }
+            allInfos.append("Your ").append(describeDinosaurStatsAndAbility(dinosaur));
         }
         allInfos.append("Your opponent's inactive dinosaurs which they could switch into their active slot:\n");
         for (Dinosaur dinosaur : enemyPlayer.getDinosaurs()) {
-            allInfos.append("Opponent's ").append(describeDinosaurStats(dinosaur));
+            if (dinosaur.equals(enemyPlayer.getActiveDinosaur())) {
+                continue;
+            }
+            allInfos.append("Opponent's ").append(describeDinosaurStatsAndAbility(dinosaur));
         }
         return allInfos;
     }
