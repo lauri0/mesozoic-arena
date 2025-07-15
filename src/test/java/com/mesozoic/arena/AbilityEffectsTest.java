@@ -3,6 +3,7 @@ import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.Battle;
+import com.mesozoic.arena.engine.AbilityEffects;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -53,6 +54,42 @@ public class AbilityEffectsTest {
 
         assertEquals(100, attacker.getHealth());
         assertEquals(95, armored.getHealth());
+    }
+
+    @Test
+    public void testSupporterAddsPriority() {
+        Move cheer = new Move("Cheer", 0, 0, 0, List.of());
+        Dinosaur helper = new Dinosaur(
+                "Helper", 100, 50, "assets/animals/allosaurus.png", 100, 10,
+                List.of(cheer), new Ability("Supporter", ""));
+
+        int modified = AbilityEffects.modifyPriority(helper, cheer);
+        assertEquals(1, modified);
+
+        Move strike = new Move("Strike", 5, 0, 0, List.of());
+        modified = AbilityEffects.modifyPriority(helper, strike);
+        assertEquals(0, modified);
+    }
+
+    @Test
+    public void testBerserkRaisesAttackOnKnockout() {
+        Move strike = new Move("Strike", 20, 0, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, 0, List.of());
+
+        Dinosaur berserker = new Dinosaur(
+                "Berserker", 100, 50, "assets/animals/allosaurus.png", 100, 10,
+                List.of(strike), new Ability("Berserk", ""));
+        Dinosaur target = new Dinosaur(
+                "Target", 20, 50, "assets/animals/allosaurus.png", 100, 10,
+                List.of(waitMove), null);
+
+        Player p1 = new Player(List.of(berserker));
+        Player p2 = new Player(List.of(target));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(strike, waitMove);
+
+        assertEquals(1, berserker.getAttackStage());
     }
 }
 

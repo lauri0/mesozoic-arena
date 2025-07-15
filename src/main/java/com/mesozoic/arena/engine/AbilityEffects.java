@@ -54,6 +54,25 @@ public final class AbilityEffects {
     }
 
     /**
+     * Adjusts move priority based on the user's ability.
+     *
+     * @param user the dinosaur performing the move
+     * @param move the move being used
+     * @return the priority after ability modifications
+     */
+    public static int modifyPriority(Dinosaur user, Move move) {
+        if (user == null || move == null) {
+            return move == null ? 0 : move.getPriority();
+        }
+        Ability ability = user.getAbility();
+        if (ability != null && "Supporter".equalsIgnoreCase(ability.getName())
+                && move.getDamage() == 0) {
+            return move.getPriority() + 1;
+        }
+        return move.getPriority();
+    }
+
+    /**
      * Applies effects after a dinosaur has been attacked.
      *
      * @param attacker the dinosaur that initiated the attack
@@ -79,6 +98,22 @@ public final class AbilityEffects {
         Ability ability = active == null ? null : active.getAbility();
         if (ability != null && "Adrenaline".equalsIgnoreCase(ability.getName())) {
             active.adjustStamina(10);
+        }
+    }
+
+    /**
+     * Triggers effects when the user knocks out an opposing dinosaur.
+     *
+     * @param attacker the dinosaur delivering the final blow
+     * @param defender the dinosaur that fainted
+     */
+    public static void onKnockOut(Dinosaur attacker, Dinosaur defender) {
+        if (attacker == null || defender == null) {
+            return;
+        }
+        Ability ability = attacker.getAbility();
+        if (ability != null && "Berserk".equalsIgnoreCase(ability.getName())) {
+            attacker.adjustAttackStage(1);
         }
     }
 }
