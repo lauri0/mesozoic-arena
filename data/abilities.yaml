@@ -4,3 +4,5 @@ Adrenaline: Regenerates stamina each turn.
 Intimidate: Lowers the opponent's attack by one stage on entry.
 Spiky Body: Reflects 10 damage when hit by an attack.
 Armored: Reduces incoming damage by 10.
+Supporter: 0 damage moves gain +1 priority.
+Berserk: Attack increases by one stage after each knockout.

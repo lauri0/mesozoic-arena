@@ -115,8 +115,10 @@ public class Battle {
             return;
         }
 
-        int p1Priority = playerOneMove == null ? Integer.MIN_VALUE : playerOneMove.getPriority();
-        int p2Priority = playerTwoMove == null ? Integer.MIN_VALUE : playerTwoMove.getPriority();
+        int p1Priority = playerOneMove == null ? Integer.MIN_VALUE
+                : AbilityEffects.modifyPriority(dinoOne, playerOneMove);
+        int p2Priority = playerTwoMove == null ? Integer.MIN_VALUE
+                : AbilityEffects.modifyPriority(dinoTwo, playerTwoMove);
         boolean p1First;
         if (p1Priority != p2Priority) {
             p1First = p1Priority > p2Priority;
@@ -216,6 +218,10 @@ public class Battle {
             }
 
             AbilityEffects.onAttacked(attacker, defender, move);
+            boolean faintedThisHit = defender.getHealth() <= 0;
+            if (faintedThisHit) {
+                AbilityEffects.onKnockOut(attacker, defender);
+            }
             Dinosaur beforeDefender = defender;
             checkFaint(opposingPlayer);
             checkFaint(actingPlayer);
