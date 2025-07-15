@@ -3,6 +3,7 @@ package com.mesozoic.arena.data;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
 import org.yaml.snakeyaml.Yaml;
 import java.util.HashMap;
@@ -26,16 +27,19 @@ import java.util.Random;
 public class DinosaurLoader {
     private static final String DATA_FILE = "data/animals.yaml";
     private static final String MOVE_FILE = "data/moves.yaml";
+    private static final String ABILITY_FILE = "data/abilities.yaml";
     private static final String IMAGE_DIR = "assets/animals";
 
     private final List<Dinosaur> availableDinosaurs;
     private final Map<String, Move> moveTemplates;
+    private final Map<String, Ability> abilityTemplates;
 
     /**
      * Parses the YAML data file at construction time.
      */
     public DinosaurLoader() throws IOException {
         moveTemplates = loadMoves();
+        abilityTemplates = loadAbilities();
         availableDinosaurs = Collections.unmodifiableList(loadDinosaurs());
     }
 
@@ -88,7 +92,10 @@ public class DinosaurLoader {
         List<String> moveNames = (List<String>) values.get("moves");
         List<Move> moves = resolveMoves(moveNames);
 
-        return new Dinosaur(name, health, speed, imagePath, 100, attack, moves);
+        String abilityName = String.valueOf(values.getOrDefault("ability", "None"));
+        Ability ability = abilityTemplates.get(abilityName);
+
+        return new Dinosaur(name, health, speed, imagePath, 100, attack, moves, ability);
     }
 
     private List<Move> resolveMoves(List<String> names) {
@@ -133,7 +140,7 @@ public class DinosaurLoader {
                     move.getStaminaChange(), move.getPriority(), move.getEffects()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
-                source.getStamina(), source.getAttack(), copiedMoves);
+                source.getStamina(), source.getAttack(), copiedMoves, source.getAbility());
     }
 
     private Map<String, Move> loadMoves() throws IOException {
@@ -152,6 +159,23 @@ public class DinosaurLoader {
                     int priority = ((Number) values.getOrDefault("priority", 0)).intValue();
                     List<Effect> effects = parseEffects(values.get("effects"));
                     map.put(name, new Move(name, damage, stamina, priority, effects));
+                }
+            }
+        }
+        return map;
+    }
+
+    private Map<String, Ability> loadAbilities() throws IOException {
+        Map<String, Ability> map = new HashMap<>();
+        Yaml yaml = new Yaml();
+        Path path = Paths.get(ABILITY_FILE);
+        try (InputStream input = Files.newInputStream(path)) {
+            Map<String, Object> root = yaml.load(input);
+            if (root != null) {
+                for (Entry<String, Object> entry : root.entrySet()) {
+                    String name = entry.getKey();
+                    String description = entry.getValue() == null ? "" : String.valueOf(entry.getValue());
+                    map.put(name, new Ability(name, description));
                 }
             }
         }
