@@ -181,10 +181,9 @@ public class MainWindow extends JFrame {
     }
 
     private JButton createMoveButton(Dinosaur dino, Move move, boolean playerSide) {
+        int dmg = move.getDamage() * dino.getEffectiveAttack();
         JButton button = new JButton(
-                move.getName()
-                        + " (" + (move.getDamage() * dino.getAttack())
-                        + " / " + move.getStaminaChange() + ")"
+                move.getName() + " (" + dmg + " / " + move.getStaminaChange() + ")"
         );
         if (playerSide) {
             boolean canUse = dino.canUse(move);

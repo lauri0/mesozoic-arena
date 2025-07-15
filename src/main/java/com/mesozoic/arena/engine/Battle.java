@@ -7,7 +7,8 @@ import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
-import com.mesozoic.arena.model.Effect;
+import com.mesozoic.arena.engine.MoveEffects;
+import com.mesozoic.arena.engine.AbilityEffects;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -35,6 +36,8 @@ public class Battle {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.opponentAI = opponentAI;
+        AbilityEffects.onEntry(playerOne.getActiveDinosaur(), playerTwo.getActiveDinosaur());
+        AbilityEffects.onEntry(playerTwo.getActiveDinosaur(), playerOne.getActiveDinosaur());
     }
 
     /**
@@ -116,30 +119,39 @@ public class Battle {
         if (p1Priority != p2Priority) {
             p1First = p1Priority > p2Priority;
         } else {
-            p1First = dinoOne.getSpeed() >= dinoTwo.getSpeed();
+            p1First = dinoOne.getEffectiveSpeed() >= dinoTwo.getEffectiveSpeed();
         }
 
         boolean p1Braced = false;
         boolean p2Braced = false;
+        String lastP1Action = null;
+        String lastP2Action = null;
+        if (!moveHistory.isEmpty()) {
+            TurnRecord lastRecord = moveHistory.get(moveHistory.size() - 1);
+            lastP1Action = lastRecord.getPlayerAction();
+            lastP2Action = lastRecord.getNpcAction();
+        }
 
         if (p1First) {
-            p1Braced = hasBraceEffect(playerOne, playerOneMove);
+            p1Braced = MoveEffects.hasBraceEffect(playerOneMove, lastP1Action);
             boolean fainted = performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
             if (winner == null && !fainted) {
-                p2Braced = hasBraceEffect(playerTwo, playerTwoMove);
+                p2Braced = MoveEffects.hasBraceEffect(playerTwoMove, lastP2Action);
                 performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
             }
         } else {
-            p2Braced = hasBraceEffect(playerTwo, playerTwoMove);
+            p2Braced = MoveEffects.hasBraceEffect(playerTwoMove, lastP2Action);
             boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
             if (winner == null && !fainted) {
-                p1Braced = hasBraceEffect(playerOne, playerOneMove);
+                p1Braced = MoveEffects.hasBraceEffect(playerOneMove, lastP1Action);
                 performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
             }
         }
 
         regenerateBenchStamina(playerOne);
         regenerateBenchStamina(playerTwo);
+        AbilityEffects.endTurn(playerOne.getActiveDinosaur());
+        AbilityEffects.endTurn(playerTwo.getActiveDinosaur());
 
         String p1Action = switchedOne != null ? "Switch to " + switchedOne.getName()
                 : playerOneMove == null ? "None" : playerOneMove.getName();
@@ -177,7 +189,8 @@ public class Battle {
         // apply move effects
         attacker.adjustStamina(move.getStaminaChange());
         if (!defenderBraced) {
-            int totalDamage = move.getDamage() * attacker.getAttack();
+            int totalDamage = move.getDamage() * attacker.getEffectiveAttack();
+            totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
             int before = defender.getHealth();
             defender.adjustHealth(-totalDamage);
             int damage = before - defender.getHealth();
@@ -204,6 +217,8 @@ public class Battle {
         Dinosaur active = player.getActiveDinosaur();
         if (active != null && active.getHealth() <= 0) {
             player.removeDinosaur(active);
+            Player opponent = player == playerOne ? playerTwo : playerOne;
+            AbilityEffects.onEntry(player.getActiveDinosaur(), opponent.getActiveDinosaur());
             if (!player.hasRemainingDinosaurs()) {
                 winner = (player == playerOne) ? playerTwo : playerOne;
             }
@@ -225,34 +240,13 @@ public class Battle {
             return null;
         }
         player.setActiveDinosaur(target);
+        Player opponent = player == playerOne ? playerTwo : playerOne;
+        AbilityEffects.onEntry(target, opponent.getActiveDinosaur());
         player.clearQueuedSwitch();
         addEvent(label + " switched to " + target.getName() + ".");
         return target;
     }
 
-    private boolean hasBraceEffect(Player player, Move move) {
-        if (move == null) {
-            return false;
-        }
-        boolean bracePresent = false;
-        for (Effect effect : move.getEffects()) {
-            if ("brace".equalsIgnoreCase(effect.getName())) {
-                bracePresent = true;
-                break;
-            }
-        }
-        if (!bracePresent) {
-            return false;
-        }
-        if (!moveHistory.isEmpty()) {
-            TurnRecord lastRecord = moveHistory.get(moveHistory.size() - 1);
-            String lastAction = player == playerOne ? lastRecord.getPlayerAction() : lastRecord.getNpcAction();
-            if ("brace".equalsIgnoreCase(lastAction)) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     private void regenerateBenchStamina(Player player) {
         Dinosaur active = player.getActiveDinosaur();
