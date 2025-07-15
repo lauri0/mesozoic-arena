@@ -1,1 +1,3 @@
 brace: Negates damage from the next attack after use.
+heal: Restores 30 HP to the active dinosaur.
+area heal: Restores 10 HP to all dinosaurs on the team.

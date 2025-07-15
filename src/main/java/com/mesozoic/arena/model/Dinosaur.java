@@ -9,6 +9,7 @@ import java.util.List;
 public class Dinosaur {
     private final String name;
     private int health;
+    private final int maxHealth;
     private final int speed;
     private int speedStage = 0;
     private final String imagePath;
@@ -22,6 +23,7 @@ public class Dinosaur {
             List<Move> moves, Ability ability) {
         this.name = name;
         this.health = health;
+        this.maxHealth = health;
         this.speed = speed;
         this.imagePath = imagePath;
         this.ability = ability;
@@ -40,6 +42,10 @@ public class Dinosaur {
 
     public int getHealth() {
         return health;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
     public int getSpeed() {
@@ -79,6 +85,9 @@ public class Dinosaur {
 
     public void adjustHealth(int amount) {
         health += amount;
+        if (health > maxHealth) {
+            health = maxHealth;
+        }
     }
 
     public void adjustStamina(int amount) {
