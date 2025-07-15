@@ -9,6 +9,8 @@ import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.MoveEffects;
 import com.mesozoic.arena.engine.AbilityEffects;
+import com.mesozoic.arena.engine.AilmentEffects;
+import com.mesozoic.arena.model.Ailment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -152,6 +154,8 @@ public class Battle {
         regenerateBenchStamina(playerTwo);
         AbilityEffects.endTurn(playerOne.getActiveDinosaur());
         AbilityEffects.endTurn(playerTwo.getActiveDinosaur());
+        AilmentEffects.endTurn(playerOne.getActiveDinosaur());
+        AilmentEffects.endTurn(playerTwo.getActiveDinosaur());
 
         String p1Action = switchedOne != null ? "Switch to " + switchedOne.getName()
                 : playerOneMove == null ? "None" : playerOneMove.getName();
@@ -190,7 +194,7 @@ public class Battle {
             }
 
             attacker.adjustStamina(move.getStaminaChange());
-            applyMoveEffects(actingPlayer, move);
+            applyMoveEffects(actingPlayer, opposingPlayer, move);
             if (!defenderBraced) {
                 int totalDamage = move.getDamage() * attacker.getEffectiveAttack();
                 totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
@@ -268,18 +272,20 @@ public class Battle {
         }
     }
 
-    private void applyMoveEffects(Player player, Move move) {
-        Dinosaur active = player.getActiveDinosaur();
+    private void applyMoveEffects(Player actingPlayer, Player defendingPlayer, Move move) {
+        Dinosaur active = actingPlayer.getActiveDinosaur();
         if (active == null || move == null) {
             return;
         }
 
         if (MoveEffects.containsEffect(move, "heal")) {
-            active.adjustHealth(30);
+            int healAmount = AilmentEffects.modifyHealing(active, 30);
+            active.adjustHealth(healAmount);
         }
         if (MoveEffects.containsEffect(move, "area heal")) {
-            for (Dinosaur dinosaur : player.getDinosaurs()) {
-                dinosaur.adjustHealth(10);
+            for (Dinosaur dinosaur : actingPlayer.getDinosaurs()) {
+                int healAmount = AilmentEffects.modifyHealing(dinosaur, 10);
+                dinosaur.adjustHealth(healAmount);
             }
         }
         if (MoveEffects.containsEffect(move, "frenzy")) {
@@ -288,6 +294,10 @@ public class Battle {
         if (MoveEffects.containsEffect(move, "adrenaline")) {
             active.adjustAttackStage(1);
             active.adjustSpeedStage(1);
+        }
+        if (MoveEffects.containsEffect(move, "bleed")) {
+            Dinosaur defender = defendingPlayer.getActiveDinosaur();
+            AilmentEffects.applyAilment(defender, new Ailment("Bleeding"));
         }
     }
 }
