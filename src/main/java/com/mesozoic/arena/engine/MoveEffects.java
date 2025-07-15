@@ -41,4 +41,19 @@ public final class MoveEffects {
         }
         return true;
     }
+
+    /**
+     * Determines how many times the given move should be executed based on its effects.
+     * Returns {@code 3} when the move has a triple attack effect, {@code 2} for a double
+     * attack effect and {@code 1} otherwise.
+     */
+    public static int getRepeatCount(Move move) {
+        if (containsEffect(move, "triple attack")) {
+            return 3;
+        }
+        if (containsEffect(move, "double attack")) {
+            return 2;
+        }
+        return 1;
+    }
 }

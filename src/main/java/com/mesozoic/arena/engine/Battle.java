@@ -180,41 +180,48 @@ public class Battle {
 
     private boolean performTurn(Player actingPlayer, Player opposingPlayer, Move move,
             boolean defenderBraced) {
-        Dinosaur attacker = actingPlayer.getActiveDinosaur();
-        Dinosaur defender = opposingPlayer.getActiveDinosaur();
-        if (attacker == null || defender == null || move == null) {
-            return false;
+        int repeatCount = MoveEffects.getRepeatCount(move);
+        boolean defenderFainted = false;
+        for (int index = 0; index < repeatCount; index++) {
+            Dinosaur attacker = actingPlayer.getActiveDinosaur();
+            Dinosaur defender = opposingPlayer.getActiveDinosaur();
+            if (attacker == null || defender == null || move == null) {
+                return defenderFainted;
+            }
+
+            attacker.adjustStamina(move.getStaminaChange());
+            applyMoveEffects(actingPlayer, move);
+            if (!defenderBraced) {
+                int totalDamage = move.getDamage() * attacker.getEffectiveAttack();
+                totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
+                int beforeHealth = defender.getHealth();
+                defender.adjustHealth(-totalDamage);
+                int damageDealt = beforeHealth - defender.getHealth();
+                String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
+                String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
+                addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
+                        " dealing " + damageDealt + " damage. " + defenderLabel +
+                        defender.getName() + " has " + Math.max(0, defender.getHealth()) +
+                        " health left.");
+            } else {
+                String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
+                String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
+                addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
+                        " but " + defenderLabel + defender.getName() +
+                        " braced and took no damage.");
+            }
+
+            AbilityEffects.onAttacked(attacker, defender, move);
+            Dinosaur beforeDefender = defender;
+            checkFaint(opposingPlayer);
+            checkFaint(actingPlayer);
+            defenderFainted = defenderFainted || beforeDefender != opposingPlayer.getActiveDinosaur();
+            if (defenderFainted) {
+                break;
+            }
+            defenderBraced = false;
         }
-
-        // apply move effects
-        attacker.adjustStamina(move.getStaminaChange());
-        applyMoveEffects(actingPlayer, move);
-        if (!defenderBraced) {
-            int totalDamage = move.getDamage() * attacker.getEffectiveAttack();
-            totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
-            int before = defender.getHealth();
-            defender.adjustHealth(-totalDamage);
-            int damage = before - defender.getHealth();
-            String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
-            String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
-            addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
-                    " dealing " + damage + " damage. " + defenderLabel +
-                    defender.getName() + " has " + Math.max(0, defender.getHealth()) +
-                    " health left.");
-        } else {
-            String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
-            String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
-            addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
-                    " but " + defenderLabel + defender.getName() +
-                    " braced and took no damage.");
-        }
-
-        AbilityEffects.onAttacked(attacker, defender, move);
-
-        Dinosaur beforeDefender = defender;
-        checkFaint(opposingPlayer);
-        checkFaint(actingPlayer);
-        return beforeDefender != opposingPlayer.getActiveDinosaur();
+        return defenderFainted;
     }
 
     private void checkFaint(Player player) {
@@ -262,16 +269,25 @@ public class Battle {
     }
 
     private void applyMoveEffects(Player player, Move move) {
+        Dinosaur active = player.getActiveDinosaur();
+        if (active == null || move == null) {
+            return;
+        }
+
         if (MoveEffects.containsEffect(move, "heal")) {
-            Dinosaur active = player.getActiveDinosaur();
-            if (active != null) {
-                active.adjustHealth(30);
-            }
+            active.adjustHealth(30);
         }
         if (MoveEffects.containsEffect(move, "area heal")) {
             for (Dinosaur dinosaur : player.getDinosaurs()) {
                 dinosaur.adjustHealth(10);
             }
+        }
+        if (MoveEffects.containsEffect(move, "frenzy")) {
+            active.adjustAttackStage(2);
+        }
+        if (MoveEffects.containsEffect(move, "adrenaline")) {
+            active.adjustAttackStage(1);
+            active.adjustSpeedStage(1);
         }
     }
 }
