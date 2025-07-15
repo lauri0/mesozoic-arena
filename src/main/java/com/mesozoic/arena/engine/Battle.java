@@ -209,8 +209,11 @@ public class Battle {
                     " braced and took no damage.");
         }
 
+        AbilityEffects.onAttacked(attacker, defender, move);
+
         Dinosaur beforeDefender = defender;
         checkFaint(opposingPlayer);
+        checkFaint(actingPlayer);
         return beforeDefender != opposingPlayer.getActiveDinosaur();
     }
 
