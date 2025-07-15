@@ -91,5 +91,50 @@ public class AbilityEffectsTest {
 
         assertEquals(1, berserker.getAttackStage());
     }
+
+    @Test
+    public void testToughReducesDamageAtFullHealth() {
+        Move strike = new Move("Strike", 30, 0, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, 0, List.of());
+
+        Dinosaur attacker = new Dinosaur(
+                "Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 1,
+                List.of(strike), null);
+        Dinosaur tough = new Dinosaur(
+                "Tough", 100, 50, "assets/animals/allosaurus.png", 100, 10,
+                List.of(waitMove), new Ability("Tough", ""));
+
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(tough));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(strike, waitMove);
+
+        assertEquals(100, attacker.getHealth());
+        assertEquals(90, tough.getHealth());
+    }
+
+    @Test
+    public void testToughOnlyAtFullHealth() {
+        Move strike = new Move("Strike", 30, 0, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, 0, List.of());
+
+        Dinosaur attacker = new Dinosaur(
+                "Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 1,
+                List.of(strike), null);
+        Dinosaur tough = new Dinosaur(
+                "Tough", 100, 50, "assets/animals/allosaurus.png", 100, 10,
+                List.of(waitMove), new Ability("Tough", ""));
+
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(tough));
+        Battle battle = new Battle(p1, p2);
+
+        tough.adjustHealth(-10);
+        battle.executeRound(strike, waitMove);
+
+        assertEquals(100, attacker.getHealth());
+        assertEquals(60, tough.getHealth());
+    }
 }
 

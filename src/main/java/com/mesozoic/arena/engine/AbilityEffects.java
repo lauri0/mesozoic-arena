@@ -50,6 +50,11 @@ public final class AbilityEffects {
             return Math.max(0, modified);
         }
 
+        if ("Tough".equalsIgnoreCase(name)
+                && defender.getHealth() == defender.getMaxHealth()) {
+            return Math.round(damage / 3f);
+        }
+
         return damage;
     }
 
