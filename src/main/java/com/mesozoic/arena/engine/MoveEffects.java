@@ -11,6 +11,21 @@ public final class MoveEffects {
     }
 
     /**
+     * Checks if the given move has an effect with the specified name.
+     */
+    public static boolean containsEffect(Move move, String effectName) {
+        if (move == null || effectName == null) {
+            return false;
+        }
+        for (Effect effect : move.getEffects()) {
+            if (effectName.equalsIgnoreCase(effect.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Determines whether a move with a brace effect should activate based on the last action.
      *
      * @param move       the move being used
@@ -18,17 +33,7 @@ public final class MoveEffects {
      * @return {@code true} if the brace effect applies, otherwise {@code false}
      */
     public static boolean hasBraceEffect(Move move, String lastAction) {
-        if (move == null) {
-            return false;
-        }
-        boolean bracePresent = false;
-        for (Effect effect : move.getEffects()) {
-            if ("brace".equalsIgnoreCase(effect.getName())) {
-                bracePresent = true;
-                break;
-            }
-        }
-        if (!bracePresent) {
+        if (!containsEffect(move, "brace")) {
             return false;
         }
         if (lastAction != null && "brace".equalsIgnoreCase(lastAction)) {

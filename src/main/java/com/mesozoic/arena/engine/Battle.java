@@ -188,6 +188,7 @@ public class Battle {
 
         // apply move effects
         attacker.adjustStamina(move.getStaminaChange());
+        applyMoveEffects(actingPlayer, move);
         if (!defenderBraced) {
             int totalDamage = move.getDamage() * attacker.getEffectiveAttack();
             totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
@@ -253,6 +254,20 @@ public class Battle {
         for (Dinosaur dinosaur : player.getDinosaurs()) {
             if (!dinosaur.equals(active)) {
                 dinosaur.adjustStamina(10);
+            }
+        }
+    }
+
+    private void applyMoveEffects(Player player, Move move) {
+        if (MoveEffects.containsEffect(move, "heal")) {
+            Dinosaur active = player.getActiveDinosaur();
+            if (active != null) {
+                active.adjustHealth(30);
+            }
+        }
+        if (MoveEffects.containsEffect(move, "area heal")) {
+            for (Dinosaur dinosaur : player.getDinosaurs()) {
+                dinosaur.adjustHealth(10);
             }
         }
     }
