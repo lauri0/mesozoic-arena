@@ -2,6 +2,7 @@ Allosaurus:
   health: 210
   speed: 100
   attack: 10
+  ability: None
   image: assets/animals/allosaurus.png
   moves:
     - Bite
@@ -13,6 +14,7 @@ Ceratosaurus:
   health: 140
   speed: 130
   attack: 10
+  ability: None
   image: assets/animals/ceratosaurus.png
   moves:
     - Bite
@@ -24,6 +26,7 @@ Stegosaurus:
   health: 290
   speed: 60
   attack: 10
+  ability: None
   image: assets/animals/stegosaurus.png
   moves:
     - Brace

@@ -72,7 +72,7 @@ public final class DinosaurLoader {
                     }
                 }
                 dinosaurs.add(new Dinosaur(name, health, speed, image, 100, attack,
-                        dinoMoves));
+                        dinoMoves, null));
             }
             return dinosaurs;
         } catch (Exception e) {
