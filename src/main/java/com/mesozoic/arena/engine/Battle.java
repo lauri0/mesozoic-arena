@@ -123,17 +123,17 @@ public class Battle {
         boolean p2Braced = false;
 
         if (p1First) {
-            p1Braced = hasBraceEffect(playerOneMove);
+            p1Braced = hasBraceEffect(playerOne, playerOneMove);
             boolean fainted = performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
             if (winner == null && !fainted) {
-                p2Braced = hasBraceEffect(playerTwoMove);
+                p2Braced = hasBraceEffect(playerTwo, playerTwoMove);
                 performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
             }
         } else {
-            p2Braced = hasBraceEffect(playerTwoMove);
+            p2Braced = hasBraceEffect(playerTwo, playerTwoMove);
             boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
             if (winner == null && !fainted) {
-                p1Braced = hasBraceEffect(playerOneMove);
+                p1Braced = hasBraceEffect(playerOne, playerOneMove);
                 performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
             }
         }
@@ -230,16 +230,28 @@ public class Battle {
         return target;
     }
 
-    private boolean hasBraceEffect(Move move) {
+    private boolean hasBraceEffect(Player player, Move move) {
         if (move == null) {
             return false;
         }
+        boolean bracePresent = false;
         for (Effect effect : move.getEffects()) {
             if ("brace".equalsIgnoreCase(effect.getName())) {
-                return true;
+                bracePresent = true;
+                break;
             }
         }
-        return false;
+        if (!bracePresent) {
+            return false;
+        }
+        if (!moveHistory.isEmpty()) {
+            TurnRecord lastRecord = moveHistory.get(moveHistory.size() - 1);
+            String lastAction = player == playerOne ? lastRecord.getPlayerAction() : lastRecord.getNpcAction();
+            if ("brace".equalsIgnoreCase(lastAction)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void regenerateBenchStamina(Player player) {

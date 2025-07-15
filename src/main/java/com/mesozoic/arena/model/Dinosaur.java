@@ -75,5 +75,8 @@ public class Dinosaur {
 
     public void adjustStamina(int amount) {
         stamina += amount;
+        if (stamina > 100) {
+            stamina = 100;
+        }
     }
 }
