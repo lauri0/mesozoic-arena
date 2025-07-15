@@ -14,13 +14,13 @@ public class Dinosaur {
     private int speedStage = 0;
     private final String imagePath;
     private final Ability ability;
-    private final int attack;
+    private final double attack;
     private int attackStage = 0;
     private int stamina;
     private final List<Move> moves;
 
-    public Dinosaur(String name, int health, int speed, String imagePath, int stamina, int attack,
-            List<Move> moves, Ability ability) {
+    public Dinosaur(String name, int health, int speed, String imagePath, int stamina, double attack,
+                    List<Move> moves, Ability ability) {
         this.name = name;
         this.health = health;
         this.maxHealth = health;
@@ -56,7 +56,7 @@ public class Dinosaur {
         return imagePath;
     }
 
-    public int getAttack() {
+    public double getAttack() {
         return attack;
     }
 
@@ -87,6 +87,9 @@ public class Dinosaur {
         health += amount;
         if (health > maxHealth) {
             health = maxHealth;
+        }
+        if (health < 0) {
+            health = 0;
         }
     }
 

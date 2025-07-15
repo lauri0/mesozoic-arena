@@ -1,5 +1,4 @@
 import com.mesozoic.arena.model.Dinosaur;
-import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.Battle;

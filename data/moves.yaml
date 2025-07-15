@@ -1,41 +1,71 @@
 Bite:
-  damage: 5
-  stamina: -40
-  priority: 0
-  effects: []
-
-Scratch:
-  damage: 2
-  stamina: 0
-  priority: 0
-  effects: []
-
-Roar:
-  damage: 0
-  stamina: -20
-  priority: 0
-  effects: []
-
-Tail Swipe:
-  damage: 3
-  stamina: -20
+  damage: 40
+  stamina: -30
   priority: 0
   effects: []
 
 Brace:
   damage: 0
   stamina: -10
-  priority: 1
+  priority: 2
   effects: [brace]
 
-Stomp:
-  damage: 1
+Charge:
+  damage: 40
+  stamina: -40
+  priority: 1
+  effects: []
+
+Double Scratch:
+  damage: 18
+  stamina: -25
+  priority: 0
+  effects: [double attack]
+
+Kick:
+  damage: 30
+  stamina: -20
+  priority: 0
+  effects: []
+
+Heal:
+  damage: 0
+  stamina: -20
+  priority: 1
+  effects: [heal]
+
+Impale:
+  damage: 40
+  stamina: -30
+  priority: 0
+  effects: []
+
+Roar:
+  damage: 0
+  stamina: 30
+  priority: 0
+  effects: []
+
+Scratch:
+  damage: 20
   stamina: 0
   priority: 0
   effects: []
 
+Tail Swipe:
+  damage: 30
+  stamina: -20
+  priority: 0
+  effects: []
+
 Thagomizer Swipe:
-  damage: 5
+  damage: 40
   stamina: -30
+  priority: 0
+  effects: []
+
+Stomp:
+  damage: 10
+  stamina: 0
   priority: 0
   effects: []
