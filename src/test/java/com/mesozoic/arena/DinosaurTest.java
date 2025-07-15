@@ -1,3 +1,5 @@
+package com.mesozoic.arena;
+
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
@@ -14,8 +16,8 @@ public class DinosaurTest {
         assertEquals(50, dino.getEffectiveSpeed());
         dino.adjustAttackStage(1);
         dino.adjustSpeedStage(-1);
-        assertEquals(15, dino.getEffectiveAttack());
-        assertEquals(33, dino.getEffectiveSpeed());
+        assertEquals(12.5, dino.getEffectiveAttack());
+        assertEquals(40, dino.getEffectiveSpeed());
     }
 
     @Test

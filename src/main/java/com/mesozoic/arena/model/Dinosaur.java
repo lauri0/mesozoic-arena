@@ -151,8 +151,8 @@ public class Dinosaur {
         speedStage = 0;
     }
 
-    public int getEffectiveAttack() {
-        return Math.round((float) attack * stageMultiplier(attackStage));
+    public double getEffectiveAttack() {
+        return attack * stageMultiplier(attackStage);
     }
 
     public int getEffectiveSpeed() {
@@ -171,8 +171,8 @@ public class Dinosaur {
 
     private static float stageMultiplier(int stage) {
         if (stage >= 0) {
-            return (2f + stage) / 2f;
+            return (4f + stage) / 4f;
         }
-        return 2f / (2 - stage);
+        return 4f / (4 - stage);
     }
 }

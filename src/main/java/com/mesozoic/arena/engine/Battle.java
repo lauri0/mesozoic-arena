@@ -198,7 +198,7 @@ public class Battle {
             attacker.adjustStamina(move.getStaminaChange());
             applyMoveEffects(actingPlayer, opposingPlayer, move);
             if (!defenderBraced) {
-                int totalDamage = move.getDamage() * attacker.getEffectiveAttack();
+                int totalDamage = Math.toIntExact(Math.round(move.getDamage() * attacker.getEffectiveAttack()));
                 totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
                 int beforeHealth = defender.getHealth();
                 defender.adjustHealth(-totalDamage);

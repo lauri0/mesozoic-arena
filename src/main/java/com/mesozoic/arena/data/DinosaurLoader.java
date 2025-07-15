@@ -84,7 +84,7 @@ public class DinosaurLoader {
     private Dinosaur parseDinosaur(String name, Map<String, Object> values) throws IOException {
         int health = ((Number) values.get("health")).intValue();
         int speed = ((Number) values.get("speed")).intValue();
-        int attack = ((Number) values.getOrDefault("attack", 10)).intValue();
+        double attack = ((Number) values.getOrDefault("attack", 1)).doubleValue();
         String imagePath = (String) values.get("image");
         validateImageExists(imagePath);
 

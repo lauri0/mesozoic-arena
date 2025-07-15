@@ -202,7 +202,7 @@ public class MainWindow extends JFrame {
     }
 
     private JButton createMoveButton(Dinosaur dino, Move move, boolean playerSide) {
-        int dmg = move.getDamage() * dino.getEffectiveAttack();
+        int dmg = Math.toIntExact(Math.round(move.getDamage() * dino.getEffectiveAttack()));
         JButton button = new JButton(
                 move.getName() + " (" + dmg + " / " + move.getStaminaChange() + ")"
         );
