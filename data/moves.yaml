@@ -3,69 +3,81 @@ Bite:
   stamina: -30
   priority: 0
   effects: []
+  description: "Bite the opponent for X damage."
 
 Brace:
   damage: 0
   stamina: -10
   priority: 2
   effects: [brace]
+  description: "Brace yourself to reduce incoming attacks for X damage."
 
 Charge:
   damage: 40
   stamina: -40
   priority: 1
   effects: []
+  description: "Charge forward to slam the foe for X damage."
 
 Double Scratch:
   damage: 18
   stamina: -25
   priority: 0
   effects: [double attack]
+  description: "Scratch twice for a total of X damage."
 
 Kick:
   damage: 30
   stamina: -20
   priority: 0
   effects: []
+  description: "Deliver a powerful kick for X damage."
 
 Heal:
   damage: 0
   stamina: -20
   priority: 1
   effects: [heal]
+  description: "Recover health while dealing X damage."
 
 Impale:
   damage: 40
   stamina: -30
   priority: 0
   effects: []
+  description: "Impale the foe with your horns for X damage."
 
 Roar:
   damage: 0
   stamina: 30
   priority: 0
   effects: []
+  description: "Roar loudly to intimidate for X damage."
 
 Scratch:
   damage: 20
   stamina: 0
   priority: 0
   effects: []
+  description: "Scratch the target for X damage."
 
 Tail Swipe:
   damage: 30
   stamina: -20
   priority: 0
   effects: []
+  description: "Swipe your tail for X damage."
 
 Thagomizer Swipe:
   damage: 40
   stamina: -30
   priority: 0
   effects: []
+  description: "Swing your spiked tail for X damage."
 
 Stomp:
   damage: 10
   stamina: 0
   priority: 0
   effects: []
+  description: "Stomp the ground for X damage."
