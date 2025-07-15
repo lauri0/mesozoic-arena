@@ -4,6 +4,7 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Effect;
+import com.mesozoic.arena.engine.TurnRecord;
 import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.util.EffectLoader;
 
@@ -15,6 +16,7 @@ import java.net.http.HttpResponse;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -31,14 +33,14 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     private String lastResponse;
 
     @Override
-    public Move chooseMove(Player self, Player enemy) {
+    public Move chooseMove(Player self, Player enemy, List<TurnRecord> history) {
         Dinosaur activeSelf = self.getActiveDinosaur();
         Dinosaur activeEnemy = enemy.getActiveDinosaur();
         if (activeSelf == null || activeEnemy == null) {
             return null;
         }
 
-        String prompt = buildPrompt(self, enemy);
+        String prompt = buildPrompt(self, enemy, history);
         System.out.println(prompt);
         try {
             String output = sendPrompt(prompt);
@@ -47,11 +49,11 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             if (output.isEmpty()) {
                 System.out.println("LLM response: No response");
             }
-            return parseMove(output, self);
+            return parseMove(output, self, history);
         } catch (Exception e) {
             e.printStackTrace();
             lastResponse = "";
-            return new RandomOpponent().chooseMove(self, enemy);
+            return new RandomOpponent().chooseMove(self, enemy, history);
         }
     }
 
@@ -87,7 +89,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return text.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
-    private Move parseMove(String output, Player selfPlayer) {
+    private Move parseMove(String output, Player selfPlayer, List<TurnRecord> history) {
         String answer = extractAnswer(output);
         if (answer != null) {
             String lower = answer.toLowerCase();
@@ -108,7 +110,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         if (move != null) {
             return move;
         }
-        return new RandomOpponent().chooseMove(selfPlayer, null);
+        return new RandomOpponent().chooseMove(selfPlayer, null, history);
     }
 
     private String extractAnswer(String text) {
@@ -176,7 +178,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 + dino.getStamina() + ", Speed: " + dino.getSpeed() + ")\n";
     }
 
-    private String buildPrompt(Player selfPlayer, Player enemyPlayer) {
+    private String buildPrompt(Player selfPlayer, Player enemyPlayer, List<TurnRecord> history) {
         return "You are playing Mesozoic Arena, a turn based dinosaur battle game. " +
                 "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
                 "dinosaurs using lower priority moves regardless of speed. " +
@@ -188,6 +190,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllDinosaurInfos(selfPlayer, enemyPlayer) +
                 getAllEffectInfos(selfPlayer, enemyPlayer) +
+                formatHistory(history) +
                 "Respond with the move name to attack or 'Switch to <name>' to switch. " +
                 "End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
     }
@@ -246,6 +249,21 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             }
         }
         return names;
+    }
+
+    private String formatHistory(List<TurnRecord> history) {
+        if (history.isEmpty()) {
+            return "";
+        }
+        StringBuilder info = new StringBuilder("Last turns:\n");
+        int start = Math.max(0, history.size() - 2);
+        for (int i = start; i < history.size(); i++) {
+            TurnRecord rec = history.get(i);
+            info.append("Turn ").append(i + 1).append(": You ")
+                    .append(rec.getNpcAction()).append(", Opponent ")
+                    .append(rec.getPlayerAction()).append("\n");
+        }
+        return info.toString();
     }
 
     public String getLastResponse() {
