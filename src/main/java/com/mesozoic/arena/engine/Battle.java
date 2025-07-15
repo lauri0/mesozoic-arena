@@ -10,6 +10,8 @@ import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Effect;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
+import com.mesozoic.arena.engine.TurnRecord;
 
 /**
  * Handles turn management and rule enforcement for a battle between two
@@ -21,6 +23,7 @@ public class Battle {
     private final OpponentAgent opponentAI;
     private final List<String> eventLog = new ArrayList<>();
     private final List<String> aiLog = new ArrayList<>();
+    private final List<TurnRecord> moveHistory = new ArrayList<>();
     private int turn = 1;
     private Player winner;
 
@@ -46,6 +49,13 @@ public class Battle {
      */
     public List<String> getAiLog() {
         return new ArrayList<>(aiLog);
+    }
+
+    /**
+     * Returns a copy of the recorded moves and switches for each turn.
+     */
+    public List<TurnRecord> getMoveHistory() {
+        return new ArrayList<>(moveHistory);
     }
 
     /**
@@ -85,10 +95,12 @@ public class Battle {
             return;
         }
 
-        if (applyQueuedSwitch(playerOne, "Player")) {
+        Dinosaur switchedOne = applyQueuedSwitch(playerOne, "Player");
+        if (switchedOne != null) {
             playerOneMove = null;
         }
-        if (applyQueuedSwitch(playerTwo, "NPC")) {
+        Dinosaur switchedTwo = applyQueuedSwitch(playerTwo, "NPC");
+        if (switchedTwo != null) {
             playerTwoMove = null;
         }
 
@@ -128,13 +140,19 @@ public class Battle {
 
         regenerateBenchStamina(playerOne);
         regenerateBenchStamina(playerTwo);
+
+        String p1Action = switchedOne != null ? "Switch to " + switchedOne.getName()
+                : playerOneMove == null ? "None" : playerOneMove.getName();
+        String p2Action = switchedTwo != null ? "Switch to " + switchedTwo.getName()
+                : playerTwoMove == null ? "None" : playerTwoMove.getName();
+        moveHistory.add(new TurnRecord(p1Action, p2Action));
     }
 
     /**
      * Executes a round using the AI to select the opponent's move.
      */
     public void executeRound(Move playerOneMove) {
-        Move playerTwoMove = opponentAI.chooseMove(playerTwo, playerOne);
+        Move playerTwoMove = opponentAI.chooseMove(playerTwo, playerOne, Collections.unmodifiableList(moveHistory));
         logLLMResponse();
         executeRound(playerOneMove, playerTwoMove);
         turn++;
@@ -201,15 +219,15 @@ public class Battle {
         }
     }
 
-    private boolean applyQueuedSwitch(Player player, String label) {
+    private Dinosaur applyQueuedSwitch(Player player, String label) {
         Dinosaur target = player.getQueuedSwitch();
         if (target == null) {
-            return false;
+            return null;
         }
         player.setActiveDinosaur(target);
         player.clearQueuedSwitch();
         addEvent(label + " switched to " + target.getName() + ".");
-        return true;
+        return target;
     }
 
     private boolean hasBraceEffect(Move move) {
