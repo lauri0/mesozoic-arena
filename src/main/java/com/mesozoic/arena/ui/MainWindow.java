@@ -32,7 +32,7 @@ public class MainWindow extends JFrame {
         this.opponent = opponent;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1100, 900);
+        setSize(1200, 900);
 
         playerPanel   = new DinoPanel(true);
         opponentPanel = new DinoPanel(false);
@@ -49,7 +49,7 @@ public class MainWindow extends JFrame {
         JLabel npcLabel = new JLabel("NPC's thoughts", JLabel.CENTER);
         npcPanel.add(npcLabel, BorderLayout.NORTH);
         npcPanel.add(new JScrollPane(npcArea), BorderLayout.CENTER);
-        npcPanel.setPreferredSize(new Dimension(250, 100));
+        npcPanel.setPreferredSize(new Dimension(350, 100));
         add(npcPanel, BorderLayout.EAST);
 
         logArea.setEditable(false);
