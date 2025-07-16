@@ -31,6 +31,15 @@ public class Battle {
     private int turn = 1;
     private Player winner;
 
+    private boolean moveHits(Move move) {
+        return move != null && Math.random() < move.getAccuracy();
+    }
+
+    private void logMiss(Player actingPlayer, Dinosaur attacker, Move move) {
+        String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
+        addEvent(actorLabel + attacker.getName() + " used " + move.getName() + " but missed.");
+    }
+
     public Battle(Player playerOne, Player playerTwo) {
         this(playerOne, playerTwo, createAgent());
     }
@@ -192,6 +201,12 @@ public class Battle {
             Dinosaur defender = opposingPlayer.getActiveDinosaur();
             if (attacker == null || defender == null || move == null) {
                 return defenderFainted;
+            }
+
+            if (!moveHits(move)) {
+                logMiss(actingPlayer, attacker, move);
+                defenderBraced = false;
+                continue;
             }
 
             applyMoveEffects(actingPlayer, opposingPlayer, move);

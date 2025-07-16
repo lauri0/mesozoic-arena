@@ -108,8 +108,9 @@ public class DinosaurLoader {
                 Move template = moveTemplates.get(moveName);
                 if (template != null) {
                     moves.add(new Move(template.getName(), template.getDamage(),
-                            template.getPriority(),
-                            template.getDescription(), template.getEffects()));
+                            template.getPriority(), template.getDescription(),
+                            template.getType(), template.getEffects(),
+                            template.getAccuracy()));
                 }
             }
         }
@@ -141,7 +142,8 @@ public class DinosaurLoader {
         for (Move move : source.getMoves()) {
             copiedMoves.add(new Move(move.getName(), move.getDamage(),
                     move.getPriority(),
-                    move.getDescription(), move.getEffects()));
+                    move.getDescription(), move.getType(),
+                    move.getEffects(), move.getAccuracy()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
                 source.getHeadAttack(), source.getBodyAttack(), copiedMoves, source.getAbility());
@@ -163,8 +165,9 @@ public class DinosaurLoader {
                     String description = String.valueOf(values.getOrDefault("description", ""));
                     String typeLabel = String.valueOf(values.getOrDefault("type", "body"));
                     MoveType type = "head".equalsIgnoreCase(typeLabel) ? MoveType.HEAD : MoveType.BODY;
+                    double accuracy = ((Number) values.getOrDefault("accuracy", 1.0)).doubleValue();
                     List<Effect> effects = parseEffects(values.get("effects"));
-                    map.put(name, new Move(name, damage, priority, description, type, effects));
+                    map.put(name, new Move(name, damage, priority, description, type, effects, accuracy));
                 }
             }
         }
