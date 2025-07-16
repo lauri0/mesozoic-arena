@@ -1,83 +1,95 @@
 Bite:
   damage: 40
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Deal XX damage."
+  description: "Deal XX damage. YY accuracy."
   type: head
 
 Brace:
   damage: 0
+  accuracy: 0.9
   priority: 2
   effects: [brace]
-  description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority."
+  description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority. YY accuracy."
   type: body
 
 Charge:
   damage: 40
+  accuracy: 0.9
   priority: 1
   effects: []
-  description: "Deal XX damage. +1 Priority."
+  description: "Deal XX damage. +1 Priority. YY accuracy."
   type: body
 
 Double Scratch:
   damage: 18
+  accuracy: 0.9
   priority: 0
   effects: [double attack]
-  description: "Attack twice for XX damage each."
+  description: "Attack twice for XX damage each. YY accuracy."
   type: body
 
 Kick:
   damage: 30
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Deal XX damage."
+  description: "Deal XX damage. YY accuracy."
   type: body
 
 Heal:
   damage: 0
+  accuracy: 0.9
   priority: 1
   effects: [heal]
-  description: "Recover 30 health. +1 Priority."
+  description: "Recover 30 health. +1 Priority. YY accuracy."
   type: body
 
 Impale:
   damage: 40
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Deal XX damage."
+  description: "Deal XX damage. YY accuracy."
   type: head
 
 Roar:
   damage: 0
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Rally your allies."
+  description: "Rally your allies. YY accuracy."
   type: head
 
 Scratch:
   damage: 20
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Deal XX damage."
+  description: "Deal XX damage. YY accuracy."
   type: body
 
 Tail Swipe:
   damage: 30
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Deal XX damage."
+  description: "Deal XX damage. YY accuracy."
   type: body
 
 Thagomizer Swipe:
   damage: 40
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Deal XX damage."
+  description: "Deal XX damage. YY accuracy."
   type: body
 
 Stomp:
   damage: 22
+  accuracy: 0.9
   priority: 0
   effects: []
-  description: "Deal XX damage."
+  description: "Deal XX damage. YY accuracy."
   type: body
