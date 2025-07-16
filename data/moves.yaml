@@ -76,7 +76,7 @@ Thagomizer Swipe:
   type: body
 
 Stomp:
-  damage: 10
+  damage: 22
   priority: 0
   effects: []
   description: "Deal XX damage."
