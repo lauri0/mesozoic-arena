@@ -100,10 +100,7 @@ public final class AbilityEffects {
      * Applies end of turn effects for the active dinosaur.
      */
     public static void endTurn(Dinosaur active) {
-        Ability ability = active == null ? null : active.getAbility();
-        if (ability != null && "Adrenaline".equalsIgnoreCase(ability.getName())) {
-            active.adjustStamina(10);
-        }
+        // no stamina related end-of-turn effects remain
     }
 
     /**

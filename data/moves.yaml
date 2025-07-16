@@ -1,46 +1,40 @@
 Bite:
   damage: 40
-  stamina: -30
   priority: 0
   effects: []
-  description: "Deal XX damage. Costs YY stamina."
+  description: "Deal XX damage."
   type: head
 
 Brace:
   damage: 0
-  stamina: -10
   priority: 2
   effects: [brace]
-  description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority. Costs YY stamina."
+  description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority."
   type: body
 
 Charge:
   damage: 40
-  stamina: -40
   priority: 1
   effects: []
-  description: "Deal XX damage. +1 Priority. Costs YY stamina."
+  description: "Deal XX damage. +1 Priority."
   type: body
 
 Double Scratch:
   damage: 18
-  stamina: -25
   priority: 0
   effects: [double attack]
-  description: "Attack twice for XX damage each. Costs YY stamina."
+  description: "Attack twice for XX damage each."
   type: body
 
 Kick:
   damage: 30
-  stamina: -20
   priority: 0
   effects: []
-  description: "Deal XX damage. Costs YY stamina."
+  description: "Deal XX damage."
   type: body
 
 Heal:
   damage: 0
-  stamina: -20
   priority: 1
   effects: [heal]
   description: "Recover 30 health. +1 Priority."
@@ -48,48 +42,42 @@ Heal:
 
 Impale:
   damage: 40
-  stamina: -30
   priority: 0
   effects: []
-  description: "Deal XX damage. Costs YY stamina."
+  description: "Deal XX damage."
   type: head
 
 Roar:
   damage: 0
-  stamina: 30
   priority: 0
   effects: []
-  description: "Gain YY stamina."
+  description: "Rally your allies."
   type: head
 
 Scratch:
   damage: 20
-  stamina: 0
   priority: 0
   effects: []
-  description: "Deal XX damage. Costs YY stamina."
+  description: "Deal XX damage."
   type: body
 
 Tail Swipe:
   damage: 30
-  stamina: -20
   priority: 0
   effects: []
-  description: "Deal XX damage. Costs YY stamina."
+  description: "Deal XX damage."
   type: body
 
 Thagomizer Swipe:
   damage: 40
-  stamina: -30
   priority: 0
   effects: []
-  description: "Deal XX damage. Costs YY stamina."
+  description: "Deal XX damage."
   type: body
 
 Stomp:
   damage: 10
-  stamina: 0
   priority: 0
   effects: []
-  description: "Deal XX damage. Costs YY stamina."
+  description: "Deal XX damage."
   type: body

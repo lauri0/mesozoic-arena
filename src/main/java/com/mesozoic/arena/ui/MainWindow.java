@@ -11,7 +11,6 @@ import java.awt.*;
 
 public class MainWindow extends JFrame {
     private static final String HEALTH_ICON_PATH  = "assets/icons/health.png";
-    private static final String STAMINA_ICON_PATH = "assets/icons/energy.png";
     private static final String SPEED_ICON_PATH   = "assets/icons/speed.png";
     private static final String ATTACK_ICON_PATH  = "assets/icons/attack.png";
     private static final String BLEED_ICON_PATH   = "assets/icons/bleed.png";
@@ -90,7 +89,6 @@ public class MainWindow extends JFrame {
 
         // Stats with icons
         setStatLabel(panel.health,  HEALTH_ICON_PATH,  d == null ? 0 : d.getHealth(),  true);
-        setStatLabel(panel.stamina, STAMINA_ICON_PATH, d == null ? 0 : d.getStamina(), true);
         setStatLabel(panel.speed,   SPEED_ICON_PATH,   d == null ? 0 : d.getSpeed(),   true);
 
         // Image
@@ -195,11 +193,8 @@ public class MainWindow extends JFrame {
 
         JLabel hp = new JLabel();
         setStatLabel(hp, HEALTH_ICON_PATH, dino.getHealth(), false);
-        JLabel sp = new JLabel();
-        setStatLabel(sp, STAMINA_ICON_PATH, dino.getStamina(), false);
-        JPanel stats = new JPanel(new GridLayout(1,2,5,0));
+        JPanel stats = new JPanel(new GridLayout(1,1,5,0));
         stats.add(hp);
-        stats.add(sp);
         stats.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton sw = new JButton("Switch");
@@ -224,15 +219,9 @@ public class MainWindow extends JFrame {
                 ? dino.getEffectiveHeadAttack()
                 : dino.getEffectiveBodyAttack();
         int dmg = Math.toIntExact(Math.round(move.getDamage() * attackValue));
-        JButton button = new JButton(
-                move.getName() + " (" + dmg + " / " + move.getStaminaChange() + ")"
-        );
+        JButton button = new JButton(move.getName() + " (" + dmg + ")");
         if (playerSide) {
-            boolean canUse = dino.canUse(move);
-            button.setEnabled(canUse);
-            if (canUse) {
-                button.addActionListener(e -> doRound(move));
-            }
+            button.addActionListener(e -> doRound(move));
         } else {
             button.setEnabled(false);
         }
@@ -251,7 +240,6 @@ public class MainWindow extends JFrame {
         final JLabel image   = new JLabel();
         final JLabel name    = new JLabel();
         final JLabel health  = new JLabel();
-        final JLabel stamina = new JLabel();
         final JLabel speed   = new JLabel();
         final JPanel bench   = new JPanel(new FlowLayout(FlowLayout.LEFT, 5,5));
         final JPanel moves   = new JPanel(new GridLayout(0,2,5,5));
@@ -272,9 +260,8 @@ public class MainWindow extends JFrame {
             // Center: stats + bench & moves
             Box info = Box.createVerticalBox();
             info.add(name);
-            JPanel statsRow = new JPanel(new GridLayout(1,3,5,0));
+            JPanel statsRow = new JPanel(new GridLayout(1,2,5,0));
             statsRow.add(health);
-            statsRow.add(stamina);
             statsRow.add(speed);
             statsRow.setAlignmentX(Component.CENTER_ALIGNMENT);
             info.add(statsRow);

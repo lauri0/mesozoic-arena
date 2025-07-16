@@ -17,11 +17,10 @@ public class Dinosaur {
     private final double headAttack;
     private final double bodyAttack;
     private int attackStage = 0;
-    private int stamina;
     private final List<Move> moves;
     private final List<Ailment> ailments = new ArrayList<>();
 
-    public Dinosaur(String name, int health, int speed, String imagePath, int stamina,
+    public Dinosaur(String name, int health, int speed, String imagePath,
                     double headAttack, double bodyAttack, List<Move> moves, Ability ability) {
         this.name = name;
         this.health = health;
@@ -31,7 +30,6 @@ public class Dinosaur {
         this.ability = ability;
         this.headAttack = headAttack;
         this.bodyAttack = bodyAttack;
-        this.stamina = stamina;
         if (moves == null) {
             this.moves = new ArrayList<>();
         } else {
@@ -71,20 +69,7 @@ public class Dinosaur {
         return ability;
     }
 
-    public int getStamina() {
-        return stamina;
-    }
 
-    /**
-     * Indicates whether this dinosaur has enough stamina to perform the given
-     * move.
-     */
-    public boolean canUse(Move move) {
-        if (move == null) {
-            return false;
-        }
-        return stamina + move.getStaminaChange() >= 0;
-    }
 
     public List<Move> getMoves() {
         return new ArrayList<>(moves);
@@ -129,12 +114,6 @@ public class Dinosaur {
         }
     }
 
-    public void adjustStamina(int amount) {
-        stamina += amount;
-        if (stamina > 100) {
-            stamina = 100;
-        }
-    }
 
     public int getAttackStage() {
         return attackStage;
