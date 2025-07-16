@@ -108,6 +108,20 @@ public class MoveEffectsTest {
     }
 
     @Test
+    public void testSlowLowersOpponentSpeed() {
+        Move slow = new Move("Mud", 0, 0, 0, List.of(new Effect("slow")));
+        Move noop = new Move("Wait", 0, 0, 0, List.of());
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(slow), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(defender));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(slow, noop);
+        assertEquals(-1, defender.getSpeedStage());
+    }
+
+    @Test
     public void testBleedDealsEndTurnDamage() {
         Move bleed = new Move("Cut", 0, 0, 0, List.of(new Effect("bleed")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());

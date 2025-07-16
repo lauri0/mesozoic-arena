@@ -305,6 +305,12 @@ public class Battle {
             active.adjustAttackStage(1);
             active.adjustSpeedStage(1);
         }
+        if (MoveEffects.containsEffect(move, "slow")) {
+            Dinosaur defender = defendingPlayer.getActiveDinosaur();
+            if (defender != null) {
+                defender.adjustSpeedStage(-1);
+            }
+        }
         if (MoveEffects.containsEffect(move, "bleed")) {
             Dinosaur defender = defendingPlayer.getActiveDinosaur();
             AilmentEffects.applyAilment(defender, new Ailment("Bleeding"));
