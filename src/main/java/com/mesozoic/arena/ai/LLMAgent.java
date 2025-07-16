@@ -189,7 +189,6 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 "The player who knocks out all of the opponent's dinosaurs first wins the match. " +
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getInactiveDinosaurInfos(selfPlayer, enemyPlayer) +
-                getAllEffectInfos(selfPlayer, enemyPlayer) +
                 formatHistory(history, 2) +
                 "Respond with the move name to attack or 'Switch to <name>' to switch. " +
                 "End your response with 'Answer: <move>' or 'Answer: Switch to <name>'.\nAction:";
@@ -223,38 +222,6 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             allInfos.append("Opponent's ").append(describeDinosaurStatsAndAbility(dinosaur));
         }
         return allInfos;
-    }
-
-    private StringBuilder getAllEffectInfos(Player selfPlayer, Player enemyPlayer) {
-        Map<String, String> descriptions = EffectLoader.loadDescriptions();
-        Set<String> effectNames = collectEffectNames(selfPlayer, enemyPlayer);
-        StringBuilder info = new StringBuilder();
-        if (!effectNames.isEmpty()) {
-            info.append("Effects in play:\n");
-            for (String name : effectNames.stream().sorted().toList()) {
-                String desc = descriptions.getOrDefault(name, "");
-                info.append(name);
-                if (!desc.isBlank()) {
-                    info.append(": ").append(desc);
-                }
-                info.append("\n");
-            }
-        }
-        return info;
-    }
-
-    private Set<String> collectEffectNames(Player... players) {
-        Set<String> names = new HashSet<>();
-        for (Player player : players) {
-            for (Dinosaur dinosaur : player.getDinosaurs()) {
-                for (Move move : dinosaur.getMoves()) {
-                    for (Effect effect : move.getEffects()) {
-                        names.add(effect.getName());
-                    }
-                }
-            }
-        }
-        return names;
     }
 
     private String formatHistory(List<TurnRecord> history, int queriedHistoryTurns) {

@@ -8,7 +8,6 @@ import com.mesozoic.arena.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class MainWindow extends JFrame {
     private static final String HEALTH_ICON_PATH  = "assets/icons/health.png";
@@ -94,7 +93,7 @@ public class MainWindow extends JFrame {
 
         // Image
         if (d != null) {
-            panel.image.setIcon(loadIcon(d.getImagePath(), 400, 300));
+            panel.image.setIcon(loadIcon(d.getImagePath(), 384, 256));
         } else {
             panel.image.setIcon(null);
         }
@@ -143,36 +142,10 @@ public class MainWindow extends JFrame {
 
     private ImageIcon loadIcon(String path, int w, int h) {
         java.net.URL url = getClass().getClassLoader().getResource(path);
-        if (url == null) {
-            return new ImageIcon();
-        }
-
-        ImageIcon baseIcon = new ImageIcon(url);
-        int srcWidth  = baseIcon.getIconWidth();
-        int srcHeight = baseIcon.getIconHeight();
-
-        if (srcWidth <= 0 || srcHeight <= 0) {
-            return new ImageIcon();
-        }
-
-        double scale = Math.max((double) w / srcWidth, (double) h / srcHeight);
-        int scaledWidth  = (int) Math.round(srcWidth * scale);
-        int scaledHeight = (int) Math.round(srcHeight * scale);
-
-        Image scaled = baseIcon.getImage().getScaledInstance(
-                scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
-
-        BufferedImage buffer = new BufferedImage(
-                scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = buffer.createGraphics();
-        g2.drawImage(scaled, 0, 0, null);
-        g2.dispose();
-
-        int x = (scaledWidth - w) / 2;
-        int y = (scaledHeight - h) / 2;
-
-        BufferedImage cropped = buffer.getSubimage(x, y, w, h);
-        return new ImageIcon(cropped);
+        if (url == null) return new ImageIcon();
+        Image img = new ImageIcon(url).getImage()
+                .getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        return new ImageIcon(img);
     }
 
     private String stageFragment(int stage, String iconPath) {
@@ -196,7 +169,7 @@ public class MainWindow extends JFrame {
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
         column.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-        JLabel img = new JLabel(loadIcon(dino.getImagePath(), 120, 90));
+        JLabel img = new JLabel(loadIcon(dino.getImagePath(), 120, 80));
         img.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel n = new JLabel(dino.getName());
