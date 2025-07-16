@@ -14,6 +14,7 @@ public class MainWindow extends JFrame {
     private static final String STAMINA_ICON_PATH = "assets/icons/energy.png";
     private static final String SPEED_ICON_PATH   = "assets/icons/speed.png";
     private static final String ATTACK_ICON_PATH  = "assets/icons/attack.png";
+    private static final String BLEED_ICON_PATH   = "assets/icons/bleed.png";
 
     private static final int   BASE_STAT_ICON_SIZE   = 24;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
@@ -83,6 +84,7 @@ public class MainWindow extends JFrame {
             StringBuilder nameText = new StringBuilder(d.getName());
             nameText.append(stageFragment(d.getAttackStage(), ATTACK_ICON_PATH));
             nameText.append(stageFragment(d.getSpeedStage(), SPEED_ICON_PATH));
+            nameText.append(ailmentFragment(d.hasAilment("Bleeding"), BLEED_ICON_PATH));
             panel.name.setText("<html>" + nameText + "</html>");
         }
 
@@ -148,17 +150,32 @@ public class MainWindow extends JFrame {
         return new ImageIcon(img);
     }
 
+    private String iconHtml(String iconPath) {
+        java.net.URL url = getClass().getClassLoader().getResource(iconPath);
+        if (url == null) {
+            return "";
+        }
+        int size = Math.round(BASE_STAT_ICON_SIZE * 0.75f);
+        return "<img src='" + url + "' width='" + size + "' height='" + size + "'/>";
+    }
+
     private String stageFragment(int stage, String iconPath) {
         if (stage == 0) {
             return "";
         }
-        java.net.URL url = getClass().getClassLoader().getResource(iconPath);
-        if (url == null) {
+        String img = iconHtml(iconPath);
+        if (img.isEmpty()) {
             return " " + stage;
         }
-        int size = Math.round(BASE_STAT_ICON_SIZE * 0.75f);
-        return " " + stage + "<img src='" + url + "' width='" + size
-                + "' height='" + size + "'/>";
+        return " " + stage + img;
+    }
+
+    private String ailmentFragment(boolean show, String iconPath) {
+        if (!show) {
+            return "";
+        }
+        String img = iconHtml(iconPath);
+        return img.isEmpty() ? "" : " " + img;
     }
 
     /**
