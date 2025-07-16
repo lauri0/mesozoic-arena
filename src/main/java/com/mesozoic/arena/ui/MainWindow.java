@@ -3,6 +3,7 @@ package com.mesozoic.arena.ui;
 import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.Player;
 
 import javax.swing.*;
@@ -202,7 +203,10 @@ public class MainWindow extends JFrame {
     }
 
     private JButton createMoveButton(Dinosaur dino, Move move, boolean playerSide) {
-        int dmg = Math.toIntExact(Math.round(move.getDamage() * dino.getEffectiveAttack()));
+        double attackValue = move.getType() == MoveType.HEAD
+                ? dino.getEffectiveHeadAttack()
+                : dino.getEffectiveBodyAttack();
+        int dmg = Math.toIntExact(Math.round(move.getDamage() * attackValue));
         JButton button = new JButton(
                 move.getName() + " (" + dmg + " / " + move.getStaminaChange() + ")"
         );

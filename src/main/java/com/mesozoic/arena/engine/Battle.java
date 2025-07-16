@@ -6,6 +6,7 @@ import com.mesozoic.arena.ai.RandomOpponent;
 import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.MoveEffects;
 import com.mesozoic.arena.engine.AbilityEffects;
@@ -198,7 +199,10 @@ public class Battle {
             attacker.adjustStamina(move.getStaminaChange());
             applyMoveEffects(actingPlayer, opposingPlayer, move);
             if (!defenderBraced) {
-                int totalDamage = Math.toIntExact(Math.round(move.getDamage() * attacker.getEffectiveAttack()));
+                double attackValue = move.getType() == MoveType.HEAD
+                        ? attacker.getEffectiveHeadAttack()
+                        : attacker.getEffectiveBodyAttack();
+                int totalDamage = Math.toIntExact(Math.round(move.getDamage() * attackValue));
                 totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
                 int beforeHealth = defender.getHealth();
                 defender.adjustHealth(-totalDamage);

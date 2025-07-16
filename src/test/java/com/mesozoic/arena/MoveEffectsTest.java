@@ -14,10 +14,10 @@ public class MoveEffectsTest {
     public void testAreaHealHealsWholeTeam() {
         Move areaHeal = new Move("Rally", 0, 0, 0, List.of(new Effect("area heal")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur active = new Dinosaur("Active", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(areaHeal), null);
-        Dinosaur bench = new Dinosaur("Bench", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null);
+        Dinosaur active = new Dinosaur("Active", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(areaHeal), null);
+        Dinosaur bench = new Dinosaur("Bench", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
         Player p1 = new Player(List.of(active, bench));
-        Player p2 = new Player(List.of(new Dinosaur("Opponent", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null)));
+        Player p2 = new Player(List.of(new Dinosaur("Opponent", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null)));
         Battle battle = new Battle(p1, p2);
 
         active.adjustHealth(-20);
@@ -32,10 +32,10 @@ public class MoveEffectsTest {
     public void testHealCapsAtMax() {
         Move heal = new Move("Recover", 0, 0, 0, List.of(new Effect("heal")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur active = new Dinosaur("Active", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(heal), null);
-        Dinosaur bench = new Dinosaur("Bench", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null);
+        Dinosaur active = new Dinosaur("Active", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(heal), null);
+        Dinosaur bench = new Dinosaur("Bench", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
         Player p1 = new Player(List.of(active, bench));
-        Player p2 = new Player(List.of(new Dinosaur("Opponent", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null)));
+        Player p2 = new Player(List.of(new Dinosaur("Opponent", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null)));
         Battle battle = new Battle(p1, p2);
 
         active.adjustHealth(-80); // 20 health left
@@ -54,8 +54,8 @@ public class MoveEffectsTest {
     public void testDoubleAttackHitsTwice() {
         Move doubleHit = new Move("Double", 1, 0, 0, List.of(new Effect("double attack")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(doubleHit), null);
-        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null);
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(doubleHit), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(defender));
         Battle battle = new Battle(p1, p2);
@@ -68,8 +68,8 @@ public class MoveEffectsTest {
     public void testTripleAttackHitsThrice() {
         Move tripleHit = new Move("Triple", 1, 0, 0, List.of(new Effect("triple attack")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(tripleHit), null);
-        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null);
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(tripleHit), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(defender));
         Battle battle = new Battle(p1, p2);
@@ -82,8 +82,8 @@ public class MoveEffectsTest {
     public void testFrenzyRaisesAttack() {
         Move frenzy = new Move("Rage", 0, 0, 0, List.of(new Effect("frenzy")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(frenzy), null);
-        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null);
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(frenzy), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(defender));
         Battle battle = new Battle(p1, p2);
@@ -96,8 +96,8 @@ public class MoveEffectsTest {
     public void testAdrenalineRaisesAttackAndSpeed() {
         Move adrenaline = new Move("Boost", 0, 0, 0, List.of(new Effect("adrenaline")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(adrenaline), null);
-        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null);
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(adrenaline), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(defender));
         Battle battle = new Battle(p1, p2);
@@ -111,8 +111,8 @@ public class MoveEffectsTest {
     public void testBleedDealsEndTurnDamage() {
         Move bleed = new Move("Cut", 0, 0, 0, List.of(new Effect("bleed")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(bleed), null);
-        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(noop), null);
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(bleed), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(noop), null);
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(defender));
         Battle battle = new Battle(p1, p2);
@@ -126,8 +126,8 @@ public class MoveEffectsTest {
         Move bleed = new Move("Cut", 0, 0, 0, List.of(new Effect("bleed")));
         Move heal = new Move("Recover", 0, 0, 0, List.of(new Effect("heal")));
         Move noop = new Move("Wait", 0, 0, 0, List.of());
-        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(bleed), null);
-        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, List.of(heal), null);
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(bleed), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 100, 10, 10, List.of(heal), null);
         defender.adjustHealth(-40);
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(defender));

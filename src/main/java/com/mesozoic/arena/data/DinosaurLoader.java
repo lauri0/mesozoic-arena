@@ -3,6 +3,7 @@ package com.mesozoic.arena.data;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
 import org.yaml.snakeyaml.Yaml;
@@ -84,7 +85,9 @@ public class DinosaurLoader {
     private Dinosaur parseDinosaur(String name, Map<String, Object> values) throws IOException {
         int health = ((Number) values.get("health")).intValue();
         int speed = ((Number) values.get("speed")).intValue();
-        double attack = ((Number) values.getOrDefault("attack", 1)).doubleValue();
+        double defaultAttack = ((Number) values.getOrDefault("attack", 1)).doubleValue();
+        double headAttack = ((Number) values.getOrDefault("head attack", defaultAttack)).doubleValue();
+        double bodyAttack = ((Number) values.getOrDefault("body attack", defaultAttack)).doubleValue();
         String imagePath = (String) values.get("image");
         validateImageExists(imagePath);
 
@@ -95,7 +98,7 @@ public class DinosaurLoader {
         String abilityName = String.valueOf(values.getOrDefault("ability", "None"));
         Ability ability = abilityTemplates.get(abilityName);
 
-        return new Dinosaur(name, health, speed, imagePath, 100, attack, moves, ability);
+        return new Dinosaur(name, health, speed, imagePath, 100, headAttack, bodyAttack, moves, ability);
     }
 
     private List<Move> resolveMoves(List<String> names) {
@@ -141,7 +144,7 @@ public class DinosaurLoader {
                     move.getDescription(), move.getEffects()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
-                source.getStamina(), source.getAttack(), copiedMoves, source.getAbility());
+                source.getStamina(), source.getHeadAttack(), source.getBodyAttack(), copiedMoves, source.getAbility());
     }
 
     private Map<String, Move> loadMoves() throws IOException {
@@ -159,8 +162,10 @@ public class DinosaurLoader {
                     int stamina = ((Number) values.getOrDefault("stamina", 0)).intValue();
                     int priority = ((Number) values.getOrDefault("priority", 0)).intValue();
                     String description = String.valueOf(values.getOrDefault("description", ""));
+                    String typeLabel = String.valueOf(values.getOrDefault("type", "body"));
+                    MoveType type = "head".equalsIgnoreCase(typeLabel) ? MoveType.HEAD : MoveType.BODY;
                     List<Effect> effects = parseEffects(values.get("effects"));
-                    map.put(name, new Move(name, damage, stamina, priority, description, effects));
+                    map.put(name, new Move(name, damage, stamina, priority, description, type, effects));
                 }
             }
         }

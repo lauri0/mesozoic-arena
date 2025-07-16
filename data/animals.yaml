@@ -1,7 +1,8 @@
 Allosaurus:
   health: 140
   speed: 100
-  attack: 1.0
+  head attack: 1.0
+  body attack: 1.0
   ability: None
   image: assets/animals/allosaurus.png
   moves:
@@ -13,7 +14,8 @@ Allosaurus:
 Ceratosaurus:
   health: 110
   speed: 110
-  attack: 0.95
+  head attack: 0.95
+  body attack: 0.95
   ability: None
   image: assets/animals/ceratosaurus.png
   moves:
@@ -25,7 +27,8 @@ Ceratosaurus:
 Corythosaurus:
   health: 140
   speed: 95
-  attack: 0.7
+  head attack: 0.7
+  body attack: 0.7
   ability: None
   image: assets/animals/corythosaurus.png
   moves:
@@ -37,7 +40,8 @@ Corythosaurus:
 Stegosaurus:
   health: 160
   speed: 60
-  attack: 1.0
+  head attack: 1.0
+  body attack: 1.0
   ability: Spiky Body
   image: assets/animals/stegosaurus.png
   moves:
@@ -49,7 +53,8 @@ Stegosaurus:
 Styracosaurus:
   health: 90
   speed: 60
-  attack: 0.8
+  head attack: 0.8
+  body attack: 0.8
   ability: Intimidate
   image: assets/animals/styracosaurus.png
   moves:
