@@ -153,8 +153,6 @@ public class Battle {
             }
         }
 
-        regenerateBenchStamina(playerOne);
-        regenerateBenchStamina(playerTwo);
         AbilityEffects.endTurn(playerOne.getActiveDinosaur());
         AbilityEffects.endTurn(playerTwo.getActiveDinosaur());
         AilmentEffects.endTurn(playerOne.getActiveDinosaur());
@@ -196,7 +194,6 @@ public class Battle {
                 return defenderFainted;
             }
 
-            attacker.adjustStamina(move.getStaminaChange());
             applyMoveEffects(actingPlayer, opposingPlayer, move);
             if (!defenderBraced) {
                 double attackValue = move.getType() == MoveType.HEAD
@@ -272,15 +269,6 @@ public class Battle {
         return target;
     }
 
-
-    private void regenerateBenchStamina(Player player) {
-        Dinosaur active = player.getActiveDinosaur();
-        for (Dinosaur dinosaur : player.getDinosaurs()) {
-            if (!dinosaur.equals(active)) {
-                dinosaur.adjustStamina(10);
-            }
-        }
-    }
 
     private void applyMoveEffects(Player actingPlayer, Player defendingPlayer, Move move) {
         Dinosaur active = actingPlayer.getActiveDinosaur();

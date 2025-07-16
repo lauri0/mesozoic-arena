@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Simple AI that selects a random move the dinosaur has enough stamina to use.
+ * Simple AI that selects a random move from the dinosaur's move list.
  */
 public class RandomOpponent implements OpponentAgent {
     private final Random random = new Random();
@@ -20,20 +20,11 @@ public class RandomOpponent implements OpponentAgent {
         if (active == null) {
             return null;
         }
-        List<Move> usable = getUsableMoves(active);
-        if (usable.isEmpty()) {
+        List<Move> moves = active.getMoves();
+        if (moves.isEmpty()) {
             return null;
         }
-        return usable.get(random.nextInt(usable.size()));
+        return moves.get(random.nextInt(moves.size()));
     }
 
-    private List<Move> getUsableMoves(Dinosaur dinosaur) {
-        List<Move> usable = new ArrayList<>();
-        for (Move move : dinosaur.getMoves()) {
-            if (dinosaur.canUse(move)) {
-                usable.add(move);
-            }
-        }
-        return usable;
-    }
 }

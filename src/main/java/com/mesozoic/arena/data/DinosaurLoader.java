@@ -98,7 +98,7 @@ public class DinosaurLoader {
         String abilityName = String.valueOf(values.getOrDefault("ability", "None"));
         Ability ability = abilityTemplates.get(abilityName);
 
-        return new Dinosaur(name, health, speed, imagePath, 100, headAttack, bodyAttack, moves, ability);
+        return new Dinosaur(name, health, speed, imagePath, headAttack, bodyAttack, moves, ability);
     }
 
     private List<Move> resolveMoves(List<String> names) {
@@ -108,7 +108,7 @@ public class DinosaurLoader {
                 Move template = moveTemplates.get(moveName);
                 if (template != null) {
                     moves.add(new Move(template.getName(), template.getDamage(),
-                            template.getStaminaChange(), template.getPriority(),
+                            template.getPriority(),
                             template.getDescription(), template.getEffects()));
                 }
             }
@@ -140,11 +140,11 @@ public class DinosaurLoader {
         List<Move> copiedMoves = new ArrayList<>();
         for (Move move : source.getMoves()) {
             copiedMoves.add(new Move(move.getName(), move.getDamage(),
-                    move.getStaminaChange(), move.getPriority(),
+                    move.getPriority(),
                     move.getDescription(), move.getEffects()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
-                source.getStamina(), source.getHeadAttack(), source.getBodyAttack(), copiedMoves, source.getAbility());
+                source.getHeadAttack(), source.getBodyAttack(), copiedMoves, source.getAbility());
     }
 
     private Map<String, Move> loadMoves() throws IOException {
@@ -159,13 +159,12 @@ public class DinosaurLoader {
                     @SuppressWarnings("unchecked")
                     Map<String, Object> values = (Map<String, Object>) entry.getValue();
                     int damage = ((Number) values.getOrDefault("damage", 0)).intValue();
-                    int stamina = ((Number) values.getOrDefault("stamina", 0)).intValue();
                     int priority = ((Number) values.getOrDefault("priority", 0)).intValue();
                     String description = String.valueOf(values.getOrDefault("description", ""));
                     String typeLabel = String.valueOf(values.getOrDefault("type", "body"));
                     MoveType type = "head".equalsIgnoreCase(typeLabel) ? MoveType.HEAD : MoveType.BODY;
                     List<Effect> effects = parseEffects(values.get("effects"));
-                    map.put(name, new Move(name, damage, stamina, priority, description, type, effects));
+                    map.put(name, new Move(name, damage, priority, description, type, effects));
                 }
             }
         }

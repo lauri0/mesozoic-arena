@@ -38,7 +38,6 @@ public final class DinosaurLoader {
                 String name = entry.getKey();
                 Map<String, Object> val = castMap(entry.getValue());
                 int damage = toInt(val.get("damage"));
-                int stamina = toInt(val.get("stamina"));
                 int priority = toInt(val.getOrDefault("priority", 0));
                 String typeLabel = String.valueOf(val.getOrDefault("type", "body"));
                 MoveType type = "head".equalsIgnoreCase(typeLabel) ? MoveType.HEAD : MoveType.BODY;
@@ -51,7 +50,7 @@ public final class DinosaurLoader {
                         }
                     }
                 }
-                moves.put(name, new Move(name, damage, stamina, priority, "", type, effects));
+                moves.put(name, new Move(name, damage, priority, "", type, effects));
             }
 
             Map<String, Object> data = yaml.load(dinoStream);
@@ -72,12 +71,12 @@ public final class DinosaurLoader {
                         Move m = moves.get(String.valueOf(n));
                         if (m != null) {
                             dinoMoves.add(new Move(m.getName(), m.getDamage(),
-                                    m.getStaminaChange(), m.getPriority(), m.getDescription(), m.getType(),
+                                    m.getPriority(), m.getDescription(), m.getType(),
                                     m.getEffects()));
                         }
                     }
                 }
-                dinosaurs.add(new Dinosaur(name, health, speed, image, 100, headAttack, bodyAttack,
+                dinosaurs.add(new Dinosaur(name, health, speed, image, headAttack, bodyAttack,
                         dinoMoves, null));
             }
             return dinosaurs;

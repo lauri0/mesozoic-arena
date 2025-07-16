@@ -131,7 +131,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             return null;
         }
         for (Move move : active.getMoves()) {
-            if (move.getName().equalsIgnoreCase(name) && active.canUse(move)) {
+            if (move.getName().equalsIgnoreCase(name)) {
                 return move;
             }
         }
@@ -143,7 +143,7 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
             return null;
         }
         for (Move move : active.getMoves()) {
-            if (text.contains(move.getName().toLowerCase()) && active.canUse(move)) {
+            if (text.contains(move.getName().toLowerCase())) {
                 return move;
             }
         }
@@ -168,13 +168,13 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     private String formatMoves(Dinosaur dino) {
         return dino.getMoves().stream()
-                .map(m -> m.getName() + ": " + m.getDescriptionWithDamageAndStamina(dino))
+                .map(m -> m.getName() + ": " + m.getDescriptionWithDamage(dino))
                 .collect(Collectors.joining("\n"));
     }
 
     private String describeDinosaurStatsAndAbility(Dinosaur dino) {
-        return dino.getName() + " (HP: " + dino.getHealth() + ", Stamina: "
-                + dino.getStamina() + ", Speed: " + dino.getEffectiveSpeed() + ", Ability: "
+        return dino.getName() + " (HP: " + dino.getHealth() + ", Speed: "
+                + dino.getEffectiveSpeed() + ", Ability: "
                 + dino.getAbility().getDescription() + ").\n";
     }
 
@@ -182,9 +182,6 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return "You are playing Mesozoic Arena, a turn based dinosaur battle game. " +
                 "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
                 "dinosaurs using lower priority moves regardless of speed. " +
-                "Moves can cost (move's stamina amount negative) or in some cases provide stamina (move's stamina positive) to their users. " +
-                "A dinosaur can only use moves which they have enough stamina for. Maximum stamina is 100. " +
-                "Benched dinosaurs regain 10 stamina at the end of each turn. " +
                 "You may also switch your active dinosaur, which happens before moves but skips using a move. " +
                 "The player who knocks out all of the opponent's dinosaurs first wins the match. " +
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
