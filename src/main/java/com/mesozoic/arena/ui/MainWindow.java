@@ -7,6 +7,7 @@ import com.mesozoic.arena.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class MainWindow extends JFrame {
     private static final String HEALTH_ICON_PATH  = "assets/icons/health.png";
@@ -141,10 +142,36 @@ public class MainWindow extends JFrame {
 
     private ImageIcon loadIcon(String path, int w, int h) {
         java.net.URL url = getClass().getClassLoader().getResource(path);
-        if (url == null) return new ImageIcon();
-        Image img = new ImageIcon(url).getImage()
-                .getScaledInstance(w, h, Image.SCALE_SMOOTH);
-        return new ImageIcon(img);
+        if (url == null) {
+            return new ImageIcon();
+        }
+
+        ImageIcon baseIcon = new ImageIcon(url);
+        int srcWidth  = baseIcon.getIconWidth();
+        int srcHeight = baseIcon.getIconHeight();
+
+        if (srcWidth <= 0 || srcHeight <= 0) {
+            return new ImageIcon();
+        }
+
+        double scale = Math.max((double) w / srcWidth, (double) h / srcHeight);
+        int scaledWidth  = (int) Math.round(srcWidth * scale);
+        int scaledHeight = (int) Math.round(srcHeight * scale);
+
+        Image scaled = baseIcon.getImage().getScaledInstance(
+                scaledWidth, scaledHeight, Image.SCALE_SMOOTH);
+
+        BufferedImage buffer = new BufferedImage(
+                scaledWidth, scaledHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = buffer.createGraphics();
+        g2.drawImage(scaled, 0, 0, null);
+        g2.dispose();
+
+        int x = (scaledWidth - w) / 2;
+        int y = (scaledHeight - h) / 2;
+
+        BufferedImage cropped = buffer.getSubimage(x, y, w, h);
+        return new ImageIcon(cropped);
     }
 
     private String stageFragment(int stage, String iconPath) {
