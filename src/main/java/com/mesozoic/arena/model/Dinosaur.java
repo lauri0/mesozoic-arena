@@ -14,21 +14,23 @@ public class Dinosaur {
     private int speedStage = 0;
     private final String imagePath;
     private final Ability ability;
-    private final double attack;
+    private final double headAttack;
+    private final double bodyAttack;
     private int attackStage = 0;
     private int stamina;
     private final List<Move> moves;
     private final List<Ailment> ailments = new ArrayList<>();
 
-    public Dinosaur(String name, int health, int speed, String imagePath, int stamina, double attack,
-                    List<Move> moves, Ability ability) {
+    public Dinosaur(String name, int health, int speed, String imagePath, int stamina,
+                    double headAttack, double bodyAttack, List<Move> moves, Ability ability) {
         this.name = name;
         this.health = health;
         this.maxHealth = health;
         this.speed = speed;
         this.imagePath = imagePath;
         this.ability = ability;
-        this.attack = attack;
+        this.headAttack = headAttack;
+        this.bodyAttack = bodyAttack;
         this.stamina = stamina;
         if (moves == null) {
             this.moves = new ArrayList<>();
@@ -57,8 +59,12 @@ public class Dinosaur {
         return imagePath;
     }
 
-    public double getAttack() {
-        return attack;
+    public double getHeadAttack() {
+        return headAttack;
+    }
+
+    public double getBodyAttack() {
+        return bodyAttack;
     }
 
     public Ability getAbility() {
@@ -151,8 +157,12 @@ public class Dinosaur {
         speedStage = 0;
     }
 
-    public double getEffectiveAttack() {
-        return attack * stageMultiplier(attackStage);
+    public double getEffectiveHeadAttack() {
+        return headAttack * stageMultiplier(attackStage);
+    }
+
+    public double getEffectiveBodyAttack() {
+        return bodyAttack * stageMultiplier(attackStage);
     }
 
     public int getEffectiveSpeed() {

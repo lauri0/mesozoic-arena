@@ -4,6 +4,7 @@ Bite:
   priority: 0
   effects: []
   description: "Deal XX damage. Costs YY stamina."
+  type: head
 
 Brace:
   damage: 0
@@ -11,6 +12,7 @@ Brace:
   priority: 2
   effects: [brace]
   description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority. Costs YY stamina."
+  type: body
 
 Charge:
   damage: 40
@@ -18,6 +20,7 @@ Charge:
   priority: 1
   effects: []
   description: "Deal XX damage. +1 Priority. Costs YY stamina."
+  type: body
 
 Double Scratch:
   damage: 18
@@ -25,6 +28,7 @@ Double Scratch:
   priority: 0
   effects: [double attack]
   description: "Attack twice for XX damage each. Costs YY stamina."
+  type: body
 
 Kick:
   damage: 30
@@ -32,6 +36,7 @@ Kick:
   priority: 0
   effects: []
   description: "Deal XX damage. Costs YY stamina."
+  type: body
 
 Heal:
   damage: 0
@@ -39,6 +44,7 @@ Heal:
   priority: 1
   effects: [heal]
   description: "Recover 30 health. +1 Priority."
+  type: body
 
 Impale:
   damage: 40
@@ -46,6 +52,7 @@ Impale:
   priority: 0
   effects: []
   description: "Deal XX damage. Costs YY stamina."
+  type: head
 
 Roar:
   damage: 0
@@ -53,6 +60,7 @@ Roar:
   priority: 0
   effects: []
   description: "Gain YY stamina."
+  type: head
 
 Scratch:
   damage: 20
@@ -60,6 +68,7 @@ Scratch:
   priority: 0
   effects: []
   description: "Deal XX damage. Costs YY stamina."
+  type: body
 
 Tail Swipe:
   damage: 30
@@ -67,6 +76,7 @@ Tail Swipe:
   priority: 0
   effects: []
   description: "Deal XX damage. Costs YY stamina."
+  type: body
 
 Thagomizer Swipe:
   damage: 40
@@ -74,6 +84,7 @@ Thagomizer Swipe:
   priority: 0
   effects: []
   description: "Deal XX damage. Costs YY stamina."
+  type: body
 
 Stomp:
   damage: 10
@@ -81,3 +92,4 @@ Stomp:
   priority: 0
   effects: []
   description: "Deal XX damage. Costs YY stamina."
+  type: body

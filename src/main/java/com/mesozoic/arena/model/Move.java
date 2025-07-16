@@ -13,12 +13,17 @@ public class Move {
     private final int priority;
     private final List<Effect> effects;
     private final String description;
+    private final MoveType type;
 
     public Move(String name, int damage, int staminaChange, int priority, List<Effect> effects) {
-        this(name, damage, staminaChange, priority, "", effects);
+        this(name, damage, staminaChange, priority, "", MoveType.BODY, effects);
     }
 
     public Move(String name, int damage, int staminaChange, int priority, String description, List<Effect> effects) {
+        this(name, damage, staminaChange, priority, description, MoveType.BODY, effects);
+    }
+
+    public Move(String name, int damage, int staminaChange, int priority, String description, MoveType type, List<Effect> effects) {
         this.name = name;
         this.damage = damage;
         this.staminaChange = staminaChange;
@@ -29,6 +34,7 @@ public class Move {
             this.effects = new ArrayList<>(effects);
         }
         this.description = description == null ? "" : description;
+        this.type = type == null ? MoveType.BODY : type;
     }
 
     public String getName() {
@@ -55,8 +61,15 @@ public class Move {
         return description;
     }
 
+    public MoveType getType() {
+        return type;
+    }
+
     public String getDescriptionWithDamageAndStamina(Dinosaur user) {
-        long realDamage = Math.round(damage * user.getEffectiveAttack());
+        double attackValue = type == MoveType.HEAD
+                ? user.getEffectiveHeadAttack()
+                : user.getEffectiveBodyAttack();
+        long realDamage = Math.round(damage * attackValue);
         String descriptionWithStamina = description.replace("YY", String.valueOf(Math.abs(staminaChange)));
         return descriptionWithStamina.replace("XX", String.valueOf(realDamage));
     }

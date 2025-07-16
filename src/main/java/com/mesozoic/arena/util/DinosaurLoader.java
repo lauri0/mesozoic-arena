@@ -3,6 +3,7 @@ package com.mesozoic.arena.util;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.MoveType;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,8 @@ public final class DinosaurLoader {
                 int damage = toInt(val.get("damage"));
                 int stamina = toInt(val.get("stamina"));
                 int priority = toInt(val.getOrDefault("priority", 0));
+                String typeLabel = String.valueOf(val.getOrDefault("type", "body"));
+                MoveType type = "head".equalsIgnoreCase(typeLabel) ? MoveType.HEAD : MoveType.BODY;
                 List<Effect> effects = new ArrayList<>();
                 List<?> eff = castObjectList(val.get("effects"));
                 if (eff != null) {
@@ -48,7 +51,7 @@ public final class DinosaurLoader {
                         }
                     }
                 }
-                moves.put(name, new Move(name, damage, stamina, priority, effects));
+                moves.put(name, new Move(name, damage, stamina, priority, "", type, effects));
             }
 
             Map<String, Object> data = yaml.load(dinoStream);
@@ -58,7 +61,9 @@ public final class DinosaurLoader {
                 Map<String, Object> dinoData = castMap(entry.getValue());
                 int health = toInt(dinoData.get("health"));
                 int speed = toInt(dinoData.get("speed"));
-                int attack = toInt(dinoData.getOrDefault("attack", 10));
+                int defaultAttack = toInt(dinoData.getOrDefault("attack", 10));
+                int headAttack = toInt(dinoData.getOrDefault("head attack", defaultAttack));
+                int bodyAttack = toInt(dinoData.getOrDefault("body attack", defaultAttack));
                 String image = String.valueOf(dinoData.get("image"));
                 List<?> moveNames = castObjectList(dinoData.get("moves"));
                 List<Move> dinoMoves = new ArrayList<>();
@@ -67,11 +72,12 @@ public final class DinosaurLoader {
                         Move m = moves.get(String.valueOf(n));
                         if (m != null) {
                             dinoMoves.add(new Move(m.getName(), m.getDamage(),
-                                    m.getStaminaChange(), m.getPriority(), m.getEffects()));
+                                    m.getStaminaChange(), m.getPriority(), m.getDescription(), m.getType(),
+                                    m.getEffects()));
                         }
                     }
                 }
-                dinosaurs.add(new Dinosaur(name, health, speed, image, 100, attack,
+                dinosaurs.add(new Dinosaur(name, health, speed, image, 100, headAttack, bodyAttack,
                         dinoMoves, null));
             }
             return dinosaurs;

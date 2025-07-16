@@ -19,10 +19,10 @@ public class AbilityEffectsTest {
 
         Dinosaur attacker = new Dinosaur(
                 "Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 1,
-                List.of(strike), null);
+                1, List.of(strike), null);
         Dinosaur spiky = new Dinosaur(
                 "Spiky", 100, 50, "assets/animals/allosaurus.png", 100, 10,
-                List.of(waitMove), new Ability("Spiky Body", ""));
+                10, List.of(waitMove), new Ability("Spiky Body", ""));
 
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(spiky));
@@ -41,10 +41,10 @@ public class AbilityEffectsTest {
 
         Dinosaur attacker = new Dinosaur(
                 "Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 1,
-                List.of(strike), null);
+                1, List.of(strike), null);
         Dinosaur armored = new Dinosaur(
                 "Armored", 100, 50, "assets/animals/allosaurus.png", 100, 10,
-                List.of(waitMove), new Ability("Armored", ""));
+                10, List.of(waitMove), new Ability("Armored", ""));
 
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(armored));
@@ -61,7 +61,7 @@ public class AbilityEffectsTest {
         Move cheer = new Move("Cheer", 0, 0, 0, List.of());
         Dinosaur helper = new Dinosaur(
                 "Helper", 100, 50, "assets/animals/allosaurus.png", 100, 10,
-                List.of(cheer), new Ability("Supporter", ""));
+                10, List.of(cheer), new Ability("Supporter", ""));
 
         int modified = AbilityEffects.modifyPriority(helper, cheer);
         assertEquals(1, modified);
@@ -78,10 +78,10 @@ public class AbilityEffectsTest {
 
         Dinosaur berserker = new Dinosaur(
                 "Berserker", 100, 50, "assets/animals/allosaurus.png", 100, 10,
-                List.of(strike), new Ability("Berserk", ""));
+                10, List.of(strike), new Ability("Berserk", ""));
         Dinosaur target = new Dinosaur(
                 "Target", 20, 50, "assets/animals/allosaurus.png", 100, 10,
-                List.of(waitMove), null);
+                10, List.of(waitMove), null);
 
         Player p1 = new Player(List.of(berserker));
         Player p2 = new Player(List.of(target));
@@ -99,10 +99,10 @@ public class AbilityEffectsTest {
 
         Dinosaur attacker = new Dinosaur(
                 "Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 1,
-                List.of(strike), null);
+                1, List.of(strike), null);
         Dinosaur tough = new Dinosaur(
                 "Tough", 100, 50, "assets/animals/allosaurus.png", 100, 10,
-                List.of(waitMove), new Ability("Tough", ""));
+                10, List.of(waitMove), new Ability("Tough", ""));
 
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(tough));
@@ -121,10 +121,10 @@ public class AbilityEffectsTest {
 
         Dinosaur attacker = new Dinosaur(
                 "Attacker", 100, 50, "assets/animals/allosaurus.png", 100, 1,
-                List.of(strike), null);
+                1, List.of(strike), null);
         Dinosaur tough = new Dinosaur(
                 "Tough", 100, 50, "assets/animals/allosaurus.png", 100, 10,
-                List.of(waitMove), new Ability("Tough", ""));
+                10, List.of(waitMove), new Ability("Tough", ""));
 
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(tough));
