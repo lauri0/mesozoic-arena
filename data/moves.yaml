@@ -87,7 +87,7 @@ Thagomizer Swipe:
   type: body
 
 Stomp:
-  damage: 10
+  damage: 22
   stamina: 0
   priority: 0
   effects: []
