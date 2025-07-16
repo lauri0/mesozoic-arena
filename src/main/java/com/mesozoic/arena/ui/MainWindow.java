@@ -14,6 +14,8 @@ public class MainWindow extends JFrame {
     private static final String SPEED_ICON_PATH   = "assets/icons/speed.png";
     private static final String ATTACK_ICON_PATH  = "assets/icons/attack.png";
     private static final String BLEED_ICON_PATH   = "assets/icons/bleed.png";
+    private static final String HEAD_ICON_PATH    = "assets/icons/head.png";
+    private static final String BODY_ICON_PATH    = "assets/icons/tail.png";
 
     private static final int   BASE_STAT_ICON_SIZE   = 24;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
@@ -88,8 +90,21 @@ public class MainWindow extends JFrame {
         }
 
         // Stats with icons
-        setStatLabel(panel.health,  HEALTH_ICON_PATH,  d == null ? 0 : d.getHealth(),  true);
-        setStatLabel(panel.speed,   SPEED_ICON_PATH,   d == null ? 0 : d.getSpeed(),   true);
+        if (d == null) {
+            setStatLabel(panel.health,  HEALTH_ICON_PATH, "0", true);
+            setStatLabel(panel.headAttack, HEAD_ICON_PATH, "0", true);
+            setStatLabel(panel.bodyAttack, BODY_ICON_PATH, "0", true);
+            setStatLabel(panel.speed,   SPEED_ICON_PATH,  "0", true);
+        } else {
+            int percent = Math.round(100f * d.getHealth() / d.getMaxHealth());
+            String hpText = d.getHealth() + " (" + percent + "%)";
+            setStatLabel(panel.health, HEALTH_ICON_PATH, hpText, true);
+            setStatLabel(panel.headAttack, HEAD_ICON_PATH,
+                    String.format("%.2f", d.getHeadAttack()), true);
+            setStatLabel(panel.bodyAttack, BODY_ICON_PATH,
+                    String.format("%.2f", d.getBodyAttack()), true);
+            setStatLabel(panel.speed, SPEED_ICON_PATH, d.getSpeed(), true);
+        }
 
         // Image
         if (d != null) {
@@ -127,17 +142,21 @@ public class MainWindow extends JFrame {
     }
 
     /**
-     * Helper to put a colored icon + number into a JLabel
+     * Helper to put an icon and value text into a JLabel.
      */
-    private void setStatLabel(JLabel label, String iconPath, int value, boolean large) {
+    private void setStatLabel(JLabel label, String iconPath, String text, boolean large) {
         int iconSize = large ? Math.round(BASE_STAT_ICON_SIZE * STAT_LARGE_ICON_SIZE_MULT) : BASE_STAT_ICON_SIZE;
         label.setIcon(loadIcon(iconPath, iconSize, iconSize));
-        label.setText(String.valueOf(value));
+        label.setText(text);
         float fontSize = label.getFont().getSize2D();
         if (large) {
             fontSize = BASE_STAT_FONT_SIZE;
         }
         label.setFont(label.getFont().deriveFont(fontSize));
+    }
+
+    private void setStatLabel(JLabel label, String iconPath, int value, boolean large) {
+        setStatLabel(label, iconPath, String.valueOf(value), large);
     }
 
     private ImageIcon loadIcon(String path, int w, int h) {
@@ -193,8 +212,11 @@ public class MainWindow extends JFrame {
 
         JLabel hp = new JLabel();
         setStatLabel(hp, HEALTH_ICON_PATH, dino.getHealth(), false);
-        JPanel stats = new JPanel(new GridLayout(1,1,5,0));
+        JLabel sp = new JLabel();
+        setStatLabel(sp, SPEED_ICON_PATH, dino.getSpeed(), false);
+        JPanel stats = new JPanel(new GridLayout(1,2,5,0));
         stats.add(hp);
+        stats.add(sp);
         stats.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JButton sw = new JButton("Switch");
@@ -239,8 +261,10 @@ public class MainWindow extends JFrame {
         final boolean isPlayerSide;
         final JLabel image   = new JLabel();
         final JLabel name    = new JLabel();
-        final JLabel health  = new JLabel();
-        final JLabel speed   = new JLabel();
+        final JLabel health      = new JLabel();
+        final JLabel headAttack  = new JLabel();
+        final JLabel bodyAttack  = new JLabel();
+        final JLabel speed       = new JLabel();
         final JPanel bench   = new JPanel(new FlowLayout(FlowLayout.LEFT, 5,5));
         final JPanel moves   = new JPanel(new GridLayout(0,2,5,5));
 
@@ -260,8 +284,10 @@ public class MainWindow extends JFrame {
             // Center: stats + bench & moves
             Box info = Box.createVerticalBox();
             info.add(name);
-            JPanel statsRow = new JPanel(new GridLayout(1,2,5,0));
+            JPanel statsRow = new JPanel(new GridLayout(1,4,5,0));
             statsRow.add(health);
+            statsRow.add(headAttack);
+            statsRow.add(bodyAttack);
             statsRow.add(speed);
             statsRow.setAlignmentX(Component.CENTER_ALIGNMENT);
             info.add(statsRow);
