@@ -238,7 +238,7 @@ public class MainWindow extends JFrame {
     }
 
     private JButton createMoveButton(Dinosaur dino, Move move, boolean playerSide) {
-        double attackValue = move.getType() == MoveType.HEAD
+        double attackValue = move.getKind() == MoveType.HEAD
                 ? dino.getEffectiveHeadAttack()
                 : dino.getEffectiveBodyAttack();
         int damage = Math.toIntExact(Math.round(move.getDamage() * attackValue));

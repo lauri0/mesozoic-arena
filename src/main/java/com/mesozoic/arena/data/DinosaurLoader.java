@@ -109,7 +109,7 @@ public class DinosaurLoader {
                 if (template != null) {
                     moves.add(new Move(template.getName(), template.getDamage(),
                             template.getPriority(), template.getDescription(),
-                            template.getType(), template.getEffects(),
+                            template.getKind(), template.getEffects(),
                             template.getAccuracy()));
                 }
             }
@@ -142,7 +142,7 @@ public class DinosaurLoader {
         for (Move move : source.getMoves()) {
             copiedMoves.add(new Move(move.getName(), move.getDamage(),
                     move.getPriority(),
-                    move.getDescription(), move.getType(),
+                    move.getDescription(), move.getKind(),
                     move.getEffects(), move.getAccuracy()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
@@ -163,11 +163,11 @@ public class DinosaurLoader {
                     int damage = ((Number) values.getOrDefault("damage", 0)).intValue();
                     int priority = ((Number) values.getOrDefault("priority", 0)).intValue();
                     String description = String.valueOf(values.getOrDefault("description", ""));
-                    String typeLabel = String.valueOf(values.getOrDefault("type", "body"));
-                    MoveType type = "head".equalsIgnoreCase(typeLabel) ? MoveType.HEAD : MoveType.BODY;
+                    String kindLabel = String.valueOf(values.getOrDefault("kind", "body"));
+                    MoveType kind = "head".equalsIgnoreCase(kindLabel) ? MoveType.HEAD : MoveType.BODY;
                     double accuracy = ((Number) values.getOrDefault("accuracy", 1.0)).doubleValue();
                     List<Effect> effects = parseEffects(values.get("effects"));
-                    map.put(name, new Move(name, damage, priority, description, type, effects, accuracy));
+                    map.put(name, new Move(name, damage, priority, description, kind, effects, accuracy));
                 }
             }
         }
