@@ -17,6 +17,7 @@ public class MainWindow extends JFrame {
     private static final String BLEED_ICON_PATH   = "assets/icons/bleed.png";
     private static final String HEAD_ICON_PATH    = "assets/icons/head.png";
     private static final String BODY_ICON_PATH    = "assets/icons/tail.png";
+    private static final String TYPE_CHART_PATH   = "assets/other/type_chart.PNG";
 
     private static final int   BASE_STAT_ICON_SIZE   = 24;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
@@ -52,7 +53,12 @@ public class MainWindow extends JFrame {
         npcArea.setWrapStyleWord(true);
         JPanel npcPanel = new JPanel(new BorderLayout());
         JLabel npcLabel = new JLabel("NPC's thoughts", JLabel.CENTER);
-        npcPanel.add(npcLabel, BorderLayout.NORTH);
+        JButton typeChartButton = new JButton("Type Chart");
+        typeChartButton.addActionListener(e -> openTypeChart());
+        Box npcHeader = Box.createVerticalBox();
+        npcHeader.add(typeChartButton);
+        npcHeader.add(npcLabel);
+        npcPanel.add(npcHeader, BorderLayout.NORTH);
         npcPanel.add(new JScrollPane(npcArea), BorderLayout.CENTER);
         npcPanel.setPreferredSize(new Dimension(350, 100));
         add(npcPanel, BorderLayout.EAST);
@@ -83,7 +89,7 @@ public class MainWindow extends JFrame {
         if (d == null) {
             panel.name.setText("None");
         } else {
-            StringBuilder nameText = new StringBuilder(d.getName());
+            StringBuilder nameText = new StringBuilder(formatDinoName(d));
             nameText.append(stageFragment(d.getAttackStage(), ATTACK_ICON_PATH));
             nameText.append(stageFragment(d.getSpeedStage(), SPEED_ICON_PATH));
             nameText.append(ailmentFragment(d.hasAilment("Bleeding"), BLEED_ICON_PATH));
@@ -160,12 +166,32 @@ public class MainWindow extends JFrame {
         setStatLabel(label, iconPath, String.valueOf(value), large);
     }
 
-    private ImageIcon loadIcon(String path, int w, int h) {
+    private ImageIcon loadIcon(String path) {
         java.net.URL url = getClass().getClassLoader().getResource(path);
-        if (url == null) return new ImageIcon();
-        Image img = new ImageIcon(url).getImage()
-                .getScaledInstance(w, h, Image.SCALE_SMOOTH);
+        return url == null ? new ImageIcon() : new ImageIcon(url);
+    }
+
+    private ImageIcon loadIcon(String path, int w, int h) {
+        ImageIcon base = loadIcon(path);
+        if (base.getIconWidth() <= 0) {
+            return new ImageIcon();
+        }
+        Image img = base.getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH);
         return new ImageIcon(img);
+    }
+
+    private void openTypeChart() {
+        ImageIcon icon = loadIcon(TYPE_CHART_PATH);
+        if (icon.getIconWidth() <= 0) {
+            JOptionPane.showMessageDialog(this, "Type chart not found.");
+            return;
+        }
+        JLabel label = new JLabel(icon);
+        JFrame frame = new JFrame("Type Chart");
+        frame.add(new JScrollPane(label));
+        frame.pack();
+        frame.setLocationRelativeTo(this);
+        frame.setVisible(true);
     }
 
     private String iconHtml(String iconPath) {
@@ -196,6 +222,16 @@ public class MainWindow extends JFrame {
         return img.isEmpty() ? "" : " " + img;
     }
 
+    private String formatDinoName(Dinosaur dino) {
+        String types = dino.getTypes().stream()
+                .map(t -> t.name().charAt(0) + t.name().substring(1).toLowerCase())
+                .collect(java.util.stream.Collectors.joining("/"));
+        if (types.isEmpty()) {
+            return dino.getName();
+        }
+        return types + " " + dino.getName();
+    }
+
     /**
      * Creates the detailed bench entry for the given dinosaur.
      */
@@ -207,7 +243,7 @@ public class MainWindow extends JFrame {
         JLabel img = new JLabel(loadIcon(dino.getImagePath(), 120, 80));
         img.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel n = new JLabel(dino.getName());
+        JLabel n = new JLabel(formatDinoName(dino));
         n.setAlignmentX(Component.CENTER_ALIGNMENT);
         n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
 
