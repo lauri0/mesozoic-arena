@@ -13,6 +13,7 @@ public class MainWindow extends JFrame {
     private static final String HEALTH_ICON_PATH  = "assets/icons/health.png";
     private static final String SPEED_ICON_PATH   = "assets/icons/speed.png";
     private static final String ATTACK_ICON_PATH  = "assets/icons/attack.png";
+    private static final String ACCURACY_ICON_PATH = "assets/icons/accuracy.png";
     private static final String BLEED_ICON_PATH   = "assets/icons/bleed.png";
     private static final String HEAD_ICON_PATH    = "assets/icons/head.png";
     private static final String BODY_ICON_PATH    = "assets/icons/tail.png";
@@ -240,8 +241,12 @@ public class MainWindow extends JFrame {
         double attackValue = move.getType() == MoveType.HEAD
                 ? dino.getEffectiveHeadAttack()
                 : dino.getEffectiveBodyAttack();
-        int dmg = Math.toIntExact(Math.round(move.getDamage() * attackValue));
-        JButton button = new JButton(move.getName() + " (" + dmg + ")");
+        int damage = Math.toIntExact(Math.round(move.getDamage() * attackValue));
+        String attackImg = iconHtml(ATTACK_ICON_PATH);
+        String accuracyImg = iconHtml(ACCURACY_ICON_PATH);
+        String label = String.format("<html>%s (%s %d %s %.2f)</html>",
+                move.getName(), attackImg, damage, accuracyImg, move.getAccuracy());
+        JButton button = new JButton(label);
         if (playerSide) {
             button.addActionListener(e -> doRound(move));
         } else {
