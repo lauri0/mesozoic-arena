@@ -92,6 +92,24 @@ public class Dinosaur {
         return new ArrayList<>(types);
     }
 
+    /**
+     * Checks if this dinosaur has the specified type.
+     *
+     * @param searchType the type to look for
+     * @return {@code true} if the dinosaur has the type, otherwise {@code false}
+     */
+    public boolean hasType(DinoType searchType) {
+        if (searchType == null) {
+            return false;
+        }
+        for (DinoType currentType : types) {
+            if (currentType == searchType) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public double getMultiplierFrom(DinoType attackType) {
         double multiplier = 1.0;
         for (DinoType type : types) {
