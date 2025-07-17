@@ -211,7 +211,7 @@ public class Battle {
 
             applyMoveEffects(actingPlayer, opposingPlayer, move);
             if (!defenderBraced) {
-                double attackValue = move.getType() == MoveType.HEAD
+                double attackValue = move.getKind() == MoveType.HEAD
                         ? attacker.getEffectiveHeadAttack()
                         : attacker.getEffectiveBodyAttack();
                 int totalDamage = Math.toIntExact(Math.round(move.getDamage() * attackValue));

@@ -40,8 +40,8 @@ public final class DinosaurLoader {
                 int damage = toInt(val.get("damage"));
                 int priority = toInt(val.getOrDefault("priority", 0));
                 String description = String.valueOf(val.getOrDefault("description", ""));
-                String typeLabel = String.valueOf(val.getOrDefault("type", "body"));
-                MoveType type = "head".equalsIgnoreCase(typeLabel) ? MoveType.HEAD : MoveType.BODY;
+                String kindLabel = String.valueOf(val.getOrDefault("kind", "body"));
+                MoveType kind = "head".equalsIgnoreCase(kindLabel) ? MoveType.HEAD : MoveType.BODY;
                 double accuracy = Double.parseDouble(String.valueOf(val.getOrDefault("accuracy", 1.0)));
                 List<Effect> effects = new ArrayList<>();
                 List<?> eff = castObjectList(val.get("effects"));
@@ -52,7 +52,7 @@ public final class DinosaurLoader {
                         }
                     }
                 }
-                moves.put(name, new Move(name, damage, priority, description, type, effects, accuracy));
+                moves.put(name, new Move(name, damage, priority, description, kind, effects, accuracy));
             }
 
             Map<String, Object> data = yaml.load(dinoStream);
@@ -73,7 +73,7 @@ public final class DinosaurLoader {
                         Move m = moves.get(String.valueOf(n));
                         if (m != null) {
                             dinoMoves.add(new Move(m.getName(), m.getDamage(),
-                                    m.getPriority(), m.getDescription(), m.getType(),
+                                    m.getPriority(), m.getDescription(), m.getKind(),
                                     m.getEffects(), m.getAccuracy()));
                         }
                     }

@@ -4,7 +4,7 @@ Bite:
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
-  type: head
+  kind: head
 
 Brace:
   damage: 0
@@ -12,7 +12,7 @@ Brace:
   priority: 2
   effects: [brace]
   description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority. YY accuracy."
-  type: body
+  kind: body
 
 Charge:
   damage: 40
@@ -20,7 +20,7 @@ Charge:
   priority: 1
   effects: []
   description: "Deal XX damage. +1 Priority. YY accuracy."
-  type: body
+  kind: body
 
 Double Scratch:
   damage: 18
@@ -28,7 +28,7 @@ Double Scratch:
   priority: 0
   effects: [double attack]
   description: "Attack twice for XX damage each. YY accuracy."
-  type: body
+  kind: body
 
 Kick:
   damage: 30
@@ -36,7 +36,7 @@ Kick:
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
-  type: body
+  kind: body
 
 Heal:
   damage: 0
@@ -44,7 +44,7 @@ Heal:
   priority: 1
   effects: [heal]
   description: "Recover 30 health. +1 Priority. YY accuracy."
-  type: body
+  kind: body
 
 Impale:
   damage: 40
@@ -52,7 +52,7 @@ Impale:
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
-  type: head
+  kind: head
 
 Roar:
   damage: 0
@@ -60,7 +60,7 @@ Roar:
   priority: 0
   effects: []
   description: "Rally your allies. YY accuracy."
-  type: head
+  kind: head
 
 Scratch:
   damage: 20
@@ -68,7 +68,7 @@ Scratch:
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
-  type: body
+  kind: body
 
 Tail Swipe:
   damage: 30
@@ -76,7 +76,7 @@ Tail Swipe:
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
-  type: body
+  kind: body
 
 Thagomizer Swipe:
   damage: 40
@@ -84,7 +84,7 @@ Thagomizer Swipe:
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
-  type: body
+  kind: body
 
 Stomp:
   damage: 22
@@ -92,4 +92,4 @@ Stomp:
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
-  type: body
+  kind: body

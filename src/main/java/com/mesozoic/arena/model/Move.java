@@ -12,7 +12,7 @@ public class Move {
     private final int priority;
     private final List<Effect> effects;
     private final String description;
-    private final MoveType type;
+    private final MoveType kind;
     private final double accuracy;
 
     public Move(String name, int damage, int priority, List<Effect> effects) {
@@ -23,11 +23,11 @@ public class Move {
         this(name, damage, priority, description, MoveType.BODY, effects, 1.0);
     }
 
-    public Move(String name, int damage, int priority, String description, MoveType type, List<Effect> effects) {
-        this(name, damage, priority, description, type, effects, 1.0);
+    public Move(String name, int damage, int priority, String description, MoveType kind, List<Effect> effects) {
+        this(name, damage, priority, description, kind, effects, 1.0);
     }
 
-    public Move(String name, int damage, int priority, String description, MoveType type,
+    public Move(String name, int damage, int priority, String description, MoveType kind,
             List<Effect> effects, double accuracy) {
         this.name = name;
         this.damage = damage;
@@ -38,7 +38,7 @@ public class Move {
             this.effects = new ArrayList<>(effects);
         }
         this.description = description == null ? "" : description;
-        this.type = type == null ? MoveType.BODY : type;
+        this.kind = kind == null ? MoveType.BODY : kind;
         this.accuracy = accuracy;
     }
 
@@ -62,8 +62,8 @@ public class Move {
         return description;
     }
 
-    public MoveType getType() {
-        return type;
+    public MoveType getKind() {
+        return kind;
     }
 
     public double getAccuracy() {
@@ -71,7 +71,7 @@ public class Move {
     }
 
     public String getDescriptionWithDamage(Dinosaur user) {
-        double attackValue = type == MoveType.HEAD
+        double attackValue = kind == MoveType.HEAD
                 ? user.getEffectiveHeadAttack()
                 : user.getEffectiveBodyAttack();
         long realDamage = Math.round(damage * attackValue);
