@@ -104,8 +104,7 @@ public class MainWindow extends JFrame {
             setStatLabel(panel.bodyAttack, BODY_ICON_PATH, "0", true);
             setStatLabel(panel.speed,   SPEED_ICON_PATH,  "0", true);
         } else {
-            int percent = Math.round(100f * d.getHealth() / d.getMaxHealth());
-            String hpText = d.getHealth() + " (" + percent + "%)";
+            String hpText = String.valueOf(d.getHealth());
             setStatLabel(panel.health, HEALTH_ICON_PATH, hpText, true);
             setStatLabel(panel.headAttack, HEAD_ICON_PATH,
                     String.format("%.2f", d.getHeadAttack()), true);

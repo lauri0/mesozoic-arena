@@ -106,7 +106,7 @@ Tail Slam:
   description: "Deal XX damage. YY accuracy."
   kind: body
 
-Thagomizer Swipe:
+Thagomize:
   type: Impaler
   damage: 45
   accuracy: 0.9
