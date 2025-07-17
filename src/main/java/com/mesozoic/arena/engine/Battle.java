@@ -214,8 +214,9 @@ public class Battle {
                 double attackValue = move.getKind() == MoveType.HEAD
                         ? attacker.getEffectiveHeadAttack()
                         : attacker.getEffectiveBodyAttack();
+                double stab = attacker.hasType(move.getType()) ? 1.5 : 1.0;
                 double typeMultiplier = defender.getMultiplierFrom(move.getType());
-                int totalDamage = Math.toIntExact(Math.round(move.getDamage() * attackValue * typeMultiplier));
+                int totalDamage = Math.toIntExact(Math.round(move.getDamage() * attackValue * stab * typeMultiplier));
                 totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
                 int beforeHealth = defender.getHealth();
                 defender.adjustHealth(-totalDamage);

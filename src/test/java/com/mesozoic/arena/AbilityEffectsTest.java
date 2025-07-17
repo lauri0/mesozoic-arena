@@ -31,7 +31,7 @@ public class AbilityEffectsTest {
         battle.executeRound(strike, waitMove);
 
         assertEquals(90, attacker.getHealth());
-        assertEquals(97, spiky.getHealth());
+        assertEquals(96, spiky.getHealth());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class AbilityEffectsTest {
         battle.executeRound(strike, waitMove);
 
         assertEquals(100, attacker.getHealth());
-        assertEquals(100, armored.getHealth());
+        assertEquals(99, armored.getHealth());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class AbilityEffectsTest {
         battle.executeRound(strike, waitMove);
 
         assertEquals(100, attacker.getHealth());
-        assertEquals(95, tough.getHealth());
+        assertEquals(92, tough.getHealth());
     }
 
     @Test
@@ -134,7 +134,7 @@ public class AbilityEffectsTest {
         battle.executeRound(strike, waitMove);
 
         assertEquals(100, attacker.getHealth());
-        assertEquals(75, tough.getHealth());
+        assertEquals(67, tough.getHealth());
     }
 }
 
