@@ -91,11 +91,7 @@ public class MainWindow extends JFrame {
         if (d == null) {
             panel.name.setText("None");
         } else {
-            StringBuilder nameText = new StringBuilder(formatDinoName(d));
-            nameText.append(stageFragment(d.getAttackStage(), ATTACK_ICON_PATH));
-            nameText.append(stageFragment(d.getSpeedStage(), SPEED_ICON_PATH));
-            nameText.append(ailmentFragment(d.hasAilment("Bleeding"), BLEED_ICON_PATH));
-            panel.name.setText("<html>" + nameText + "</html>");
+            panel.name.setText("<html>" + formatDinoName(d, true) + "</html>");
         }
 
         // Stats with icons
@@ -262,8 +258,21 @@ public class MainWindow extends JFrame {
         return img.isEmpty() ? "" : " " + img;
     }
 
-    private String formatDinoName(Dinosaur dino) {
+    private String formatDinoName(Dinosaur dino, boolean includeStatus) {
         java.util.List<DinoType> types = dino.getTypes();
+        StringBuilder sb = new StringBuilder();
+        sb.append(typeLabelsHtml(types));
+        sb.append("<div>").append(dino.getName());
+        if (includeStatus) {
+            sb.append(stageFragment(dino.getAttackStage(), ATTACK_ICON_PATH));
+            sb.append(stageFragment(dino.getSpeedStage(), SPEED_ICON_PATH));
+            sb.append(ailmentFragment(dino.hasAilment("Bleeding"), BLEED_ICON_PATH));
+        }
+        sb.append("</div>");
+        return sb.toString();
+    }
+
+    private String typeLabelsHtml(java.util.List<DinoType> types) {
         StringBuilder sb = new StringBuilder();
         if (!types.isEmpty()) {
             sb.append(typeLabelHtml(types.get(0)));
@@ -275,7 +284,6 @@ public class MainWindow extends JFrame {
         } else {
             sb.append(emptyTypeHtml());
         }
-        sb.append("<div>").append(dino.getName()).append("</div>");
         return sb.toString();
     }
 
@@ -294,7 +302,7 @@ public class MainWindow extends JFrame {
         JLabel img = new JLabel(loadIcon(dino.getImagePath(), 120, 80));
         img.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel n = new JLabel("<html>" + formatDinoName(dino) + "</html>");
+        JLabel n = new JLabel("<html>" + formatDinoName(dino, false) + "</html>");
         n.setAlignmentX(Component.CENTER_ALIGNMENT);
         n.setHorizontalAlignment(JLabel.CENTER);
         n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
