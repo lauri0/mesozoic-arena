@@ -3,20 +3,15 @@ package com.mesozoic.arena.ai;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
-import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.engine.TurnRecord;
 import com.mesozoic.arena.util.Config;
-import com.mesozoic.arena.util.EffectLoader;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -181,11 +176,15 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     }
 
     private String formatTypeChart() {
-        StringBuilder chart = new StringBuilder("Type chart:\n");
+        StringBuilder chart = new StringBuilder("There are type matchups. Every dinosaur has 1 or 2 types." +
+                "Every move has one type. A type being vulnerable to another type means it" +
+                "takes 2x damage from moves of that type. A type resisting another type means it takes 0.5x damage from" +
+                "moves of that type. When choosing moves to use try to use moves which deal extra damage against the opponent." +
+                "Keep in mind the opponent can switch dinosaurs and so can you. Type matchups:\n");
         for (DinoType defendingType : DinoType.values()) {
-            chart.append(defendingType.name()).append(": weak to ")
+            chart.append(defendingType.name()).append(": takes 2x from ")
                     .append(formatTypeList(defendingType, 2.0))
-                    .append(", resists ")
+                    .append(", takes 0.5x damage from ")
                     .append(formatTypeList(defendingType, 0.5))
                     .append("\n");
         }
