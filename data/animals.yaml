@@ -65,7 +65,7 @@ Stegosaurus:
 
 Styracosaurus:
   health: 90
-  speed: 60
+  speed: 75
   head attack: 0.86
   body attack: 0.67
   ability: Intimidate

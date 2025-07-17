@@ -244,8 +244,8 @@ public class MainWindow extends JFrame {
         int damage = Math.toIntExact(Math.round(move.getDamage() * attackValue));
         String attackImg = iconHtml(ATTACK_ICON_PATH);
         String accuracyImg = iconHtml(ACCURACY_ICON_PATH);
-        String label = String.format("<html>%s (%s %d %s %.2f)</html>",
-                move.getName(), attackImg, damage, accuracyImg, move.getAccuracy());
+        String label = String.format("<html>%s (%s %d %s %.0f%s)</html>",
+                move.getName(), attackImg, damage, accuracyImg, move.getAccuracy() * 100, "%");
         JButton button = new JButton(label);
         if (playerSide) {
             button.addActionListener(e -> doRound(move));
