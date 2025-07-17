@@ -11,6 +11,7 @@ import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.MoveEffects;
 import com.mesozoic.arena.engine.AbilityEffects;
 import com.mesozoic.arena.engine.AilmentEffects;
+import com.mesozoic.arena.engine.DamageCalculator;
 import com.mesozoic.arena.model.Ailment;
 import java.util.ArrayList;
 import java.util.List;
@@ -211,12 +212,7 @@ public class Battle {
 
             applyMoveEffects(actingPlayer, opposingPlayer, move);
             if (!defenderBraced) {
-                double attackValue = move.getKind() == MoveType.HEAD
-                        ? attacker.getEffectiveHeadAttack()
-                        : attacker.getEffectiveBodyAttack();
-                double stab = attacker.hasType(move.getType()) ? 1.5 : 1.0;
-                double typeMultiplier = defender.getMultiplierFrom(move.getType());
-                int totalDamage = Math.toIntExact(Math.round(move.getDamage() * attackValue * stab * typeMultiplier));
+                int totalDamage = DamageCalculator.calculate(attacker, defender, move);
                 totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
                 int beforeHealth = defender.getHealth();
                 defender.adjustHealth(-totalDamage);
