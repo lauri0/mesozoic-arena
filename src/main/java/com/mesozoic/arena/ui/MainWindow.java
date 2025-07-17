@@ -9,6 +9,7 @@ import com.mesozoic.arena.model.Player;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class MainWindow extends JFrame {
     private static final String HEALTH_ICON_PATH  = "assets/icons/health.png";
@@ -215,28 +216,31 @@ public class MainWindow extends JFrame {
         return iconHtml(path);
     }
 
-    private static final java.util.Map<DinoType, String> TYPE_COLORS =
-            java.util.Map.ofEntries(
-                    java.util.Map.entry(DinoType.BITER, "orange"),
-                    java.util.Map.entry(DinoType.BLEEDER, "red"),
-                    java.util.Map.entry(DinoType.CHARGER, "brown"),
-                    java.util.Map.entry(DinoType.CRUSHER, "darkred"),
-                    java.util.Map.entry(DinoType.DEFENDER, "silver"),
-                    java.util.Map.entry(DinoType.GRAZER, "limegreen"),
-                    java.util.Map.entry(DinoType.IMPALER, "darkgreen"),
-                    java.util.Map.entry(DinoType.LANDSCAPER, "blue"),
-                    java.util.Map.entry(DinoType.RUNNER, "cyan"),
-                    java.util.Map.entry(DinoType.SLASHER, "yellow"),
-                    java.util.Map.entry(DinoType.SWIMMER, "purple")
-            );
+    private static final Map<DinoType, Color> TYPE_COLORS = Map.ofEntries(
+            Map.entry(DinoType.BITER, new Color(255, 165, 0)),      // orange
+            Map.entry(DinoType.BLEEDER, new Color(255, 0, 0)),      // red
+            Map.entry(DinoType.CHARGER, new Color(165, 42, 42)),    // brown
+            Map.entry(DinoType.CRUSHER, new Color(139, 0, 0)),      // darkred
+            Map.entry(DinoType.DEFENDER, new Color(192, 192, 192)), // silver
+            Map.entry(DinoType.GRAZER, new Color(50, 205, 50)),     // limegreen
+            Map.entry(DinoType.IMPALER, new Color(0, 100, 0)),      // darkgreen
+            Map.entry(DinoType.LANDSCAPER, new Color(0, 0, 255)),   // blue
+            Map.entry(DinoType.RUNNER, new Color(0, 255, 255)),     // cyan
+            Map.entry(DinoType.SLASHER, new Color(255, 255, 0)),    // yellow
+            Map.entry(DinoType.SWIMMER, new Color(128, 0, 128))     // purple
+    );
 
     private String typeLabelHtml(DinoType type) {
         if (type == null) {
             return "";
         }
-        String color = TYPE_COLORS.getOrDefault(type, "lightgray");
+        Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
         String typeName = type.name().substring(0, 1) + type.name().substring(1).toLowerCase();
-        return "<div style='background-color:" + color + ";text-align:center;'>" + typeName + "</div>";
+        return "<div style='background-color:" + colorHex(color) + ";text-align:center;'>" + typeName + "</div>";
+    }
+
+    private static String colorHex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
     private String stageFragment(int stage, String iconPath) {
@@ -259,10 +263,24 @@ public class MainWindow extends JFrame {
     }
 
     private String formatDinoName(Dinosaur dino) {
-        String typesHtml = dino.getTypes().stream()
-                .map(this::typeLabelHtml)
-                .collect(java.util.stream.Collectors.joining());
-        return typesHtml + "<div>" + dino.getName() + "</div>";
+        java.util.List<DinoType> types = dino.getTypes();
+        StringBuilder sb = new StringBuilder();
+        if (!types.isEmpty()) {
+            sb.append(typeLabelHtml(types.get(0)));
+        } else {
+            sb.append(emptyTypeHtml());
+        }
+        if (types.size() > 1) {
+            sb.append(typeLabelHtml(types.get(1)));
+        } else {
+            sb.append(emptyTypeHtml());
+        }
+        sb.append("<div>").append(dino.getName()).append("</div>");
+        return sb.toString();
+    }
+
+    private String emptyTypeHtml() {
+        return "<div>&nbsp;</div>";
     }
 
     /**
