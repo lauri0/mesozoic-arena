@@ -4,6 +4,7 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Effect;
+import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.engine.TurnRecord;
 import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.util.EffectLoader;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -178,12 +180,35 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
                 + dino.getAbility().getDescription() + ").\n";
     }
 
+    private String formatTypeChart() {
+        StringBuilder chart = new StringBuilder("Type chart:\n");
+        for (DinoType defendingType : DinoType.values()) {
+            chart.append(defendingType.name()).append(": weak to ")
+                    .append(formatTypeList(defendingType, 2.0))
+                    .append(", resists ")
+                    .append(formatTypeList(defendingType, 0.5))
+                    .append("\n");
+        }
+        return chart.toString();
+    }
+
+    private String formatTypeList(DinoType defendingType, double multiplier) {
+        List<String> matches = new ArrayList<>();
+        for (DinoType attackType : DinoType.values()) {
+            if (defendingType.getMultiplierFrom(attackType) == multiplier) {
+                matches.add(attackType.name());
+            }
+        }
+        return matches.isEmpty() ? "none" : String.join(", ", matches);
+    }
+
     private String buildPrompt(Player selfPlayer, Player enemyPlayer, List<TurnRecord> history) {
         return "You are playing Mesozoic Arena, a turn based dinosaur battle game. " +
                 "The dinosaur with more speed goes first. A dinosaur using a higher priority move goes before " +
                 "dinosaurs using lower priority moves regardless of speed. " +
                 "You may also switch your active dinosaur, which happens before moves but skips using a move. " +
                 "The player who knocks out all of the opponent's dinosaurs first wins the match. " +
+                formatTypeChart() +
                 getActiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 getInactiveDinosaurInfos(selfPlayer, enemyPlayer) +
                 formatHistory(history, 2) +
