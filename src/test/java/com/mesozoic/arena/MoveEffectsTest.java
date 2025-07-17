@@ -61,7 +61,7 @@ public class MoveEffectsTest {
         Battle battle = new Battle(p1, p2);
 
         battle.executeRound(doubleHit, noop);
-        assertEquals(80, defender.getHealth());
+        assertEquals(90, defender.getHealth());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class MoveEffectsTest {
         Battle battle = new Battle(p1, p2);
 
         battle.executeRound(tripleHit, noop);
-        assertEquals(70, defender.getHealth());
+        assertEquals(85, defender.getHealth());
     }
 
     @Test

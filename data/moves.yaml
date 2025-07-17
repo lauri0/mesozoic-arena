@@ -1,4 +1,5 @@
 Bite:
+  type: Biter
   damage: 40
   accuracy: 0.9
   priority: 0
@@ -7,6 +8,7 @@ Bite:
   kind: head
 
 Brace:
+  type: Biter
   damage: 0
   accuracy: 0.9
   priority: 2
@@ -15,6 +17,7 @@ Brace:
   kind: body
 
 Charge:
+  type: Biter
   damage: 40
   accuracy: 0.9
   priority: 1
@@ -23,6 +26,7 @@ Charge:
   kind: body
 
 Double Scratch:
+  type: Biter
   damage: 18
   accuracy: 0.9
   priority: 0
@@ -31,6 +35,7 @@ Double Scratch:
   kind: body
 
 Kick:
+  type: Biter
   damage: 30
   accuracy: 0.9
   priority: 0
@@ -39,6 +44,7 @@ Kick:
   kind: body
 
 Heal:
+  type: Biter
   damage: 0
   accuracy: 0.9
   priority: 1
@@ -47,6 +53,7 @@ Heal:
   kind: body
 
 Impale:
+  type: Biter
   damage: 40
   accuracy: 0.9
   priority: 0
@@ -55,6 +62,7 @@ Impale:
   kind: head
 
 Roar:
+  type: Biter
   damage: 0
   accuracy: 0.9
   priority: 0
@@ -63,6 +71,7 @@ Roar:
   kind: head
 
 Scratch:
+  type: Biter
   damage: 20
   accuracy: 0.9
   priority: 0
@@ -71,6 +80,7 @@ Scratch:
   kind: body
 
 Tail Swipe:
+  type: Biter
   damage: 30
   accuracy: 0.9
   priority: 0
@@ -79,6 +89,7 @@ Tail Swipe:
   kind: body
 
 Thagomizer Swipe:
+  type: Biter
   damage: 40
   accuracy: 0.9
   priority: 0
@@ -87,6 +98,7 @@ Thagomizer Swipe:
   kind: body
 
 Stomp:
+  type: Biter
   damage: 22
   accuracy: 0.9
   priority: 0

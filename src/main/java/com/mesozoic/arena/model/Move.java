@@ -13,22 +13,23 @@ public class Move {
     private final List<Effect> effects;
     private final String description;
     private final MoveType kind;
+    private final DinoType type;
     private final double accuracy;
 
     public Move(String name, int damage, int priority, List<Effect> effects) {
-        this(name, damage, priority, "", MoveType.BODY, effects, 1.0);
+        this(name, damage, priority, "", MoveType.BODY, DinoType.BITER, effects, 1.0);
     }
 
     public Move(String name, int damage, int priority, String description, List<Effect> effects) {
-        this(name, damage, priority, description, MoveType.BODY, effects, 1.0);
+        this(name, damage, priority, description, MoveType.BODY, DinoType.BITER, effects, 1.0);
     }
 
     public Move(String name, int damage, int priority, String description, MoveType kind, List<Effect> effects) {
-        this(name, damage, priority, description, kind, effects, 1.0);
+        this(name, damage, priority, description, kind, DinoType.BITER, effects, 1.0);
     }
 
     public Move(String name, int damage, int priority, String description, MoveType kind,
-            List<Effect> effects, double accuracy) {
+            DinoType type, List<Effect> effects, double accuracy) {
         this.name = name;
         this.damage = damage;
         this.priority = priority;
@@ -39,7 +40,12 @@ public class Move {
         }
         this.description = description == null ? "" : description;
         this.kind = kind == null ? MoveType.BODY : kind;
+        this.type = type == null ? DinoType.BITER : type;
         this.accuracy = accuracy;
+    }
+
+    public DinoType getType() {
+        return type;
     }
 
     public String getName() {

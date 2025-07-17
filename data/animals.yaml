@@ -1,4 +1,5 @@
 Allosaurus:
+  types: [Biter]
   health: 140
   speed: 100
   head attack: 1.1
@@ -12,6 +13,7 @@ Allosaurus:
     - Tail Swipe
 
 Ceratosaurus:
+  types: [Biter]
   health: 110
   speed: 110
   head attack: 0.99
@@ -25,6 +27,7 @@ Ceratosaurus:
     - Tail Swipe
 
 Corythosaurus:
+  types: [Biter]
   health: 140
   speed: 95
   head attack: 0.62
@@ -38,6 +41,7 @@ Corythosaurus:
     - Tail Swipe
 
 Daspletosaurus:
+  types: [Biter]
   health: 140
   speed: 90
   head attack: 1.2
@@ -51,6 +55,7 @@ Daspletosaurus:
     - Tail Swipe
 
 Stegosaurus:
+  types: [Biter]
   health: 160
   speed: 60
   head attack: 0.65
@@ -64,6 +69,7 @@ Stegosaurus:
     - Thagomizer Swipe
 
 Styracosaurus:
+  types: [Biter]
   health: 90
   speed: 75
   head attack: 0.86
