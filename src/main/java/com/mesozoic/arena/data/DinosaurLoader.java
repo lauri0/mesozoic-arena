@@ -4,6 +4,7 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.MoveType;
+import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
 import org.yaml.snakeyaml.Yaml;
@@ -95,10 +96,21 @@ public class DinosaurLoader {
         List<String> moveNames = (List<String>) values.get("moves");
         List<Move> moves = resolveMoves(moveNames);
 
+        List<DinoType> types = new ArrayList<>();
+        Object rawTypes = values.get("types");
+        if (rawTypes instanceof List<?> list) {
+            for (Object obj : list) {
+                types.add(DinoType.fromString(String.valueOf(obj)));
+            }
+        } else if (rawTypes != null) {
+            types.add(DinoType.fromString(String.valueOf(rawTypes)));
+        }
+
         String abilityName = String.valueOf(values.getOrDefault("ability", "None"));
         Ability ability = abilityTemplates.get(abilityName);
 
-        return new Dinosaur(name, health, speed, imagePath, headAttack, bodyAttack, moves, ability);
+        return new Dinosaur(name, health, speed, imagePath, headAttack, bodyAttack,
+                moves, ability, types);
     }
 
     private List<Move> resolveMoves(List<String> names) {
@@ -109,8 +121,8 @@ public class DinosaurLoader {
                 if (template != null) {
                     moves.add(new Move(template.getName(), template.getDamage(),
                             template.getPriority(), template.getDescription(),
-                            template.getKind(), template.getEffects(),
-                            template.getAccuracy()));
+                            template.getKind(), template.getType(),
+                            template.getEffects(), template.getAccuracy()));
                 }
             }
         }
@@ -142,11 +154,11 @@ public class DinosaurLoader {
         for (Move move : source.getMoves()) {
             copiedMoves.add(new Move(move.getName(), move.getDamage(),
                     move.getPriority(),
-                    move.getDescription(), move.getKind(),
+                    move.getDescription(), move.getKind(), move.getType(),
                     move.getEffects(), move.getAccuracy()));
         }
         return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
-                source.getHeadAttack(), source.getBodyAttack(), copiedMoves, source.getAbility());
+                source.getHeadAttack(), source.getBodyAttack(), copiedMoves, source.getAbility(), source.getTypes());
     }
 
     private Map<String, Move> loadMoves() throws IOException {
@@ -165,9 +177,10 @@ public class DinosaurLoader {
                     String description = String.valueOf(values.getOrDefault("description", ""));
                     String kindLabel = String.valueOf(values.getOrDefault("kind", "body"));
                     MoveType kind = "head".equalsIgnoreCase(kindLabel) ? MoveType.HEAD : MoveType.BODY;
+                    DinoType type = DinoType.fromString(String.valueOf(values.getOrDefault("type", "Biter")));
                     double accuracy = ((Number) values.getOrDefault("accuracy", 1.0)).doubleValue();
                     List<Effect> effects = parseEffects(values.get("effects"));
-                    map.put(name, new Move(name, damage, priority, description, kind, effects, accuracy));
+                    map.put(name, new Move(name, damage, priority, description, kind, type, effects, accuracy));
                 }
             }
         }

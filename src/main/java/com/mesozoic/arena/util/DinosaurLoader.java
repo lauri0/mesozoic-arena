@@ -4,6 +4,7 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.MoveType;
+import com.mesozoic.arena.model.DinoType;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public final class DinosaurLoader {
                 String description = String.valueOf(val.getOrDefault("description", ""));
                 String kindLabel = String.valueOf(val.getOrDefault("kind", "body"));
                 MoveType kind = "head".equalsIgnoreCase(kindLabel) ? MoveType.HEAD : MoveType.BODY;
+                DinoType type = DinoType.fromString(String.valueOf(val.getOrDefault("type", "Biter")));
                 double accuracy = Double.parseDouble(String.valueOf(val.getOrDefault("accuracy", 1.0)));
                 List<Effect> effects = new ArrayList<>();
                 List<?> eff = castObjectList(val.get("effects"));
@@ -52,7 +54,7 @@ public final class DinosaurLoader {
                         }
                     }
                 }
-                moves.put(name, new Move(name, damage, priority, description, kind, effects, accuracy));
+                moves.put(name, new Move(name, damage, priority, description, kind, type, effects, accuracy));
             }
 
             Map<String, Object> data = yaml.load(dinoStream);
@@ -73,13 +75,24 @@ public final class DinosaurLoader {
                         Move m = moves.get(String.valueOf(n));
                         if (m != null) {
                             dinoMoves.add(new Move(m.getName(), m.getDamage(),
-                                    m.getPriority(), m.getDescription(), m.getKind(),
+                                    m.getPriority(), m.getDescription(), m.getKind(), m.getType(),
                                     m.getEffects(), m.getAccuracy()));
                         }
                     }
                 }
+
+                List<DinoType> types = new ArrayList<>();
+                Object rawTypes = dinoData.get("types");
+                if (rawTypes instanceof List<?> list) {
+                    for (Object obj : list) {
+                        types.add(DinoType.fromString(String.valueOf(obj)));
+                    }
+                } else if (rawTypes != null) {
+                    types.add(DinoType.fromString(String.valueOf(rawTypes)));
+                }
+
                 dinosaurs.add(new Dinosaur(name, health, speed, image, headAttack, bodyAttack,
-                        dinoMoves, null));
+                        dinoMoves, null, types));
             }
             return dinosaurs;
         } catch (Exception e) {

@@ -18,10 +18,18 @@ public class Dinosaur {
     private final double bodyAttack;
     private int attackStage = 0;
     private final List<Move> moves;
+    private final List<DinoType> types;
     private final List<Ailment> ailments = new ArrayList<>();
 
     public Dinosaur(String name, int health, int speed, String imagePath,
                     double headAttack, double bodyAttack, List<Move> moves, Ability ability) {
+        this(name, health, speed, imagePath, headAttack, bodyAttack, moves, ability,
+                List.of(DinoType.BITER));
+    }
+
+    public Dinosaur(String name, int health, int speed, String imagePath,
+                    double headAttack, double bodyAttack, List<Move> moves,
+                    Ability ability, List<DinoType> types) {
         this.name = name;
         this.health = health;
         this.maxHealth = health;
@@ -34,6 +42,11 @@ public class Dinosaur {
             this.moves = new ArrayList<>();
         } else {
             this.moves = new ArrayList<>(moves);
+        }
+        if (types == null || types.isEmpty()) {
+            this.types = new ArrayList<>(List.of(DinoType.BITER));
+        } else {
+            this.types = new ArrayList<>(types);
         }
     }
 
@@ -73,6 +86,18 @@ public class Dinosaur {
 
     public List<Move> getMoves() {
         return new ArrayList<>(moves);
+    }
+
+    public List<DinoType> getTypes() {
+        return new ArrayList<>(types);
+    }
+
+    public double getMultiplierFrom(DinoType attackType) {
+        double multiplier = 1.0;
+        for (DinoType type : types) {
+            multiplier *= type.getMultiplierFrom(attackType);
+        }
+        return multiplier;
     }
 
     public List<Ailment> getAilments() {
