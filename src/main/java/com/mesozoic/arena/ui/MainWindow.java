@@ -216,6 +216,30 @@ public class MainWindow extends JFrame {
         return iconHtml(path);
     }
 
+    private static final java.util.Map<DinoType, String> TYPE_COLORS =
+            java.util.Map.ofEntries(
+                    java.util.Map.entry(DinoType.BITER, "orange"),
+                    java.util.Map.entry(DinoType.BLEEDER, "red"),
+                    java.util.Map.entry(DinoType.CHARGER, "brown"),
+                    java.util.Map.entry(DinoType.CRUSHER, "darkred"),
+                    java.util.Map.entry(DinoType.DEFENDER, "silver"),
+                    java.util.Map.entry(DinoType.GRAZER, "limegreen"),
+                    java.util.Map.entry(DinoType.IMPALER, "darkgreen"),
+                    java.util.Map.entry(DinoType.LANDSCAPER, "blue"),
+                    java.util.Map.entry(DinoType.RUNNER, "cyan"),
+                    java.util.Map.entry(DinoType.SLASHER, "yellow"),
+                    java.util.Map.entry(DinoType.SWIMMER, "purple")
+            );
+
+    private String typeLabelHtml(DinoType type) {
+        if (type == null) {
+            return "";
+        }
+        String color = TYPE_COLORS.getOrDefault(type, "lightgray");
+        String typeName = type.name().substring(0, 1) + type.name().substring(1).toLowerCase();
+        return "<div style='background-color:" + color + ";text-align:center;'>" + typeName + "</div>";
+    }
+
     private String stageFragment(int stage, String iconPath) {
         if (stage == 0) {
             return "";
@@ -236,14 +260,10 @@ public class MainWindow extends JFrame {
     }
 
     private String formatDinoName(Dinosaur dino) {
-        String icons = dino.getTypes().stream()
-                .map(this::typeIconHtml)
-                .filter(s -> !s.isEmpty())
+        String typesHtml = dino.getTypes().stream()
+                .map(this::typeLabelHtml)
                 .collect(java.util.stream.Collectors.joining());
-        if (icons.isEmpty()) {
-            return dino.getName();
-        }
-        return icons + " " + dino.getName();
+        return typesHtml + "<div>" + dino.getName() + "</div>";
     }
 
     /**
