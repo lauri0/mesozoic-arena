@@ -165,14 +165,14 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     private String formatMoves(Dinosaur dino) {
         return dino.getMoves().stream()
-                .map(m -> m.getName() + ": " + m.getDescriptionWithDamage(dino))
+                .map(m -> m.getName() + ": " + m.getType() + ", " + m.getDescriptionWithDamage(dino))
                 .collect(Collectors.joining("\n"));
     }
 
     private String describeDinosaurStatsAndAbility(Dinosaur dino) {
         return dino.getName() + " (HP: " + dino.getHealth() + ", Speed: "
                 + dino.getEffectiveSpeed() + ", Ability: "
-                + dino.getAbility().getDescription() + ").\n";
+                + dino.getAbility().getDescription() + ", Type(s): " + dino.printTypes() +").\n";
     }
 
     private String formatTypeChart() {
