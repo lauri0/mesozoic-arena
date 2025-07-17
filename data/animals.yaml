@@ -1,5 +1,5 @@
 Allosaurus:
-  types: [Biter]
+  types: [Bleeder]
   health: 140
   speed: 100
   head attack: 1.1
@@ -9,8 +9,8 @@ Allosaurus:
   moves:
     - Bite
     - Brace
-    - Roar
-    - Tail Swipe
+    - Hatchet Bite
+    - Tail Slam
 
 Ceratosaurus:
   types: [Biter]
@@ -23,12 +23,12 @@ Ceratosaurus:
   moves:
     - Bite
     - Brace
-    - Roar
-    - Tail Swipe
+    - Charge
+    - Double Swipe
 
 Corythosaurus:
-  types: [Biter]
-  health: 140
+  types: [Grazer]
+  health: 130
   speed: 95
   head attack: 0.62
   body attack: 0.74
@@ -38,10 +38,10 @@ Corythosaurus:
     - Brace
     - Heal
     - Kick
-    - Tail Swipe
+    - Tail Slam
 
 Daspletosaurus:
-  types: [Biter]
+  types: [Crusher]
   health: 140
   speed: 90
   head attack: 1.2
@@ -49,13 +49,27 @@ Daspletosaurus:
   ability: Berserk
   image: assets/animals/daspletosaurus.png
   moves:
+    - Brace
+    - Crushing Bite
+    - Stomp
+    - Tail Slam
+
+Euoplocephalus:
+  types: [Crusher, Defender]
+  health: 90
+  speed: 75
+  head attack: 0.52
+  body attack: 0.74
+  ability: Tough
+  image: assets/animals/euoplocephalus.png
+  moves:
     - Bite
     - Brace
-    - Roar
-    - Tail Swipe
+    - Club Smash
+    - Stomp
 
 Stegosaurus:
-  types: [Biter]
+  types: [Impaler]
   health: 160
   speed: 60
   head attack: 0.65
@@ -63,14 +77,14 @@ Stegosaurus:
   ability: Spiky Body
   image: assets/animals/stegosaurus.png
   moves:
+    - Bite
     - Brace
     - Stomp
-    - Roar
     - Thagomizer Swipe
 
 Styracosaurus:
-  types: [Biter]
-  health: 90
+  types: [Charger]
+  health: 105
   speed: 75
   head attack: 0.86
   body attack: 0.67
@@ -78,6 +92,6 @@ Styracosaurus:
   image: assets/animals/styracosaurus.png
   moves:
     - Brace
-    - Stomp
-    - Roar
+    - Charge
     - Impale
+    - Stomp

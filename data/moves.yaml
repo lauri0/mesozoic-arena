@@ -1,14 +1,14 @@
 Bite:
   type: Biter
   damage: 40
-  accuracy: 0.9
+  accuracy: 0.95
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
   kind: head
 
 Brace:
-  type: Biter
+  type: Defender
   damage: 0
   accuracy: 0.9
   priority: 2
@@ -17,26 +17,44 @@ Brace:
   kind: body
 
 Charge:
-  type: Biter
-  damage: 40
-  accuracy: 0.9
-  priority: 1
+  type: Charger
+  damage: 45
+  accuracy: 0.85
+  priority: 0
   effects: []
-  description: "Deal XX damage. +1 Priority. YY accuracy."
+  description: "Deal XX damage. YY accuracy."
   kind: body
 
-Double Scratch:
-  type: Biter
-  damage: 18
+Club Smash:
+  type: Crusher
+  damage: 40
   accuracy: 0.9
+  priority: 0
+  effects: []
+  description: "Deal XX damage. YY accuracy."
+  kind: body
+
+Crushing Bite:
+  type: Crusher
+  damage: 50
+  accuracy: 0.85
+  priority: 0
+  effects: []
+  description: "Deal XX damage. YY accuracy."
+  kind: head
+
+Double Swipe:
+  type: Slasher
+  damage: 18
+  accuracy: 1.0
   priority: 0
   effects: [double attack]
   description: "Attack twice for XX damage each. YY accuracy."
   kind: body
 
 Kick:
-  type: Biter
-  damage: 30
+  type: Grazer
+  damage: 40
   accuracy: 0.9
   priority: 0
   effects: []
@@ -44,16 +62,25 @@ Kick:
   kind: body
 
 Heal:
-  type: Biter
+  type: Grazer
   damage: 0
   accuracy: 0.9
-  priority: 1
+  priority: 0
   effects: [heal]
-  description: "Recover 30 health. +1 Priority. YY accuracy."
+  description: "Recover 30 health. YY accuracy."
   kind: body
 
+Hatchet Bite:
+  type: Bleeder
+  damage: 40
+  accuracy: 0.95
+  priority: 0
+  effects: []
+  description: "Deal XX damage. YY accuracy."
+  kind: head
+
 Impale:
-  type: Biter
+  type: Impaler
   damage: 40
   accuracy: 0.9
   priority: 0
@@ -61,36 +88,27 @@ Impale:
   description: "Deal XX damage. YY accuracy."
   kind: head
 
-Roar:
-  type: Biter
-  damage: 0
+Fast Swipe:
+  type: Slasher
+  damage: 25
   accuracy: 0.9
-  priority: 0
+  priority: 1
   effects: []
-  description: "Rally your allies. YY accuracy."
-  kind: head
-
-Scratch:
-  type: Biter
-  damage: 20
-  accuracy: 0.9
-  priority: 0
-  effects: []
-  description: "Deal XX damage. YY accuracy."
+  description: "Deal XX damage. +1 Priority. YY accuracy."
   kind: body
 
-Tail Swipe:
-  type: Biter
-  damage: 30
-  accuracy: 0.9
+Tail Slam:
+  type: Grazer
+  damage: 35
+  accuracy: 1.0
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."
   kind: body
 
 Thagomizer Swipe:
-  type: Biter
-  damage: 40
+  type: Impaler
+  damage: 45
   accuracy: 0.9
   priority: 0
   effects: []
@@ -98,9 +116,9 @@ Thagomizer Swipe:
   kind: body
 
 Stomp:
-  type: Biter
-  damage: 22
-  accuracy: 0.9
+  type: Landscaper
+  damage: 45
+  accuracy: 0.8
   priority: 0
   effects: []
   description: "Deal XX damage. YY accuracy."

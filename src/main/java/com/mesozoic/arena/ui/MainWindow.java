@@ -39,7 +39,7 @@ public class MainWindow extends JFrame {
         this.opponent = opponent;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1200, 900);
+        setSize(1200, 950);
 
         playerPanel   = new DinoPanel(true);
         opponentPanel = new DinoPanel(false);
@@ -279,6 +279,7 @@ public class MainWindow extends JFrame {
 
         JLabel n = new JLabel("<html>" + formatDinoName(dino) + "</html>");
         n.setAlignmentX(Component.CENTER_ALIGNMENT);
+        n.setHorizontalAlignment(JLabel.CENTER);
         n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
 
         JLabel hp = new JLabel();
