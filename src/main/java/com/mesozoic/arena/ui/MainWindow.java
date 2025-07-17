@@ -2,6 +2,7 @@ package com.mesozoic.arena.ui;
 
 import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.Dinosaur;
+import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.Player;
@@ -188,7 +189,11 @@ public class MainWindow extends JFrame {
         }
         JLabel label = new JLabel(icon);
         JFrame frame = new JFrame("Type Chart");
-        frame.add(new JScrollPane(label));
+        frame.setLayout(new BorderLayout());
+        frame.add(new JScrollPane(label), BorderLayout.CENTER);
+        JButton close = new JButton("Close");
+        close.addActionListener(e -> frame.dispose());
+        frame.add(close, BorderLayout.SOUTH);
         frame.pack();
         frame.setLocationRelativeTo(this);
         frame.setVisible(true);
@@ -201,6 +206,14 @@ public class MainWindow extends JFrame {
         }
         int size = Math.round(BASE_STAT_ICON_SIZE * 0.75f);
         return "<img src='" + url + "' width='" + size + "' height='" + size + "'/>";
+    }
+
+    private String typeIconHtml(DinoType type) {
+        if (type == null) {
+            return "";
+        }
+        String path = "assets/icons/" + type.name().toLowerCase() + ".png";
+        return iconHtml(path);
     }
 
     private String stageFragment(int stage, String iconPath) {
@@ -223,13 +236,14 @@ public class MainWindow extends JFrame {
     }
 
     private String formatDinoName(Dinosaur dino) {
-        String types = dino.getTypes().stream()
-                .map(t -> t.name().charAt(0) + t.name().substring(1).toLowerCase())
-                .collect(java.util.stream.Collectors.joining("/"));
-        if (types.isEmpty()) {
+        String icons = dino.getTypes().stream()
+                .map(this::typeIconHtml)
+                .filter(s -> !s.isEmpty())
+                .collect(java.util.stream.Collectors.joining());
+        if (icons.isEmpty()) {
             return dino.getName();
         }
-        return types + " " + dino.getName();
+        return icons + " " + dino.getName();
     }
 
     /**
@@ -243,7 +257,7 @@ public class MainWindow extends JFrame {
         JLabel img = new JLabel(loadIcon(dino.getImagePath(), 120, 80));
         img.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel n = new JLabel(formatDinoName(dino));
+        JLabel n = new JLabel("<html>" + formatDinoName(dino) + "</html>");
         n.setAlignmentX(Component.CENTER_ALIGNMENT);
         n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
 
@@ -280,8 +294,9 @@ public class MainWindow extends JFrame {
         int damage = Math.toIntExact(Math.round(move.getDamage() * attackValue));
         String attackImg = iconHtml(ATTACK_ICON_PATH);
         String accuracyImg = iconHtml(ACCURACY_ICON_PATH);
-        String label = String.format("<html>%s %s %d %s %.0f%s</html>",
-                move.getName(), attackImg, damage, accuracyImg, move.getAccuracy() * 100, "%");
+        String typeImg = typeIconHtml(move.getType());
+        String label = String.format("<html>%s %s %s %d %s %.0f%s</html>",
+                typeImg, move.getName(), attackImg, damage, accuracyImg, move.getAccuracy() * 100, "%");
         JButton button = new JButton(label);
         if (playerSide) {
             button.addActionListener(e -> doRound(move));
