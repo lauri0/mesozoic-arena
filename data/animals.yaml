@@ -50,7 +50,7 @@ Daspletosaurus:
   image: assets/animals/daspletosaurus.png
   moves:
     - Brace
-    - Crushing Bite
+    - Chomp
     - Stomp
     - Tail Slam
 

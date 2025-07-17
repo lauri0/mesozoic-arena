@@ -34,7 +34,7 @@ Club Smash:
   description: "Deal XX damage. YY accuracy."
   kind: body
 
-Crushing Bite:
+Chomp:
   type: Crusher
   damage: 50
   accuracy: 0.85
