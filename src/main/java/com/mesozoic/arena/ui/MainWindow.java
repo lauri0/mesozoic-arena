@@ -6,6 +6,7 @@ import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.engine.DamageCalculator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -334,10 +335,8 @@ public class MainWindow extends JFrame {
     }
 
     private JButton createMoveButton(Dinosaur dino, Move move, boolean playerSide) {
-        double attackValue = move.getKind() == MoveType.HEAD
-                ? dino.getEffectiveHeadAttack()
-                : dino.getEffectiveBodyAttack();
-        int damage = Math.toIntExact(Math.round(move.getDamage() * attackValue));
+        Dinosaur target = playerSide ? opponent.getActiveDinosaur() : player.getActiveDinosaur();
+        int damage = DamageCalculator.calculate(dino, target, move);
         String attackImg = iconHtml(ATTACK_ICON_PATH);
         String accuracyImg = iconHtml(ACCURACY_ICON_PATH);
         String label = String.format("<html>%s %s %d %s %.0f%s</html>",
