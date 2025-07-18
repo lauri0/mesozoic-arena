@@ -182,12 +182,13 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
     }
 
     private String formatTypeChart() {
-        StringBuilder chart = new StringBuilder("There are type matchups. Every dinosaur has 1 or 2 types." +
-                "Every move has one type. A type being vulnerable to another type means a dinosaur with that type " +
-                "takes 2x damage from moves of that type. A type resisting another type means a dinosaur with that type takes 0.5x damage from " +
-                "moves of that type. When choosing moves to use try to use moves which deal extra damage against the opponent." +
-                "Keep in mind the opponent can switch dinosaurs and so can you. Don't be only switching dinosaurs back and forth " +
-                "otherwise you are missing out on damage as well. Type matchups:\n");
+        StringBuilder chart = new StringBuilder("There are type matchups. Every dinosaur has 1 or 2 types. " +
+                "Every move has one type. Type A being vulnerable to type B means a dinosaur of type A " +
+                "takes 2x damage from moves of type B. Type A resisting type B means a dinosaur of type A takes 0.5x damage from " +
+                "moves of type B. Additionally, same type attack bonus exists in this game. A move deals 50% extra damage " +
+                "if the dinosaur using the move shares a type with the move. " +
+                "Keep in mind the opponent can switch dinosaurs and so can you. Don't switch dinosaurs too often otherwise " +
+                "you will miss out on dealing damage. Type matchups:\n");
         for (DinoType defendingType : DinoType.values()) {
             chart.append(defendingType.name()).append(": vulnerable to ")
                     .append(formatTypeList(defendingType, 2.0))
