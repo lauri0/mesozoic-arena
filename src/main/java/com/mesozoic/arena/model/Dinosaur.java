@@ -95,7 +95,9 @@ public class Dinosaur {
     public String printTypes() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < types.size(); i++) {
-            if (i > 0) {
+            if (i > 0 && i == types.size() - 1) {
+                sb.append(" and ");
+            } else if (i > 0) {
                 sb.append(", ");
             }
             sb.append(types.get(i).name());

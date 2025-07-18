@@ -18,13 +18,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Opponent powered by the Gemini Flash API.
  */
 public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     private static final String API_URL =
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private String lastResponse;
@@ -73,13 +76,16 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
         return extractText(response.body());
     }
 
-    private String extractText(String json) {
-        Matcher matcher = Pattern.compile("\\\"text\\\"\\s*:\\s*\\\"(.*?)\\\"",
-                Pattern.DOTALL).matcher(json);
-        if (matcher.find()) {
-            return matcher.group(1).replace("\\n", "\n");
-        }
-        return "";
+    private String extractText(String json) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root = mapper.readTree(json);
+        // adjust these paths to match Gemini’s actual response structure
+        JsonNode parts = root
+                .path("candidates")       // array of candidates
+                .get(0)
+                .path("content")          // or "output", or however the API is structured
+                .path("text");
+        return parts.asText();        // un-escapes all JSON escapes for you
     }
 
     private String escapeJson(String text) {
@@ -177,14 +183,15 @@ public class LLMAgent implements OpponentAgent, AutoCloseable {
 
     private String formatTypeChart() {
         StringBuilder chart = new StringBuilder("There are type matchups. Every dinosaur has 1 or 2 types." +
-                "Every move has one type. A type being vulnerable to another type means it" +
-                "takes 2x damage from moves of that type. A type resisting another type means it takes 0.5x damage from" +
+                "Every move has one type. A type being vulnerable to another type means a dinosaur with that type " +
+                "takes 2x damage from moves of that type. A type resisting another type means a dinosaur with that type takes 0.5x damage from " +
                 "moves of that type. When choosing moves to use try to use moves which deal extra damage against the opponent." +
-                "Keep in mind the opponent can switch dinosaurs and so can you. Type matchups:\n");
+                "Keep in mind the opponent can switch dinosaurs and so can you. Don't be only switching dinosaurs back and forth " +
+                "otherwise you are missing out on damage as well. Type matchups:\n");
         for (DinoType defendingType : DinoType.values()) {
-            chart.append(defendingType.name()).append(": takes 2x from ")
+            chart.append(defendingType.name()).append(": vulnerable to ")
                     .append(formatTypeList(defendingType, 2.0))
-                    .append(", takes 0.5x damage from ")
+                    .append("; resistant to ")
                     .append(formatTypeList(defendingType, 0.5))
                     .append("\n");
         }

@@ -43,7 +43,7 @@ Chomp:
   description: "Deal XX damage. YY accuracy."
   kind: head
 
-Double Swipe:
+Dual Swipe:
   type: Slasher
   damage: 18
   accuracy: 1.0
