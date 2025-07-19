@@ -4,6 +4,7 @@ import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.SwitchMove;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,15 @@ public class GameState {
         if (active == null) {
             return List.of();
         }
-        return new ArrayList<>(active.getMoves());
+        List<Move> moves = new ArrayList<>(active.getMoves());
+        List<Dinosaur> roster = player.getDinosaurs();
+        for (int index = 0; index < roster.size(); index++) {
+            Dinosaur bench = roster.get(index);
+            if (!bench.equals(active)) {
+                moves.add(new SwitchMove(bench, index));
+            }
+        }
+        return moves;
     }
 
     /**
@@ -70,6 +79,18 @@ public class GameState {
     public GameState nextState(Move playerOneMove, Move playerTwoMove, Random random) {
         Player nextPlayerOne = playerOne.copy();
         Player nextPlayerTwo = playerTwo.copy();
+
+        if (playerOneMove instanceof SwitchMove switchOne) {
+            Dinosaur target = nextPlayerOne.getDinosaurs().get(switchOne.getTargetIndex());
+            nextPlayerOne.queueSwitch(target);
+            playerOneMove = null;
+        }
+        if (playerTwoMove instanceof SwitchMove switchTwo) {
+            Dinosaur target = nextPlayerTwo.getDinosaurs().get(switchTwo.getTargetIndex());
+            nextPlayerTwo.queueSwitch(target);
+            playerTwoMove = null;
+        }
+
         GameState next = new GameState(nextPlayerOne, nextPlayerTwo, false);
         next.battle.executeRound(playerOneMove, playerTwoMove, random);
         return next;
