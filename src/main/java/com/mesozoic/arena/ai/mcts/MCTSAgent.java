@@ -1,0 +1,65 @@
+package com.mesozoic.arena.ai.mcts;
+
+import com.mesozoic.arena.ai.OpponentAgent;
+import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.engine.TurnRecord;
+
+import java.util.List;
+import java.util.Random;
+
+/**
+ * Opponent controlled by Monte Carlo Tree Search.
+ */
+public class MCTSAgent implements OpponentAgent {
+    private final int iterations;
+    private final Random random;
+
+    public MCTSAgent(int iterations, Random random) {
+        this.iterations = iterations;
+        this.random = random;
+    }
+
+    @Override
+    public Move chooseMove(Player self, Player enemy, List<TurnRecord> history) {
+        if (self == null || self.getActiveDinosaur() == null) {
+            return null;
+        }
+
+        GameState rootState = new GameState(enemy, self);
+        MCTSNode root = new MCTSNode(rootState, null, null);
+
+        for (int i = 0; i < iterations; i++) {
+            MCTSNode node = root;
+            while (node.isFullyExpanded() && !node.getChildren().isEmpty()) {
+                node = node.bestChild();
+            }
+            if (!node.getState().isTerminal()) {
+                if (!node.isFullyExpanded()) {
+                    node = node.expand(random);
+                }
+            }
+            int result = node.rollout(random);
+            node.backpropagate(result);
+        }
+
+        MCTSNode bestChild = null;
+        int highestVisits = -1;
+        for (MCTSNode child : root.getChildren()) {
+            if (child.getVisitCount() > highestVisits) {
+                highestVisits = child.getVisitCount();
+                bestChild = child;
+            }
+        }
+
+        if (bestChild == null) {
+            List<Move> moves = self.getActiveDinosaur().getMoves();
+            if (moves.isEmpty()) {
+                return null;
+            }
+            return moves.get(random.nextInt(moves.size()));
+        }
+
+        return bestChild.getMove();
+    }
+}
