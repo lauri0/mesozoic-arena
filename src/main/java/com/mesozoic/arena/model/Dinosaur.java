@@ -204,6 +204,25 @@ public class Dinosaur {
         return Math.round((float) speed * stageMultiplier(speedStage));
     }
 
+    /**
+     * Creates a deep copy of this dinosaur instance.
+     */
+    public Dinosaur copy() {
+        List<Move> moveCopies = new ArrayList<>();
+        for (Move move : moves) {
+            moveCopies.add(move.copy());
+        }
+        List<DinoType> typeCopies = new ArrayList<>(types);
+
+        Dinosaur clone = new Dinosaur(name, maxHealth, speed, imagePath,
+                headAttack, bodyAttack, moveCopies, ability, typeCopies);
+        clone.health = health;
+        clone.attackStage = attackStage;
+        clone.speedStage = speedStage;
+        clone.ailments.addAll(ailments);
+        return clone;
+    }
+
     private int clampStage(int stage) {
         if (stage > 6) {
             return 6;

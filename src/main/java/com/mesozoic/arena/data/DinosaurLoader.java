@@ -60,7 +60,7 @@ public class DinosaurLoader {
         int limit = Math.min(count, shuffledDinosaurs.size());
         for (int index = 0; index < limit; index++) {
             Dinosaur template = shuffledDinosaurs.get(index);
-            selection.add(copyDinosaur(template));
+            selection.add(template.copy());
         }
         return selection;
     }
@@ -119,10 +119,7 @@ public class DinosaurLoader {
             for (String moveName : names) {
                 Move template = moveTemplates.get(moveName);
                 if (template != null) {
-                    moves.add(new Move(template.getName(), template.getDamage(),
-                            template.getPriority(), template.getDescription(),
-                            template.getKind(), template.getType(),
-                            template.getEffects(), template.getAccuracy()));
+                    moves.add(template.copy());
                 }
             }
         }
@@ -150,15 +147,7 @@ public class DinosaurLoader {
     }
 
     private Dinosaur copyDinosaur(Dinosaur source) {
-        List<Move> copiedMoves = new ArrayList<>();
-        for (Move move : source.getMoves()) {
-            copiedMoves.add(new Move(move.getName(), move.getDamage(),
-                    move.getPriority(),
-                    move.getDescription(), move.getKind(), move.getType(),
-                    move.getEffects(), move.getAccuracy()));
-        }
-        return new Dinosaur(source.getName(), source.getHealth(), source.getSpeed(), source.getImagePath(),
-                source.getHeadAttack(), source.getBodyAttack(), copiedMoves, source.getAbility(), source.getTypes());
+        return source.copy();
     }
 
     private Map<String, Move> loadMoves() throws IOException {
