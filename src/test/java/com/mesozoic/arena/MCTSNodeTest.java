@@ -30,10 +30,11 @@ public class MCTSNodeTest {
         Player p2 = new Player(List.of(attacker));
         GameState state = new GameState(p1, p2);
         MCTSNode root = new MCTSNode(state, null, null);
-        Random random = new Random(0);
+        Random selectionRandom = new Random(0);
+        Random simulationRandom = new Random(1);
 
-        MCTSNode child = root.expand(random);
-        int result = child.rollout(random);
+        MCTSNode child = root.expand(selectionRandom, simulationRandom);
+        int result = child.rollout(simulationRandom);
         child.backpropagate(result);
 
         assertEquals(1, child.getVisitCount());
@@ -56,10 +57,11 @@ public class MCTSNodeTest {
         Player p2 = new Player(List.of(attacker));
         GameState state = new GameState(p1, p2);
         MCTSNode root = new MCTSNode(state, null, null);
-        Random random = new Random(0);
+        Random selectionRandom = new Random(0);
+        Random simulationRandom = new Random(1);
 
-        MCTSNode first = root.expand(random);
-        MCTSNode second = root.expand(random);
+        MCTSNode first = root.expand(selectionRandom, simulationRandom);
+        MCTSNode second = root.expand(selectionRandom, simulationRandom);
         if ("Win".equals(first.getMove().getName())) {
             first.backpropagate(1);
             second.backpropagate(-1);
@@ -86,9 +88,9 @@ public class MCTSNodeTest {
         Player p2 = new Player(List.of(dinoTwo));
         GameState state = new GameState(p1, p2);
         MCTSNode root = new MCTSNode(state, null, null);
-        Random random = new Random(0);
+        Random simulationRandom = new Random(0);
 
-        int result = root.rollout(random);
+        int result = root.rollout(simulationRandom);
         assertEquals(0, result);
     }
 
@@ -107,9 +109,9 @@ public class MCTSNodeTest {
         Player p2 = new Player(List.of(defender));
         GameState state = new GameState(p1, p2);
         MCTSNode root = new MCTSNode(state, null, null);
-        Random random = new Random(0);
+        Random simulationRandom = new Random(0);
 
-        int result = root.rollout(random);
+        int result = root.rollout(simulationRandom);
         assertEquals(-1, result);
     }
 }
