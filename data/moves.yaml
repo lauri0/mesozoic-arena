@@ -10,7 +10,7 @@ Bite:
 Brace:
   type: Defender
   damage: 0
-  accuracy: 0.9
+  accuracy: 1.0
   priority: 2
   effects: [brace]
   description: "Prevent all damage dealt to you next turn. Fails if it was already used last turn. +2 Priority. YY accuracy."

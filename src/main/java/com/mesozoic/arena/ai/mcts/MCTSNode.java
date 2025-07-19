@@ -82,7 +82,7 @@ public class MCTSNode {
     }
 
     public MCTSNode bestChild() {
-        double exploration = Math.sqrt(2.0);
+        double exploration = 5.0;
         MCTSNode best = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for (MCTSNode child : children) {
