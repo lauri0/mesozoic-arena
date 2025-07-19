@@ -50,7 +50,7 @@ public class DinosaurLoader {
      * Selections will not include duplicates.
      */
     public Player createRandomPlayer() {
-        return new Player(selectRandomDinosaurs(3));
+        return new Player(selectRandomDinosaurs(1));
     }
 
     private List<Dinosaur> selectRandomDinosaurs(int count) {
@@ -167,7 +167,8 @@ public class DinosaurLoader {
                     String kindLabel = String.valueOf(values.getOrDefault("kind", "body"));
                     MoveType kind = "head".equalsIgnoreCase(kindLabel) ? MoveType.HEAD : MoveType.BODY;
                     DinoType type = DinoType.fromString(String.valueOf(values.getOrDefault("type", "Biter")));
-                    double accuracy = ((Number) values.getOrDefault("accuracy", 1.0)).doubleValue();
+                    double accuracy = 1.0;
+                    //double accuracy = ((Number) values.getOrDefault("accuracy", 1.0)).doubleValue();
                     List<Effect> effects = parseEffects(values.get("effects"));
                     map.put(name, new Move(name, damage, priority, description, kind, type, effects, accuracy));
                 }
