@@ -61,6 +61,10 @@ public class MCTSAgentTest {
             for (int i = 0; i < 3; i++) {
                 Move chosen = agent.chooseMove(self, enemy, List.of());
                 assertEquals("Win", chosen.getName());
+
+                String stats = agent.getLastStats();
+                assertFalse(stats.isBlank());
+                assertTrue(stats.contains("Win"));
             }
         } finally {
             restoreUseLLMAgent(original);
