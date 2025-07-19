@@ -19,11 +19,19 @@ public class GameState {
     /**
      * Creates a new simulation state from the given players.
      * Copies the players before constructing the internal battle.
+     * Entry abilities are not triggered again.
      */
     public GameState(Player playerOne, Player playerTwo) {
-        this(playerOne.copy(), playerTwo.copy(), true);
+        this(playerOne.copy(), playerTwo.copy(), false);
     }
 
+    /**
+     * Internal constructor controlling whether entry abilities are applied.
+     *
+     * @param playerOne   player representing the first side
+     * @param playerTwo   player representing the second side
+     * @param applyEntry  when true, active dinosaurs trigger entry abilities
+     */
     private GameState(Player playerOne, Player playerTwo, boolean applyEntry) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
