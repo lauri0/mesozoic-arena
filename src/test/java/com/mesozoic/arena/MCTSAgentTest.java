@@ -6,6 +6,8 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Ability;
+import com.mesozoic.arena.model.Effect;
+import com.mesozoic.arena.engine.TurnRecord;
 import com.mesozoic.arena.util.Config;
 
 import org.junit.jupiter.api.Test;
@@ -166,6 +168,31 @@ public class MCTSAgentTest {
             Move chosen = agent.chooseMove(self, enemy, List.of());
             assertNull(chosen);
             assertEquals("Bench", self.getQueuedSwitch().getName());
+        } finally {
+            restoreUseLLMAgent(original);
+        }
+    }
+
+    @Test
+    public void testAgentAvoidsRepeatBrace() throws Exception {
+        String original = setUseLLMAgent(false);
+        try {
+            Move brace = new Move("Brace", 0, 0, List.of(new Effect("brace")));
+            Move strike = new Move("Strike", 10, 0, List.of());
+
+            Dinosaur defender = new Dinosaur("Defender", 20, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(brace, strike), null);
+            Dinosaur attacker = new Dinosaur("Attacker", 20, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(strike), null);
+            Player self = new Player(List.of(defender));
+            Player enemy = new Player(List.of(attacker));
+            MCTSAgent agent = new MCTSAgent(30, new Random(0));
+
+            TurnRecord last = new TurnRecord("Strike", "Brace");
+            Move chosen = agent.chooseMove(self, enemy, List.of(last));
+            assertEquals("Strike", chosen.getName());
         } finally {
             restoreUseLLMAgent(original);
         }

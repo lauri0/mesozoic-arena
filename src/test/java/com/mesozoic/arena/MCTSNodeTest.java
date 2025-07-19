@@ -5,6 +5,7 @@ import com.mesozoic.arena.ai.mcts.MCTSNode;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.Effect;
 
 import org.junit.jupiter.api.Test;
 
@@ -89,5 +90,26 @@ public class MCTSNodeTest {
 
         int result = root.rollout(random);
         assertEquals(0, result);
+    }
+
+    @Test
+    public void testRolloutAppliesBraceHistory() {
+        Move brace = new Move("Brace", 0, 0, List.of(new Effect("brace")));
+        Move strike = new Move("Strike", 10, 0, List.of());
+
+        Dinosaur attacker = new Dinosaur("Attacker", 20, 5,
+                "assets/animals/allosaurus.png", 1, 1,
+                List.of(strike), null);
+        Dinosaur defender = new Dinosaur("Defender", 20, 5,
+                "assets/animals/allosaurus.png", 1, 1,
+                List.of(brace), null);
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(defender));
+        GameState state = new GameState(p1, p2);
+        MCTSNode root = new MCTSNode(state, null, null);
+        Random random = new Random(0);
+
+        int result = root.rollout(random);
+        assertEquals(-1, result);
     }
 }

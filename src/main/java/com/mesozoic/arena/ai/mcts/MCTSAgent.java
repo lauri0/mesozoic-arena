@@ -29,7 +29,7 @@ public class MCTSAgent implements OpponentAgent {
             return null;
         }
 
-        GameState rootState = new GameState(enemy, self);
+        GameState rootState = new GameState(enemy, self, history);
         MCTSNode root = new MCTSNode(rootState, null, null);
 
         for (int i = 0; i < iterations; i++) {
