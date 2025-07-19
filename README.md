@@ -51,3 +51,10 @@ side of the window.
 When producing a move the model may include reasoning or multiple lines in its
 response. The final action should be provided on a line starting with
 `Answer:` followed by either the move name or `Switch to <dinosaur>`.
+
+## MCTS Opponent
+
+When the LLM is disabled the game uses a Monte Carlo Tree Search agent. The
+search depth can be tuned through the `mctsIterations` option in
+`data/constants.ini`. Higher values yield stronger play at the cost of longer
+thinking time. The default is `1000` iterations.
