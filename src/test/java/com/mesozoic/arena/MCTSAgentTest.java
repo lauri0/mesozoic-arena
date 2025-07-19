@@ -114,4 +114,29 @@ public class MCTSAgentTest {
             restoreUseLLMAgent(original);
         }
     }
+
+    @Test
+    public void testBattleLogsMctsStats() throws Exception {
+        String original = setUseLLMAgent(false);
+        try {
+            Move wait = new Move("Wait", 0, 0, List.of());
+            Dinosaur playerDino = new Dinosaur("Player", 10, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(wait), null);
+            Dinosaur npcDino = new Dinosaur("NPC", 10, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(wait), null);
+            Player p1 = new Player(List.of(playerDino));
+            Player p2 = new Player(List.of(npcDino));
+            Battle battle = new Battle(p1, p2, new MCTSAgent(5, new Random(0)));
+
+            battle.executeRound(wait);
+
+            List<String> log = battle.getAiLog();
+            assertFalse(log.isEmpty());
+            assertTrue(log.get(0).contains("visits"));
+        } finally {
+            restoreUseLLMAgent(original);
+        }
+    }
 }

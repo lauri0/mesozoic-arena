@@ -14,6 +14,7 @@ import java.util.Random;
 public class MCTSAgent implements OpponentAgent {
     private final int iterations;
     private final Random random;
+    private String lastStats = "";
 
     public MCTSAgent(int iterations, Random random) {
         this.iterations = iterations;
@@ -43,6 +44,23 @@ public class MCTSAgent implements OpponentAgent {
             node.backpropagate(result);
         }
 
+        StringBuilder summary = new StringBuilder();
+        for (MCTSNode child : root.getChildren()) {
+            if (child.getVisitCount() == 0) {
+                continue;
+            }
+            double average = child.getWinScore() / child.getVisitCount();
+            if (summary.length() > 0) {
+                summary.append("\n");
+            }
+            summary.append(child.getMove().getName())
+                    .append(": ")
+                    .append(child.getVisitCount())
+                    .append(" visits, avg score ")
+                    .append(String.format("%.2f", average));
+        }
+        lastStats = summary.toString();
+
         MCTSNode bestChild = null;
         int highestVisits = -1;
         for (MCTSNode child : root.getChildren()) {
@@ -61,5 +79,12 @@ public class MCTSAgent implements OpponentAgent {
         }
 
         return bestChild.getMove();
+    }
+
+    /**
+     * Returns a summary of statistics for the most recent search.
+     */
+    public String getLastStats() {
+        return lastStats;
     }
 }
