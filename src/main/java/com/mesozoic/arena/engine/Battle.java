@@ -2,7 +2,7 @@ package com.mesozoic.arena.engine;
 
 import com.mesozoic.arena.ai.LLMAgent;
 import com.mesozoic.arena.ai.OpponentAgent;
-import com.mesozoic.arena.ai.RandomOpponent;
+import com.mesozoic.arena.ai.mcts.MCTSAgent;
 import com.mesozoic.arena.util.Config;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
@@ -16,6 +16,7 @@ import com.mesozoic.arena.model.Ailment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import java.util.Random;
 import com.mesozoic.arena.engine.TurnRecord;
 
 /**
@@ -88,10 +89,10 @@ public class Battle {
             } catch (Exception e) {
                 System.err.println("Failed to load LLM model: " + e.getMessage());
                 e.printStackTrace();
-                System.err.println("Falling back to random opponent");
+                System.err.println("Falling back to MCTS opponent");
             }
         }
-        return new RandomOpponent();
+        return new MCTSAgent(Config.mctsIterations(), new Random());
     }
 
     private void addEvent(String message) {
