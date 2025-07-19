@@ -58,6 +58,18 @@ public final class Config {
         }
     }
 
+    /**
+     * Returns the epsilon value used by the MCTS agent.
+     */
+    public static double mctsEpsilon() {
+        String value = properties.getProperty("mctsEpsilon", "0.1");
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException ignored) {
+            return 0.1;
+        }
+    }
+
 
     /**
      * Returns the Gemini API key from {@code gemini.env} or an empty string if

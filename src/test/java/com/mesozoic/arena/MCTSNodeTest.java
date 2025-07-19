@@ -75,6 +75,35 @@ public class MCTSNodeTest {
     }
 
     @Test
+    public void testBestChildEpsilonGreedy() {
+        Move first = new Move("First", 0, 0, List.of());
+        Move second = new Move("Second", 0, 0, List.of());
+        Dinosaur attacker = new Dinosaur("Attacker", 10, 5,
+                "assets/animals/allosaurus.png", 1, 1,
+                List.of(first, second), null);
+        Dinosaur defender = new Dinosaur("Defender", 10, 5,
+                "assets/animals/allosaurus.png", 1, 1,
+                List.of(first), null);
+        Player p1 = new Player(List.of(defender));
+        Player p2 = new Player(List.of(attacker));
+        GameState state = new GameState(p1, p2);
+        MCTSNode root = new MCTSNode(state, null, null);
+        Random selectionRandom = new Random(0);
+        Random simulationRandom = new Random(1);
+
+        root.expand(selectionRandom, simulationRandom);
+        root.expand(selectionRandom, simulationRandom);
+
+        Random epsilonRandom = new Random(0);
+        MCTSNode chosen = root.bestChild(epsilonRandom, 1.0);
+
+        Random expectedRandom = new Random(0);
+        expectedRandom.nextDouble();
+        int expectedIndex = expectedRandom.nextInt(root.getChildren().size());
+        assertEquals(root.getChildren().get(expectedIndex), chosen);
+    }
+
+    @Test
     public void testRolloutStopsWithoutWinner() {
         Move waitOne = new Move("Wait", 0, 0, List.of());
         Move waitTwo = new Move("Wait", 0, 0, List.of());

@@ -81,13 +81,18 @@ public class MCTSNode {
         return child;
     }
 
-    public MCTSNode bestChild() {
+    public MCTSNode bestChild(Random random, double epsilon) {
+        if (random != null && epsilon > 0 && !children.isEmpty()
+                && random.nextDouble() < epsilon) {
+            return children.get(random.nextInt(children.size()));
+        }
         double exploration = 5.0;
         MCTSNode best = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for (MCTSNode child : children) {
             double exploitation = child.winScore / (child.visitCount + 1e-6);
-            double exploreTerm = Math.sqrt(Math.log(visitCount + 1) / (child.visitCount + 1e-6));
+            double exploreTerm = Math.sqrt(Math.log(visitCount + 1)
+                    / (child.visitCount + 1e-6));
             double uctValue = exploitation + exploration * exploreTerm;
             if (uctValue > bestValue) {
                 bestValue = uctValue;
@@ -95,6 +100,10 @@ public class MCTSNode {
             }
         }
         return best;
+    }
+
+    public MCTSNode bestChild() {
+        return bestChild(null, 0.0);
     }
 
     public int rollout(Random simulationRandom) {
