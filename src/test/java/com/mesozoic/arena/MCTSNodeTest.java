@@ -70,4 +70,24 @@ public class MCTSNodeTest {
         MCTSNode best = root.bestChild();
         assertEquals("Win", best.getMove().getName());
     }
+
+    @Test
+    public void testRolloutStopsWithoutWinner() {
+        Move waitOne = new Move("Wait", 0, 0, List.of());
+        Move waitTwo = new Move("Wait", 0, 0, List.of());
+        Dinosaur dinoOne = new Dinosaur("IdleOne", 10, 5,
+                "assets/animals/allosaurus.png", 1, 1,
+                List.of(waitOne), null);
+        Dinosaur dinoTwo = new Dinosaur("IdleTwo", 10, 5,
+                "assets/animals/allosaurus.png", 1, 1,
+                List.of(waitTwo), null);
+        Player p1 = new Player(List.of(dinoOne));
+        Player p2 = new Player(List.of(dinoTwo));
+        GameState state = new GameState(p1, p2);
+        MCTSNode root = new MCTSNode(state, null, null);
+        Random random = new Random(0);
+
+        int result = root.rollout(random);
+        assertEquals(0, result);
+    }
 }

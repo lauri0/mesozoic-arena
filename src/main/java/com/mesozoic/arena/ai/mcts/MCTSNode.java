@@ -11,6 +11,7 @@ import java.util.Random;
  * Node used by the Monte Carlo Tree Search.
  */
 public class MCTSNode {
+    private static final int MAX_ROLLOUT_STEPS = 100;
     private final GameState state;
     private final MCTSNode parent;
     private final List<MCTSNode> children = new ArrayList<>();
@@ -88,10 +89,12 @@ public class MCTSNode {
 
     public int rollout(Random random) {
         GameState current = state;
-        while (!current.isTerminal()) {
+        int steps = 0;
+        while (!current.isTerminal() && steps < MAX_ROLLOUT_STEPS) {
             Move ourMove = randomMove(current.getPlayerTwo(), random);
             Move opponentMove = randomMove(current.getPlayerOne(), random);
             current = current.nextState(opponentMove, ourMove, random);
+            steps++;
         }
         int winner = current.winner();
         if (winner == -1) {
