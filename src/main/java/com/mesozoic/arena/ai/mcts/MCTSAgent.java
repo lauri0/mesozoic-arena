@@ -3,6 +3,8 @@ package com.mesozoic.arena.ai.mcts;
 import com.mesozoic.arena.ai.OpponentAgent;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.SwitchMove;
+import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.engine.TurnRecord;
 
 import java.util.List;
@@ -78,7 +80,17 @@ public class MCTSAgent implements OpponentAgent {
             return moves.get(random.nextInt(moves.size()));
         }
 
-        return bestChild.getMove();
+        Move chosen = bestChild.getMove();
+        if (chosen instanceof SwitchMove switchMove) {
+            List<Dinosaur> dinos = self.getDinosaurs();
+            if (switchMove.getTargetIndex() >= 0
+                    && switchMove.getTargetIndex() < dinos.size()) {
+                self.queueSwitch(dinos.get(switchMove.getTargetIndex()));
+            }
+            return null;
+        }
+
+        return chosen;
     }
 
     /**

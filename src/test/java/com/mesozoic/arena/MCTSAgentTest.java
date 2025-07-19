@@ -143,4 +143,31 @@ public class MCTSAgentTest {
             restoreUseLLMAgent(original);
         }
     }
+
+    @Test
+    public void testAgentCanSwitch() throws Exception {
+        String original = setUseLLMAgent(false);
+        try {
+            Move wait = new Move("Wait", 0, 0, List.of());
+            Move strike = new Move("Strike", 10, 0, List.of());
+            Dinosaur active = new Dinosaur("Active", 10, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(), null);
+            Dinosaur bench = new Dinosaur("Bench", 10, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(strike), null);
+            Dinosaur foe = new Dinosaur("Foe", 10, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(wait), null);
+            Player self = new Player(List.of(active, bench));
+            Player enemy = new Player(List.of(foe));
+            MCTSAgent agent = new MCTSAgent(20, new Random(0));
+
+            Move chosen = agent.chooseMove(self, enemy, List.of());
+            assertNull(chosen);
+            assertEquals("Bench", self.getQueuedSwitch().getName());
+        } finally {
+            restoreUseLLMAgent(original);
+        }
+    }
 }
