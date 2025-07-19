@@ -136,5 +136,30 @@ public class AbilityEffectsTest {
         assertEquals(100, attacker.getHealth());
         assertEquals(67, tough.getHealth());
     }
+
+    @Test
+    public void testIntimidateTriggersOnAutoSwitch() {
+        Move strike = new Move("Strike", 20, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, List.of());
+
+        Dinosaur fodder = new Dinosaur(
+                "Fodder", 10, 5, "assets/animals/allosaurus.png", 1,
+                1, List.of(waitMove), null);
+        Dinosaur intimidator = new Dinosaur(
+                "Intimidator", 100, 50, "assets/animals/allosaurus.png", 10,
+                10, List.of(waitMove), new Ability("Intimidate", ""));
+        Player p1 = new Player(List.of(fodder, intimidator));
+
+        Dinosaur attacker = new Dinosaur(
+                "Attacker", 100, 50, "assets/animals/allosaurus.png", 10,
+                10, List.of(strike), null);
+        Player p2 = new Player(List.of(attacker));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(waitMove, strike);
+
+        assertEquals(intimidator, p1.getActiveDinosaur());
+        assertEquals(-1, attacker.getAttackStage());
+    }
 }
 
