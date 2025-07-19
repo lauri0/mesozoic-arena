@@ -18,6 +18,7 @@ public class MCTSAgent implements OpponentAgent {
     private final Random selectionRandom;
     private final Random simulationRandom;
     private String lastStats = "";
+    private int expansionCounter = 0;
 
     public MCTSAgent(int iterations, Random random) {
         long seed1 = random.nextLong();
@@ -41,6 +42,7 @@ public class MCTSAgent implements OpponentAgent {
 
         GameState rootState = new GameState(enemy, self, history);
         MCTSNode root = new MCTSNode(rootState, null, null);
+        expansionCounter = 0;
 
         for (int i = 0; i < iterations; i++) {
             MCTSNode node = root;
@@ -48,9 +50,23 @@ public class MCTSAgent implements OpponentAgent {
                 node = node.bestChild();
             }
             if (!node.getState().isTerminal()) {
+                boolean expanded = false;
+                Move expandedMove = null;
                 if (!node.isFullyExpanded()) {
                     node = node.expand(selectionRandom, simulationRandom);
+                    expanded = true;
+                    expandedMove = node.getMove();
+                    expansionCounter++;
+                    if (expandedMove != null) {
+                        System.out.println("Expansion " + expansionCounter + ": " + expandedMove.getName());
+                    }
                 }
+                int result = node.rollout(random);
+                if (expanded && expandedMove != null) {
+                    System.out.println("First rollout result for " + expandedMove.getName() + ": " + result);
+                }
+                node.backpropagate(result);
+                continue;
             }
             int result = node.rollout(simulationRandom);
             node.backpropagate(result);
