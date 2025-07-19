@@ -15,13 +15,23 @@ import java.util.Random;
  */
 public class MCTSAgent implements OpponentAgent {
     private final int iterations;
-    private final Random random;
+    private final Random selectionRandom;
+    private final Random simulationRandom;
     private String lastStats = "";
     private int expansionCounter = 0;
 
     public MCTSAgent(int iterations, Random random) {
+        long seed1 = random.nextLong();
+        long seed2 = random.nextLong();
         this.iterations = iterations;
-        this.random = random;
+        this.selectionRandom = new Random(seed1);
+        this.simulationRandom = new Random(seed2);
+    }
+
+    public MCTSAgent(int iterations, Random selectionRandom, Random simulationRandom) {
+        this.iterations = iterations;
+        this.selectionRandom = selectionRandom;
+        this.simulationRandom = simulationRandom;
     }
 
     @Override
@@ -43,7 +53,7 @@ public class MCTSAgent implements OpponentAgent {
                 boolean expanded = false;
                 Move expandedMove = null;
                 if (!node.isFullyExpanded()) {
-                    node = node.expand(random);
+                    node = node.expand(selectionRandom, simulationRandom);
                     expanded = true;
                     expandedMove = node.getMove();
                     expansionCounter++;
@@ -58,7 +68,7 @@ public class MCTSAgent implements OpponentAgent {
                 node.backpropagate(result);
                 continue;
             }
-            int result = node.rollout(random);
+            int result = node.rollout(simulationRandom);
             node.backpropagate(result);
         }
 
@@ -97,7 +107,7 @@ public class MCTSAgent implements OpponentAgent {
             if (moves.isEmpty()) {
                 return null;
             }
-            return moves.get(random.nextInt(moves.size()));
+            return moves.get(selectionRandom.nextInt(moves.size()));
         }
 
         Move chosen = bestChild.getMove();

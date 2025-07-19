@@ -30,8 +30,8 @@ Corythosaurus:
   types: [Grazer]
   health: 130
   speed: 95
-  head attack: 0.62
-  body attack: 0.74
+  head attack: 0.71
+  body attack: 0.82
   ability: Supporter
   image: assets/animals/corythosaurus.png
   moves:
@@ -57,7 +57,7 @@ Daspletosaurus:
 Euoplocephalus:
   types: [Crusher, Defender]
   health: 90
-  speed: 75
+  speed: 60
   head attack: 0.52
   body attack: 0.74
   ability: Tough
@@ -71,7 +71,7 @@ Euoplocephalus:
 Stegosaurus:
   types: [Impaler]
   health: 160
-  speed: 60
+  speed: 65
   head attack: 0.65
   body attack: 1.05
   ability: Spiky Body

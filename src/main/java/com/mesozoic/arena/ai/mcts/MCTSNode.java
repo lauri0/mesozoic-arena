@@ -69,20 +69,20 @@ public class MCTSNode {
         return moves.get(random.nextInt(moves.size()));
     }
 
-    public MCTSNode expand(Random random) {
+    public MCTSNode expand(Random selectionRandom, Random simulationRandom) {
         if (untriedMoves.isEmpty()) {
             return this;
         }
-        Move chosenMove = untriedMoves.remove(random.nextInt(untriedMoves.size()));
-        Move opponentMove = randomMove(state.getPlayerOne(), random);
-        GameState nextState = state.nextState(opponentMove, chosenMove, random);
+        Move chosenMove = untriedMoves.remove(selectionRandom.nextInt(untriedMoves.size()));
+        Move opponentMove = randomMove(state.getPlayerOne(), simulationRandom);
+        GameState nextState = state.nextState(opponentMove, chosenMove, simulationRandom);
         MCTSNode child = new MCTSNode(nextState, this, chosenMove);
         children.add(child);
         return child;
     }
 
     public MCTSNode bestChild() {
-        double exploration = Math.sqrt(2.0);
+        double exploration = 5.0;
         MCTSNode best = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for (MCTSNode child : children) {
@@ -97,13 +97,13 @@ public class MCTSNode {
         return best;
     }
 
-    public int rollout(Random random) {
+    public int rollout(Random simulationRandom) {
         GameState current = state;
         int steps = 0;
         while (!current.isTerminal() && steps < MAX_ROLLOUT_STEPS) {
-            Move ourMove = randomMove(current.getPlayerTwo(), random);
-            Move opponentMove = randomMove(current.getPlayerOne(), random);
-            current = current.nextState(opponentMove, ourMove, random);
+            Move ourMove = randomMove(current.getPlayerTwo(), simulationRandom);
+            Move opponentMove = randomMove(current.getPlayerOne(), simulationRandom);
+            current = current.nextState(opponentMove, ourMove, simulationRandom);
             steps++;
         }
         int winner = current.winner();
