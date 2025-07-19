@@ -184,7 +184,14 @@ public class Battle {
      * Executes a round using the AI to select the opponent's move.
      */
     public void executeRound(Move playerOneMove) {
-        Move playerTwoMove = opponentAI.chooseMove(playerTwo, playerOne, Collections.unmodifiableList(moveHistory));
+        Move playerTwoMove = opponentAI.chooseMove(playerTwo, playerOne,
+                Collections.unmodifiableList(moveHistory));
+        if (opponentAI instanceof MCTSAgent mcts) {
+            String stats = mcts.getLastStats();
+            if (stats != null && !stats.isBlank()) {
+                addAiLog(stats);
+            }
+        }
         logLLMResponse();
         executeRound(playerOneMove, playerTwoMove);
         turn++;
