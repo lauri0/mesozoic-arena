@@ -46,6 +46,18 @@ public final class Config {
         return Boolean.parseBoolean(properties.getProperty("useLLMAgent", "false"));
     }
 
+    /**
+     * Returns the iteration count used by the MCTS agent.
+     */
+    public static int mctsIterations() {
+        String value = properties.getProperty("mctsIterations", "1000");
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException ignored) {
+            return 1000;
+        }
+    }
+
 
     /**
      * Returns the Gemini API key from {@code gemini.env} or an empty string if
