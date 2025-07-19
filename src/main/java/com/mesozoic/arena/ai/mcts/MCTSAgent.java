@@ -17,21 +17,30 @@ public class MCTSAgent implements OpponentAgent {
     private final int iterations;
     private final Random selectionRandom;
     private final Random simulationRandom;
+    private final double epsilon;
     private String lastStats = "";
     private int expansionCounter = 0;
 
     public MCTSAgent(int iterations, Random random) {
-        long seed1 = random.nextLong();
-        long seed2 = random.nextLong();
-        this.iterations = iterations;
-        this.selectionRandom = new Random(seed1);
-        this.simulationRandom = new Random(seed2);
+        this(iterations, new Random(random.nextLong()),
+                new Random(random.nextLong()), 0.1);
+    }
+
+    public MCTSAgent(int iterations, Random random, double epsilon) {
+        this(iterations, new Random(random.nextLong()),
+                new Random(random.nextLong()), epsilon);
     }
 
     public MCTSAgent(int iterations, Random selectionRandom, Random simulationRandom) {
+        this(iterations, selectionRandom, simulationRandom, 0.1);
+    }
+
+    public MCTSAgent(int iterations, Random selectionRandom, Random simulationRandom,
+            double epsilon) {
         this.iterations = iterations;
         this.selectionRandom = selectionRandom;
         this.simulationRandom = simulationRandom;
+        this.epsilon = epsilon;
     }
 
     @Override
@@ -47,7 +56,7 @@ public class MCTSAgent implements OpponentAgent {
         for (int i = 0; i < iterations; i++) {
             MCTSNode node = root;
             while (node.isFullyExpanded() && !node.getChildren().isEmpty()) {
-                node = node.bestChild();
+                node = node.bestChild(selectionRandom, epsilon);
             }
             if (!node.getState().isTerminal()) {
                 boolean expanded = false;
@@ -97,6 +106,11 @@ public class MCTSAgent implements OpponentAgent {
                 highestVisits = child.getVisitCount();
                 bestChild = child;
             }
+        }
+        if (!root.getChildren().isEmpty()
+                && selectionRandom.nextDouble() < epsilon) {
+            bestChild = root.getChildren()
+                    .get(selectionRandom.nextInt(root.getChildren().size()));
         }
 
         if (bestChild == null) {

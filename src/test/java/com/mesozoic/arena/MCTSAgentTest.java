@@ -59,7 +59,7 @@ public class MCTSAgentTest {
             Player self = new Player(List.of(agentDino));
             Player enemy = new Player(List.of(foeDino));
             Random rng = new Random(0);
-            MCTSAgent agent = new MCTSAgent(50, rng, rng);
+            MCTSAgent agent = new MCTSAgent(50, rng, rng, 0.0);
 
             for (int i = 0; i < 3; i++) {
                 Move chosen = agent.chooseMove(self, enemy, List.of());
@@ -89,7 +89,7 @@ public class MCTSAgentTest {
             Player self = new Player(List.of(agentDino));
             Player enemy = new Player(List.of(intimidator));
             Random rng = new Random(0);
-            MCTSAgent agent = new MCTSAgent(50, rng, rng);
+            MCTSAgent agent = new MCTSAgent(50, rng, rng, 0.0);
 
             for (int i = 0; i < 3; i++) {
                 Move chosen = agent.chooseMove(self, enemy, List.of());
@@ -137,7 +137,7 @@ public class MCTSAgentTest {
             Player p1 = new Player(List.of(playerDino));
             Player p2 = new Player(List.of(npcDino));
             Random rng = new Random(0);
-            Battle battle = new Battle(p1, p2, new MCTSAgent(5, rng, rng));
+            Battle battle = new Battle(p1, p2, new MCTSAgent(5, rng, rng, 0.0));
 
             battle.executeRound(wait);
 
@@ -167,7 +167,7 @@ public class MCTSAgentTest {
             Player self = new Player(List.of(active, bench));
             Player enemy = new Player(List.of(foe));
             Random rng = new Random(0);
-            MCTSAgent agent = new MCTSAgent(20, rng, rng);
+            MCTSAgent agent = new MCTSAgent(20, rng, rng, 0.0);
 
             Move chosen = agent.chooseMove(self, enemy, List.of());
             assertNull(chosen);
@@ -193,7 +193,7 @@ public class MCTSAgentTest {
             Player self = new Player(List.of(defender));
             Player enemy = new Player(List.of(attacker));
             Random rng = new Random(0);
-            MCTSAgent agent = new MCTSAgent(30, rng, rng);
+            MCTSAgent agent = new MCTSAgent(30, rng, rng, 0.0);
 
             TurnRecord last = new TurnRecord("Strike", "Brace");
             Move chosen = agent.chooseMove(self, enemy, List.of(last));
