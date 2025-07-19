@@ -5,6 +5,7 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.SwitchMove;
+import com.mesozoic.arena.engine.TurnRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class GameState {
     private final Player playerOne;
     private final Player playerTwo;
     private final Battle battle;
+    private final List<TurnRecord> history;
 
     /**
      * Creates a new simulation state from the given players.
@@ -24,7 +26,11 @@ public class GameState {
      * Entry abilities are not triggered again.
      */
     public GameState(Player playerOne, Player playerTwo) {
-        this(playerOne.copy(), playerTwo.copy(), false);
+        this(playerOne, playerTwo, List.of());
+    }
+
+    public GameState(Player playerOne, Player playerTwo, List<TurnRecord> history) {
+        this(playerOne.copy(), playerTwo.copy(), false, history);
     }
 
     /**
@@ -34,10 +40,11 @@ public class GameState {
      * @param playerTwo   player representing the second side
      * @param applyEntry  when true, active dinosaurs trigger entry abilities
      */
-    private GameState(Player playerOne, Player playerTwo, boolean applyEntry) {
+    private GameState(Player playerOne, Player playerTwo, boolean applyEntry, List<TurnRecord> history) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
-        this.battle = new Battle(this.playerOne, this.playerTwo);
+        this.history = history == null ? new ArrayList<>() : new ArrayList<>(history);
+        this.battle = new Battle(this.playerOne, this.playerTwo, this.history);
         if (!applyEntry) {
             revertEntryEffects();
         }
@@ -91,7 +98,8 @@ public class GameState {
             playerTwoMove = null;
         }
 
-        GameState next = new GameState(nextPlayerOne, nextPlayerTwo, false);
+        List<TurnRecord> nextHistory = new ArrayList<>(history);
+        GameState next = new GameState(nextPlayerOne, nextPlayerTwo, false, nextHistory);
         next.battle.executeRound(playerOneMove, playerTwoMove, random);
         return next;
     }

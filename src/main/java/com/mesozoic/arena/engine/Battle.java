@@ -29,7 +29,7 @@ public class Battle {
     private final OpponentAgent opponentAI;
     private final List<String> eventLog = new ArrayList<>();
     private final List<String> aiLog = new ArrayList<>();
-    private final List<TurnRecord> moveHistory = new ArrayList<>();
+    private final List<TurnRecord> moveHistory;
     private int turn = 1;
     private Player winner;
 
@@ -43,13 +43,22 @@ public class Battle {
     }
 
     public Battle(Player playerOne, Player playerTwo) {
-        this(playerOne, playerTwo, createAgent());
+        this(playerOne, playerTwo, createAgent(), new ArrayList<>());
     }
 
     public Battle(Player playerOne, Player playerTwo, OpponentAgent opponentAI) {
+        this(playerOne, playerTwo, opponentAI, new ArrayList<>());
+    }
+
+    public Battle(Player playerOne, Player playerTwo, List<TurnRecord> history) {
+        this(playerOne, playerTwo, createAgent(), history);
+    }
+
+    public Battle(Player playerOne, Player playerTwo, OpponentAgent opponentAI, List<TurnRecord> history) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.opponentAI = opponentAI;
+        this.moveHistory = history == null ? new ArrayList<>() : history;
         AbilityEffects.onEntry(playerOne.getActiveDinosaur(), playerTwo.getActiveDinosaur());
         AbilityEffects.onEntry(playerTwo.getActiveDinosaur(), playerOne.getActiveDinosaur());
     }

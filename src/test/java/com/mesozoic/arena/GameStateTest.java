@@ -6,6 +6,7 @@ import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.Effect;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -67,5 +68,24 @@ public class GameStateTest {
                 .orElseThrow();
         GameState next = state.nextState(switchMove, null, new Random(0));
         assertEquals("Second", next.getPlayerOne().getActiveDinosaur().getName());
+    }
+
+    @Test
+    public void testBraceFailsWhenRepeated() {
+        Move brace = new Move("Brace", 0, 0, List.of(new Effect("brace")));
+        Move strike = new Move("Strike", 10, 0, List.of());
+        Dinosaur defender = new Dinosaur("Defender", 100, 50,
+                "assets/animals/allosaurus.png", 1, 1, List.of(brace), null);
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50,
+                "assets/animals/allosaurus.png", 1, 1, List.of(strike), null);
+        Player p1 = new Player(List.of(defender));
+        Player p2 = new Player(List.of(attacker));
+
+        GameState state = new GameState(p1, p2);
+        state = state.nextState(brace, strike, new Random(0));
+        assertEquals(100, state.getPlayerOne().getActiveDinosaur().getHealth());
+
+        GameState next = state.nextState(brace, strike, new Random(0));
+        assertTrue(next.getPlayerOne().getActiveDinosaur().getHealth() < 100);
     }
 }
