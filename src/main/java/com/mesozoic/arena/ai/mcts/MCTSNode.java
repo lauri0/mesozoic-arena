@@ -64,7 +64,7 @@ public class MCTSNode {
         }
         Move chosenMove = untriedMoves.remove(random.nextInt(untriedMoves.size()));
         Move opponentMove = randomMove(state.getPlayerOne(), random);
-        GameState nextState = state.nextState(opponentMove, chosenMove);
+        GameState nextState = state.nextState(opponentMove, chosenMove, random);
         MCTSNode child = new MCTSNode(nextState, this, chosenMove);
         children.add(child);
         return child;
@@ -91,7 +91,7 @@ public class MCTSNode {
         while (!current.isTerminal()) {
             Move ourMove = randomMove(current.getPlayerTwo(), random);
             Move opponentMove = randomMove(current.getPlayerOne(), random);
-            current = current.nextState(opponentMove, ourMove);
+            current = current.nextState(opponentMove, ourMove, random);
         }
         int winner = current.winner();
         if (winner == -1) {
