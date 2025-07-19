@@ -19,6 +19,8 @@ public class MCTSNode {
     private final Move move;
     private int visitCount;
     private double winScore;
+    private int winCount;
+    private int drawCount;
 
     public MCTSNode(GameState state, MCTSNode parent, Move move) {
         this.state = state;
@@ -45,6 +47,14 @@ public class MCTSNode {
 
     public double getWinScore() {
         return winScore;
+    }
+
+    public int getWinCount() {
+        return winCount;
+    }
+
+    public int getDrawCount() {
+        return drawCount;
     }
 
     public boolean isFullyExpanded() {
@@ -110,6 +120,11 @@ public class MCTSNode {
         while (node != null) {
             node.visitCount++;
             node.winScore += result;
+            if (result > 0) {
+                node.winCount++;
+            } else if (result == 0) {
+                node.drawCount++;
+            }
             node = node.parent;
         }
     }
