@@ -74,9 +74,7 @@ public final class DinosaurLoader {
                     for (Object n : moveNames) {
                         Move m = moves.get(String.valueOf(n));
                         if (m != null) {
-                            dinoMoves.add(new Move(m.getName(), m.getDamage(),
-                                    m.getPriority(), m.getDescription(), m.getKind(), m.getType(),
-                                    m.getEffects(), m.getAccuracy()));
+                            dinoMoves.add(m.copy());
                         }
                     }
                 }

@@ -84,4 +84,12 @@ public class Move {
         String withDamage = description.replace("XX", String.valueOf(realDamage));
         return withDamage.replace("YY", String.valueOf(accuracy));
     }
+
+    /**
+     * Returns a deep copy of this move.
+     */
+    public Move copy() {
+        return new Move(name, damage, priority, description, kind, type,
+                getEffects(), accuracy);
+    }
 }

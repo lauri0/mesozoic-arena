@@ -92,4 +92,23 @@ public class Player {
     public boolean hasRemainingDinosaurs() {
         return !dinosaurs.isEmpty();
     }
+
+    /**
+     * Creates a deep copy of this player including cloned dinosaurs.
+     */
+    public Player copy() {
+        List<Dinosaur> copies = new ArrayList<>();
+        for (Dinosaur d : dinosaurs) {
+            copies.add(d.copy());
+        }
+
+        Player clone = new Player(copies);
+        if (activeDinosaur != null) {
+            int index = dinosaurs.indexOf(activeDinosaur);
+            if (index >= 0 && index < copies.size()) {
+                clone.activeDinosaur = copies.get(index);
+            }
+        }
+        return clone;
+    }
 }
