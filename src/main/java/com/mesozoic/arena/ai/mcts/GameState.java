@@ -7,6 +7,7 @@ import com.mesozoic.arena.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Lightweight representation of a battle state used for MCTS simulations.
@@ -58,11 +59,11 @@ public class GameState {
     /**
      * Produces the next game state after both players perform their moves.
      */
-    public GameState nextState(Move playerOneMove, Move playerTwoMove) {
+    public GameState nextState(Move playerOneMove, Move playerTwoMove, Random random) {
         Player nextPlayerOne = playerOne.copy();
         Player nextPlayerTwo = playerTwo.copy();
         GameState next = new GameState(nextPlayerOne, nextPlayerTwo, false);
-        next.battle.executeRound(playerOneMove, playerTwoMove);
+        next.battle.executeRound(playerOneMove, playerTwoMove, random);
         return next;
     }
 

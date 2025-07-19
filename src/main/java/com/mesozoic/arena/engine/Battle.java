@@ -33,8 +33,8 @@ public class Battle {
     private int turn = 1;
     private Player winner;
 
-    private boolean moveHits(Move move) {
-        return move != null && Math.random() < move.getAccuracy();
+    private boolean moveHits(Move move, Random random) {
+        return move != null && random.nextDouble() < move.getAccuracy();
     }
 
     private void logMiss(Player actingPlayer, Dinosaur attacker, Move move) {
@@ -108,6 +108,10 @@ public class Battle {
      * The order of execution is determined by move priority and speed.
      */
     public void executeRound(Move playerOneMove, Move playerTwoMove) {
+        executeRound(playerOneMove, playerTwoMove, new Random());
+    }
+
+    public void executeRound(Move playerOneMove, Move playerTwoMove, Random random) {
         if (winner != null) {
             return;
         }
@@ -150,17 +154,17 @@ public class Battle {
 
         if (p1First) {
             p1Braced = MoveEffects.hasBraceEffect(playerOneMove, lastP1Action);
-            boolean fainted = performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
+            boolean fainted = performTurn(playerOne, playerTwo, playerOneMove, p2Braced, random);
             if (winner == null && !fainted) {
                 p2Braced = MoveEffects.hasBraceEffect(playerTwoMove, lastP2Action);
-                performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
+                performTurn(playerTwo, playerOne, playerTwoMove, p1Braced, random);
             }
         } else {
             p2Braced = MoveEffects.hasBraceEffect(playerTwoMove, lastP2Action);
-            boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove, p1Braced);
+            boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove, p1Braced, random);
             if (winner == null && !fainted) {
                 p1Braced = MoveEffects.hasBraceEffect(playerOneMove, lastP1Action);
-                performTurn(playerOne, playerTwo, playerOneMove, p2Braced);
+                performTurn(playerOne, playerTwo, playerOneMove, p2Braced, random);
             }
         }
 
@@ -195,7 +199,7 @@ public class Battle {
     }
 
     private boolean performTurn(Player actingPlayer, Player opposingPlayer, Move move,
-            boolean defenderBraced) {
+            boolean defenderBraced, Random random) {
         int repeatCount = MoveEffects.getRepeatCount(move);
         boolean defenderFainted = false;
         for (int index = 0; index < repeatCount; index++) {
@@ -205,7 +209,7 @@ public class Battle {
                 return defenderFainted;
             }
 
-            if (!moveHits(move)) {
+            if (!moveHits(move, random)) {
                 logMiss(actingPlayer, attacker, move);
                 defenderBraced = false;
                 continue;
