@@ -33,6 +33,14 @@ public class GameState {
         }
     }
 
+    public Player getPlayerOne() {
+        return playerOne;
+    }
+
+    public Player getPlayerTwo() {
+        return playerTwo;
+    }
+
     /**
      * Returns the moves available to the active dinosaur of the given player.
      */
