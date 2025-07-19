@@ -5,6 +5,7 @@ import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.util.Config;
 
 import org.junit.jupiter.api.Test;
@@ -60,6 +61,33 @@ public class MCTSAgentTest {
             for (int i = 0; i < 3; i++) {
                 Move chosen = agent.chooseMove(self, enemy, List.of());
                 assertEquals("Win", chosen.getName());
+            }
+        } finally {
+            restoreUseLLMAgent(original);
+        }
+    }
+
+    @Test
+    public void testOpponentIntimidateDoesNotChangeRealPlayers() throws Exception {
+        String original = setUseLLMAgent(false);
+        try {
+            Move win = new Move("Win", 10, 0, List.of());
+            Move wait = new Move("Wait", 0, 0, List.of());
+            Dinosaur agentDino = new Dinosaur("Agent", 10, 10,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(win), null);
+            Dinosaur intimidator = new Dinosaur("Foe", 10, 5,
+                    "assets/animals/allosaurus.png", 1, 1,
+                    List.of(wait), new Ability("Intimidate", ""));
+            Player self = new Player(List.of(agentDino));
+            Player enemy = new Player(List.of(intimidator));
+            MCTSAgent agent = new MCTSAgent(50, new Random(0));
+
+            for (int i = 0; i < 3; i++) {
+                Move chosen = agent.chooseMove(self, enemy, List.of());
+                assertEquals("Win", chosen.getName());
+                assertEquals(0, self.getActiveDinosaur().getAttackStage());
+                assertEquals(0, enemy.getActiveDinosaur().getAttackStage());
             }
         } finally {
             restoreUseLLMAgent(original);
