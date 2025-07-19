@@ -87,17 +87,14 @@ public class MCTSAgent implements OpponentAgent {
                 continue;
             }
             double average = child.getWinScore() / child.getVisitCount();
-            if (summary.length() > 0) {
-                summary.append("\n");
-            }
+            summary.append("\n");
             summary.append(child.getMove().getName())
                     .append(": ")
                     .append(child.getVisitCount())
                     .append(" visits, ")
                     .append(child.getWinCount())
                     .append(" wins, ")
-                    .append(child.getDrawCount())
-                    .append(" draws, avg score ")
+                    .append(" avg score ")
                     .append(String.format("%.2f", average));
         }
         lastStats = summary.toString();
