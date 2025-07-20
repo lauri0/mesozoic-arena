@@ -29,7 +29,7 @@ public class MCTSNodeTest {
         Player p1 = new Player(List.of(defender));
         Player p2 = new Player(List.of(attacker));
         GameState state = new GameState(p1, p2);
-        MCTSNode root = new MCTSNode(state, null, null, 0.0);
+        MCTSNode root = new MCTSNode(state, null, null, 0.0, 0.0);
         Random selectionRandom = new Random(0);
         Random simulationRandom = new Random(1);
 
@@ -56,7 +56,7 @@ public class MCTSNodeTest {
         Player p1 = new Player(List.of(defender));
         Player p2 = new Player(List.of(attacker));
         GameState state = new GameState(p1, p2);
-        MCTSNode root = new MCTSNode(state, null, null, 0.0);
+        MCTSNode root = new MCTSNode(state, null, null, 0.0, 0.0);
         Random selectionRandom = new Random(0);
         Random simulationRandom = new Random(1);
 
@@ -87,7 +87,7 @@ public class MCTSNodeTest {
         Player p1 = new Player(List.of(defender));
         Player p2 = new Player(List.of(attacker));
         GameState state = new GameState(p1, p2);
-        MCTSNode root = new MCTSNode(state, null, null, 0.0);
+        MCTSNode root = new MCTSNode(state, null, null, 0.0, 0.0);
         Random selectionRandom = new Random(0);
         Random simulationRandom = new Random(1);
 
@@ -116,7 +116,7 @@ public class MCTSNodeTest {
         Player p1 = new Player(List.of(dinoOne));
         Player p2 = new Player(List.of(dinoTwo));
         GameState state = new GameState(p1, p2);
-        MCTSNode root = new MCTSNode(state, null, null, 0.0);
+        MCTSNode root = new MCTSNode(state, null, null, 0.0, 0.0);
         Random simulationRandom = new Random(0);
 
         int result = root.rollout(simulationRandom);
@@ -137,7 +137,7 @@ public class MCTSNodeTest {
         Player p1 = new Player(List.of(attacker));
         Player p2 = new Player(List.of(defender));
         GameState state = new GameState(p1, p2);
-        MCTSNode root = new MCTSNode(state, null, null, 0.0);
+        MCTSNode root = new MCTSNode(state, null, null, 0.0, 0.0);
         Random simulationRandom = new Random(0);
 
         int result = root.rollout(simulationRandom);

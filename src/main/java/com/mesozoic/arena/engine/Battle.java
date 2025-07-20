@@ -104,7 +104,8 @@ public class Battle {
         Random rng = new Random();
         return new MCTSAgent(Config.mctsIterations(), new Random(rng.nextLong()),
                 new Random(rng.nextLong()), Config.mctsEpsilon(),
-                Config.mctsSelfMinimaxProbability());
+                Config.mctsSelfMinimaxProbability(),
+                Config.mctsOpponentMinimaxProbability());
     }
 
     private void addEvent(String message) {

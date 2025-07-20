@@ -82,6 +82,18 @@ public final class Config {
         }
     }
 
+    /**
+     * Returns the probability of the opponent using a minimax move.
+     */
+    public static double mctsOpponentMinimaxProbability() {
+        String value = properties.getProperty("mctsOpponentMinimaxProbability", "0.75");
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException ignored) {
+            return 0.75;
+        }
+    }
+
 
     /**
      * Returns the Gemini API key from {@code gemini.env} or an empty string if
