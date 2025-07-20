@@ -4,6 +4,10 @@ import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.engine.AbilityEffects;
+import com.mesozoic.arena.model.MoveType;
+import com.mesozoic.arena.model.DinoType;
+
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -160,6 +164,53 @@ public class AbilityEffectsTest {
 
         assertEquals(intimidator, p1.getActiveDinosaur());
         assertEquals(-1, attacker.getAttackStage());
+    }
+
+    @Test
+    public void testSharpshooterBoostsAccuracy() {
+        Move lowAcc = new Move("LowAcc", 10, 0, "", MoveType.BODY,
+                DinoType.BITER, List.of(), 0.8);
+        Move waitMove = new Move("Wait", 0, 0, List.of());
+
+        Dinosaur sharpshooter = new Dinosaur("Sharp", 100, 50,
+                "assets/animals/allosaurus.png", 1, 1, List.of(lowAcc),
+                new Ability("Sharpshooter", ""));
+        Dinosaur target = new Dinosaur("Target", 100, 50,
+                "assets/animals/allosaurus.png", 1, 1, List.of(waitMove), null);
+
+        Player p1 = new Player(List.of(sharpshooter));
+        Player p2 = new Player(List.of(target));
+        Battle battle = new Battle(p1, p2);
+
+        Random rng = new Random() {
+            @Override
+            public double nextDouble() {
+                return 0.9; // would miss without ability
+            }
+        };
+
+        battle.executeRound(lowAcc, waitMove, rng);
+
+        assertEquals(92, target.getHealth());
+    }
+
+    @Test
+    public void testRegeneratorHealsOnMoveUse() {
+        Move waitMove = new Move("Wait", 0, 0, List.of());
+        Dinosaur healer = new Dinosaur("Healer", 100, 50,
+                "assets/animals/allosaurus.png", 1, 1, List.of(waitMove),
+                new Ability("Regenerator", ""));
+        Dinosaur target = new Dinosaur("Target", 100, 50,
+                "assets/animals/allosaurus.png", 1, 1, List.of(waitMove), null);
+
+        Player p1 = new Player(List.of(healer));
+        Player p2 = new Player(List.of(target));
+        Battle battle = new Battle(p1, p2);
+
+        healer.adjustHealth(-20);
+        battle.executeRound(waitMove, waitMove, new Random(0));
+
+        assertEquals(90, healer.getHealth());
     }
 }
 

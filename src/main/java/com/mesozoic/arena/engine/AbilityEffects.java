@@ -118,4 +118,38 @@ public final class AbilityEffects {
             attacker.adjustAttackStage(1);
         }
     }
+
+    /**
+     * Adjusts the accuracy of a move based on the user's ability.
+     *
+     * @param user the dinosaur using the move
+     * @param move the move being used
+     * @return the accuracy after ability modifications
+     */
+    public static double modifyAccuracy(Dinosaur user, Move move) {
+        if (user == null || move == null) {
+            return move == null ? 0.0 : move.getAccuracy();
+        }
+        Ability ability = user.getAbility();
+        if (ability != null && "Sharpshooter".equalsIgnoreCase(ability.getName())) {
+            return Math.min(1.0, move.getAccuracy() + 0.15);
+        }
+        return move.getAccuracy();
+    }
+
+    /**
+     * Triggers effects when the dinosaur performs a move.
+     *
+     * @param user the dinosaur using the move
+     */
+    public static void onMoveUsed(Dinosaur user) {
+        if (user == null) {
+            return;
+        }
+        Ability ability = user.getAbility();
+        if (ability != null && "Regenerator".equalsIgnoreCase(ability.getName())) {
+            int healAmount = AilmentEffects.modifyHealing(user, 10);
+            user.adjustHealth(healAmount);
+        }
+    }
 }
