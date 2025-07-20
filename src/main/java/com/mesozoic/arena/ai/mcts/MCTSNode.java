@@ -172,7 +172,7 @@ public class MCTSNode {
                 && random.nextDouble() < epsilon) {
             return children.get(random.nextInt(children.size()));
         }
-        double exploration = 5.0;
+        double exploration = 2.0;
         MCTSNode best = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for (MCTSNode child : children) {
