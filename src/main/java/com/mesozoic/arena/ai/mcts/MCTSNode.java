@@ -97,16 +97,15 @@ public class MCTSNode {
     }
 
     private Move minimaxMove(Random random) {
-        return minimaxMove(state, state.getPlayerOne(), state.getPlayerTwo(), random);
+        return minimaxMove(state, random);
     }
 
-    private Move minimaxMove(GameState currentState, Player maximizingPlayer,
-            Player minimizingPlayer, Random random) {
-        List<Move> playerMoves = currentState.availableMovesFor(maximizingPlayer);
+    private Move minimaxMove(GameState currentState, Random random) {
+        List<Move> playerMoves = currentState.availableMovesFor(currentState.getPlayerOne());
         if (playerMoves.isEmpty()) {
             return null;
         }
-        List<Move> npcMoves = currentState.availableMovesFor(minimizingPlayer);
+        List<Move> npcMoves = currentState.availableMovesFor(currentState.getPlayerTwo());
         if (npcMoves.isEmpty()) {
             return playerMoves.get(random.nextInt(playerMoves.size()));
         }
@@ -134,16 +133,14 @@ public class MCTSNode {
 
     private Move chooseSelfMove(GameState currentState, Random random) {
         if (random.nextDouble() < selfProbability) {
-            return minimaxMove(currentState, currentState.getPlayerTwo(),
-                    currentState.getPlayerOne(), random);
+            return minimaxMove(currentState, random);
         }
         return randomMove(currentState.getPlayerTwo(), random);
     }
 
     private Move chooseOpponentMove(GameState currentState, Random random) {
         if (random.nextDouble() < opponentProbability) {
-            return minimaxMove(currentState, currentState.getPlayerOne(),
-                    currentState.getPlayerTwo(), random);
+            return minimaxMove(currentState, random);
         }
         return randomMove(currentState.getPlayerOne(), random);
     }
