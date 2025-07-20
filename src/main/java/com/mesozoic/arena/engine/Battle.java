@@ -33,8 +33,12 @@ public class Battle {
     private int turn = 1;
     private Player winner;
 
-    private boolean moveHits(Move move, Random random) {
-        return move != null && random.nextDouble() < move.getAccuracy();
+    private boolean moveHits(Dinosaur attacker, Move move, Random random) {
+        if (move == null || attacker == null) {
+            return false;
+        }
+        double accuracy = AbilityEffects.modifyAccuracy(attacker, move);
+        return random.nextDouble() < accuracy;
     }
 
     private void logMiss(Player actingPlayer, Dinosaur attacker, Move move) {
@@ -234,6 +238,10 @@ public class Battle {
             boolean defenderBraced, Random random) {
         int repeatCount = MoveEffects.getRepeatCount(move);
         boolean defenderFainted = false;
+        Dinosaur initialAttacker = actingPlayer.getActiveDinosaur();
+        if (move != null && initialAttacker != null) {
+            AbilityEffects.onMoveUsed(initialAttacker);
+        }
         for (int index = 0; index < repeatCount; index++) {
             Dinosaur attacker = actingPlayer.getActiveDinosaur();
             Dinosaur defender = opposingPlayer.getActiveDinosaur();
@@ -241,7 +249,7 @@ public class Battle {
                 return defenderFainted;
             }
 
-            if (!moveHits(move, random)) {
+            if (!moveHits(attacker, move, random)) {
                 logMiss(actingPlayer, attacker, move);
                 defenderBraced = false;
                 continue;
