@@ -151,4 +151,46 @@ public class MoveEffectsTest {
         battle.executeRound(noop, heal);
         assertEquals(55, defender.getHealth());
     }
+
+    @Test
+    public void testSwitchOutAfterAttack() {
+        Move switchMove = new Move("Retreat", 5, 0, List.of(new Effect("switch out")));
+        Move noop = new Move("Wait", 0, 0, List.of());
+        Dinosaur first = new Dinosaur("First", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(switchMove), null);
+        Dinosaur second = new Dinosaur("Second", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(noop), null);
+        Player p1 = new Player(List.of(first, second));
+        Player p2 = new Player(List.of(new Dinosaur("Opponent", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(noop), null)));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(switchMove, noop);
+        assertEquals(second, p1.getActiveDinosaur());
+    }
+
+    @Test
+    public void testFatigueLowersAttack() {
+        Move fatigue = new Move("Heavy", 0, 0, List.of(new Effect("fatigue")));
+        Move noop = new Move("Wait", 0, 0, List.of());
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(fatigue), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(noop), null);
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(defender));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(fatigue, noop);
+        assertEquals(-1, attacker.getAttackStage());
+    }
+
+    @Test
+    public void testRecoilDealsQuarterDamage() {
+        Move recoil = new Move("Crash", 20, 0, List.of(new Effect("recoil")));
+        Move noop = new Move("Wait", 0, 0, List.of());
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 1, 1, List.of(recoil), null);
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 1, 1, List.of(noop), null);
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(defender));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(recoil, noop);
+        assertEquals(97, attacker.getHealth());
+    }
 }
