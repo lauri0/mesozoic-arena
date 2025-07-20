@@ -7,6 +7,7 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Effect;
+import com.mesozoic.arena.model.SwitchMove;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -87,5 +88,19 @@ public class GameStateTest {
 
         GameState next = state.nextState(brace, strike, new Random(0));
         assertTrue(next.getPlayerOne().getActiveDinosaur().getHealth() < 100);
+    }
+
+    @Test
+    public void testNextStateIgnoresInvalidSwitch() {
+        Dinosaur first = new Dinosaur("Solo", 100, 50,
+                "assets/animals/allosaurus.png", 10, 10, List.of(), null);
+        Player playerOne = new Player(List.of(first));
+        Player playerTwo = new Player(List.of(first.copy()));
+
+        GameState state = new GameState(playerOne, playerTwo);
+        Move invalid = new SwitchMove(first, 1);
+
+        GameState next = state.nextState(invalid, null, new Random(0));
+        assertEquals("Solo", next.getPlayerOne().getActiveDinosaur().getName());
     }
 }

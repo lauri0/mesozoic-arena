@@ -87,21 +87,25 @@ public class GameState {
         Player nextPlayerOne = playerOne.copy();
         Player nextPlayerTwo = playerTwo.copy();
 
-        if (playerOneMove instanceof SwitchMove switchOne) {
-            Dinosaur target = nextPlayerOne.getDinosaurs().get(switchOne.getTargetIndex());
-            nextPlayerOne.queueSwitch(target);
-            playerOneMove = null;
-        }
-        if (playerTwoMove instanceof SwitchMove switchTwo) {
-            Dinosaur target = nextPlayerTwo.getDinosaurs().get(switchTwo.getTargetIndex());
-            nextPlayerTwo.queueSwitch(target);
-            playerTwoMove = null;
-        }
+        playerOneMove = applySwitchMove(nextPlayerOne, playerOneMove);
+        playerTwoMove = applySwitchMove(nextPlayerTwo, playerTwoMove);
 
         List<TurnRecord> nextHistory = new ArrayList<>(history);
         GameState next = new GameState(nextPlayerOne, nextPlayerTwo, false, nextHistory);
         next.battle.executeRound(playerOneMove, playerTwoMove, random);
         return next;
+    }
+
+    private static Move applySwitchMove(Player player, Move move) {
+        if (move instanceof SwitchMove switchMove) {
+            List<Dinosaur> dinos = player.getDinosaurs();
+            int index = switchMove.getTargetIndex();
+            if (index >= 0 && index < dinos.size()) {
+                player.queueSwitch(dinos.get(index));
+            }
+            return null;
+        }
+        return move;
     }
 
     /**
