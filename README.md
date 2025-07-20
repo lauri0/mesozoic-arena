@@ -62,3 +62,6 @@ controls how often the agent explores random moves during search.
 The `mctsSelfMinimaxProbability` option determines how often the agent
 selects a minimax move during rollouts. Set to `1.0` for purely minimax
 rollouts or `0.0` for random self play. The default is `0.5`.
+The `mctsOpponentMinimaxProbability` option controls how often the
+simulations assume the human will choose a minimax move. The default is
+`0.75`.
