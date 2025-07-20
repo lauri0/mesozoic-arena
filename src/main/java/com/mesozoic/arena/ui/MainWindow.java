@@ -41,7 +41,7 @@ public class MainWindow extends JFrame {
         this.opponent = opponent;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1200, 950);
+        setSize(1300, 950);
 
         playerPanel   = new DinoPanel(true);
         opponentPanel = new DinoPanel(false);
