@@ -34,7 +34,7 @@ public class MCTSNodeTest {
         Random simulationRandom = new Random(1);
 
         MCTSNode child = root.expand(selectionRandom, simulationRandom);
-        int result = child.rollout(simulationRandom);
+        double result = child.rollout(simulationRandom);
         child.backpropagate(result);
 
         assertEquals(1, child.getVisitCount());
@@ -119,8 +119,8 @@ public class MCTSNodeTest {
         MCTSNode root = new MCTSNode(state, null, null, 0.0, 0.0);
         Random simulationRandom = new Random(0);
 
-        int result = root.rollout(simulationRandom);
-        assertEquals(0, result);
+        double result = root.rollout(simulationRandom);
+        assertEquals(0.0, result);
     }
 
     @Test
@@ -140,7 +140,7 @@ public class MCTSNodeTest {
         MCTSNode root = new MCTSNode(state, null, null, 0.0, 0.0);
         Random simulationRandom = new Random(0);
 
-        int result = root.rollout(simulationRandom);
-        assertEquals(-1, result);
+        double result = root.rollout(simulationRandom);
+        assertEquals(-1.0, result);
     }
 }
