@@ -14,6 +14,7 @@ import java.util.Random;
  */
 public class MCTSNode {
     private static final int MAX_ROLLOUT_STEPS = 100;
+    private static final double ADVANTAGE_SCALE = 200.0;
     private final GameState state;
     private final MCTSNode parent;
     private final List<MCTSNode> children = new ArrayList<>();
@@ -95,6 +96,19 @@ public class MCTSNode {
         int p1Health = totalHealth(gameState.getPlayerOne());
         int p2Health = totalHealth(gameState.getPlayerTwo());
         return p1Health - p2Health;
+    }
+
+    private static double evaluateAdvantage(GameState gameState) {
+        int p1Health = totalHealth(gameState.getPlayerOne());
+        int p2Health = totalHealth(gameState.getPlayerTwo());
+        double advantage = (double) (p2Health - p1Health) / ADVANTAGE_SCALE;
+        if (advantage > 0.5) {
+            return 0.5;
+        }
+        if (advantage < -0.5) {
+            return -0.5;
+        }
+        return advantage;
     }
 
     private Move minimaxMove(Random random) {
@@ -193,7 +207,7 @@ public class MCTSNode {
         return bestChild(null, 0.0);
     }
 
-    public int rollout(Random simulationRandom) {
+    public double rollout(Random simulationRandom) {
         GameState current = state;
         int steps = 0;
         while (!current.isTerminal() && steps < MAX_ROLLOUT_STEPS) {
@@ -203,15 +217,18 @@ public class MCTSNode {
             steps++;
         }
         int winner = current.winner();
+        double advantage = evaluateAdvantage(current);
         if (winner == -1) {
-            return 1;
+            double healthBonus = Math.max(0.0, advantage) * 0.5;
+            double stepBonus = 0.25 * (1.0 - steps / (double) MAX_ROLLOUT_STEPS);
+            return 1.0 + healthBonus + stepBonus;
         } else if (winner == 1) {
-            return -1;
+            return -1.0;
         }
-        return 0;
+        return advantage;
     }
 
-    public void backpropagate(int result) {
+    public void backpropagate(double result) {
         MCTSNode node = this;
         while (node != null) {
             node.visitCount++;
