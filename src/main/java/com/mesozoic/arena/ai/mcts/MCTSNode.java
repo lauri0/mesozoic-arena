@@ -2,6 +2,7 @@ package com.mesozoic.arena.ai.mcts;
 
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.Dinosaur;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,12 +70,68 @@ public class MCTSNode {
         return moves.get(random.nextInt(moves.size()));
     }
 
+    private static int totalHealth(Player player) {
+        int sum = 0;
+        for (Dinosaur dino : player.getDinosaurs()) {
+            sum += dino.getHealth();
+        }
+        return sum;
+    }
+
+    private static int evaluateState(GameState gameState) {
+        int winner = gameState.winner();
+        if (winner == 1) {
+            return Integer.MAX_VALUE / 2;
+        }
+        if (winner == -1) {
+            return Integer.MIN_VALUE / 2;
+        }
+        int p1Health = totalHealth(gameState.getPlayerOne());
+        int p2Health = totalHealth(gameState.getPlayerTwo());
+        return p1Health - p2Health;
+    }
+
+    private Move minimaxMove(Random random) {
+        return minimaxMove(state, random);
+    }
+
+    private Move minimaxMove(GameState currentState, Random random) {
+        List<Move> playerMoves = currentState.availableMovesFor(currentState.getPlayerOne());
+        if (playerMoves.isEmpty()) {
+            return null;
+        }
+        List<Move> npcMoves = currentState.availableMovesFor(currentState.getPlayerTwo());
+        if (npcMoves.isEmpty()) {
+            return playerMoves.get(random.nextInt(playerMoves.size()));
+        }
+        Move bestMove = null;
+        int bestValue = Integer.MIN_VALUE;
+        for (Move playerMove : playerMoves) {
+            int worstValue = Integer.MAX_VALUE;
+            for (Move npcMove : npcMoves) {
+                GameState next = currentState.nextState(playerMove, npcMove, random);
+                int value = evaluateState(next);
+                if (value < worstValue) {
+                    worstValue = value;
+                }
+            }
+            if (worstValue > bestValue) {
+                bestValue = worstValue;
+                bestMove = playerMove;
+            }
+        }
+        if (bestMove == null) {
+            return playerMoves.get(random.nextInt(playerMoves.size()));
+        }
+        return bestMove;
+    }
+
     public MCTSNode expand(Random selectionRandom, Random simulationRandom) {
         if (untriedMoves.isEmpty()) {
             return this;
         }
         Move chosenMove = untriedMoves.remove(selectionRandom.nextInt(untriedMoves.size()));
-        Move opponentMove = randomMove(state.getPlayerOne(), simulationRandom);
+        Move opponentMove = minimaxMove(simulationRandom);
         GameState nextState = state.nextState(opponentMove, chosenMove, simulationRandom);
         MCTSNode child = new MCTSNode(nextState, this, chosenMove);
         children.add(child);
@@ -111,7 +168,7 @@ public class MCTSNode {
         int steps = 0;
         while (!current.isTerminal() && steps < MAX_ROLLOUT_STEPS) {
             Move ourMove = randomMove(current.getPlayerTwo(), simulationRandom);
-            Move opponentMove = randomMove(current.getPlayerOne(), simulationRandom);
+            Move opponentMove = minimaxMove(current, simulationRandom);
             current = current.nextState(opponentMove, ourMove, simulationRandom);
             steps++;
         }
