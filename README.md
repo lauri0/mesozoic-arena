@@ -58,7 +58,9 @@ When the LLM is disabled the game uses a Monte Carlo Tree Search agent. The
 search depth can be tuned through the `mctsIterations` option in
 `data/constants.ini`. Higher values yield stronger play at the cost of longer
 thinking time. The default is `1000` iterations. The `mctsEpsilon` option
-controls how often the agent explores random moves during search.
+controls how often the agent explores random moves during search. The
+`mctsExploration` option sets the exploration constant used for UCT and
+defaults to `2.0`.
 The `mctsSelfMinimaxProbability` option determines how often the agent
 selects a minimax move during rollouts. Set to `1.0` for purely minimax
 rollouts or `0.0` for random self play. The default is `0.5`.
