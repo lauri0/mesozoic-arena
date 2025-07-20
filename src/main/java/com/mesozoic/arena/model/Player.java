@@ -111,4 +111,15 @@ public class Player {
         }
         return clone;
     }
+
+    /**
+     * Returns the sum of the current health of all dinosaurs on the team.
+     */
+    public int getTotalHealth() {
+        int total = 0;
+        for (Dinosaur dinosaur : dinosaurs) {
+            total += dinosaur.getHealth();
+        }
+        return total;
+    }
 }
