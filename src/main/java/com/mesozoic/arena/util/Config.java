@@ -70,6 +70,18 @@ public final class Config {
         }
     }
 
+    /**
+     * Returns the probability of using a minimax move during rollouts.
+     */
+    public static double mctsSelfMinimaxProbability() {
+        String value = properties.getProperty("mctsSelfMinimaxProbability", "0.5");
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException ignored) {
+            return 0.5;
+        }
+    }
+
 
     /**
      * Returns the Gemini API key from {@code gemini.env} or an empty string if

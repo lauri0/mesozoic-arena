@@ -18,15 +18,17 @@ public class MCTSNode {
     private final List<MCTSNode> children = new ArrayList<>();
     private final List<Move> untriedMoves;
     private final Move move;
+    private final double selfProbability;
     private int visitCount;
     private double winScore;
     private int winCount;
     private int drawCount;
 
-    public MCTSNode(GameState state, MCTSNode parent, Move move) {
+    public MCTSNode(GameState state, MCTSNode parent, Move move, double selfMinimaxProbability) {
         this.state = state;
         this.parent = parent;
         this.move = move;
+        this.selfProbability = selfMinimaxProbability;
         this.untriedMoves = new ArrayList<>(state.availableMovesFor(state.getPlayerTwo()));
     }
 
@@ -126,6 +128,13 @@ public class MCTSNode {
         return bestMove;
     }
 
+    private Move chooseSelfMove(GameState currentState, Random random) {
+        if (random.nextDouble() < selfProbability) {
+            return minimaxMove(currentState, random);
+        }
+        return randomMove(currentState.getPlayerTwo(), random);
+    }
+
     public MCTSNode expand(Random selectionRandom, Random simulationRandom) {
         if (untriedMoves.isEmpty()) {
             return this;
@@ -133,7 +142,7 @@ public class MCTSNode {
         Move chosenMove = untriedMoves.remove(selectionRandom.nextInt(untriedMoves.size()));
         Move opponentMove = minimaxMove(simulationRandom);
         GameState nextState = state.nextState(opponentMove, chosenMove, simulationRandom);
-        MCTSNode child = new MCTSNode(nextState, this, chosenMove);
+        MCTSNode child = new MCTSNode(nextState, this, chosenMove, selfProbability);
         children.add(child);
         return child;
     }
@@ -167,7 +176,7 @@ public class MCTSNode {
         GameState current = state;
         int steps = 0;
         while (!current.isTerminal() && steps < MAX_ROLLOUT_STEPS) {
-            Move ourMove = randomMove(current.getPlayerTwo(), simulationRandom);
+            Move ourMove = chooseSelfMove(current, simulationRandom);
             Move opponentMove = minimaxMove(current, simulationRandom);
             current = current.nextState(opponentMove, ourMove, simulationRandom);
             steps++;
