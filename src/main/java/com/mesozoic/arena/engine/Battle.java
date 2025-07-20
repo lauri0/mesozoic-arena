@@ -254,6 +254,10 @@ public class Battle {
                 int beforeHealth = defender.getHealth();
                 defender.adjustHealth(-totalDamage);
                 int damageDealt = beforeHealth - defender.getHealth();
+                if (MoveEffects.containsEffect(move, "recoil") && damageDealt > 0) {
+                    int recoil = damageDealt / 4;
+                    attacker.adjustHealth(-recoil);
+                }
                 String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
                 String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
                 addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
@@ -282,6 +286,12 @@ public class Battle {
             }
             defenderBraced = false;
         }
+
+        if (MoveEffects.containsEffect(move, "switch out")
+                && actingPlayer.getActiveDinosaur() != null) {
+            performAutoSwitch(actingPlayer, opposingPlayer);
+        }
+
         return defenderFainted;
     }
 
@@ -319,6 +329,19 @@ public class Battle {
         return target;
     }
 
+    private void performAutoSwitch(Player player, Player opponent) {
+        List<Dinosaur> dinosaurs = player.getDinosaurs();
+        Dinosaur active = player.getActiveDinosaur();
+        int index = dinosaurs.indexOf(active);
+        if (index < 0 || dinosaurs.size() <= 1) {
+            return;
+        }
+        int nextIndex = index == dinosaurs.size() - 1 ? 0 : index + 1;
+        Dinosaur next = dinosaurs.get(nextIndex);
+        player.setActiveDinosaur(next);
+        AbilityEffects.onEntry(next, opponent.getActiveDinosaur());
+    }
+
 
     private void applyMoveEffects(Player actingPlayer, Player defendingPlayer, Move move) {
         Dinosaur active = actingPlayer.getActiveDinosaur();
@@ -342,6 +365,9 @@ public class Battle {
         if (MoveEffects.containsEffect(move, "adrenaline")) {
             active.adjustAttackStage(1);
             active.adjustSpeedStage(1);
+        }
+        if (MoveEffects.containsEffect(move, "fatigue")) {
+            active.adjustAttackStage(-1);
         }
         if (MoveEffects.containsEffect(move, "slow")) {
             Dinosaur defender = defendingPlayer.getActiveDinosaur();
