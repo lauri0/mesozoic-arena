@@ -152,7 +152,19 @@ public class Battle {
         if (p1Priority != p2Priority) {
             p1First = p1Priority > p2Priority;
         } else {
-            p1First = dinoOne.getEffectiveSpeed() >= dinoTwo.getEffectiveSpeed();
+            int p1Speed = dinoOne.getEffectiveSpeed();
+            int p2Speed = dinoTwo.getEffectiveSpeed();
+            if (p1Speed == p2Speed) {
+                int p1Total = playerOne.getTotalHealth();
+                int p2Total = playerTwo.getTotalHealth();
+                if (p1Total == p2Total) {
+                    p1First = true;
+                } else {
+                    p1First = p1Total < p2Total;
+                }
+            } else {
+                p1First = p1Speed > p2Speed;
+            }
         }
 
         boolean p1Braced = false;
