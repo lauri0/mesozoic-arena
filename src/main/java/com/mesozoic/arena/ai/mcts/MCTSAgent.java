@@ -18,29 +18,36 @@ public class MCTSAgent implements OpponentAgent {
     private final Random selectionRandom;
     private final Random simulationRandom;
     private final double epsilon;
+    private final double selfProbability;
     private String lastStats = "";
     private int expansionCounter = 0;
 
     public MCTSAgent(int iterations, Random random) {
         this(iterations, new Random(random.nextLong()),
-                new Random(random.nextLong()), 0.1);
+                new Random(random.nextLong()), 0.1, 0.5);
     }
 
     public MCTSAgent(int iterations, Random random, double epsilon) {
         this(iterations, new Random(random.nextLong()),
-                new Random(random.nextLong()), epsilon);
+                new Random(random.nextLong()), epsilon, 0.5);
     }
 
     public MCTSAgent(int iterations, Random selectionRandom, Random simulationRandom) {
-        this(iterations, selectionRandom, simulationRandom, 0.1);
+        this(iterations, selectionRandom, simulationRandom, 0.1, 0.5);
     }
 
     public MCTSAgent(int iterations, Random selectionRandom, Random simulationRandom,
             double epsilon) {
+        this(iterations, selectionRandom, simulationRandom, epsilon, 0.5);
+    }
+
+    public MCTSAgent(int iterations, Random selectionRandom, Random simulationRandom,
+            double epsilon, double selfMinimaxProbability) {
         this.iterations = iterations;
         this.selectionRandom = selectionRandom;
         this.simulationRandom = simulationRandom;
         this.epsilon = epsilon;
+        this.selfProbability = selfMinimaxProbability;
     }
 
     @Override
@@ -50,7 +57,7 @@ public class MCTSAgent implements OpponentAgent {
         }
 
         GameState rootState = new GameState(enemy, self, history);
-        MCTSNode root = new MCTSNode(rootState, null, null);
+        MCTSNode root = new MCTSNode(rootState, null, null, selfProbability);
         expansionCounter = 0;
 
         for (int i = 0; i < iterations; i++) {

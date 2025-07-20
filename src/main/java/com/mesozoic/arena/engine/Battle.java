@@ -101,8 +101,10 @@ public class Battle {
                 System.err.println("Falling back to MCTS opponent");
             }
         }
-        return new MCTSAgent(Config.mctsIterations(), new Random(),
-                Config.mctsEpsilon());
+        Random rng = new Random();
+        return new MCTSAgent(Config.mctsIterations(), new Random(rng.nextLong()),
+                new Random(rng.nextLong()), Config.mctsEpsilon(),
+                Config.mctsSelfMinimaxProbability());
     }
 
     private void addEvent(String message) {
