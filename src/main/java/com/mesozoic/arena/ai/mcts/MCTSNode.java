@@ -97,50 +97,60 @@ public class MCTSNode {
     }
 
     private Move minimaxMove(Random random) {
-        return minimaxMove(state, random);
+        return minimaxMove(state, random, true);
     }
 
-    private Move minimaxMove(GameState currentState, Random random) {
-        List<Move> playerMoves = currentState.availableMovesFor(currentState.getPlayerOne());
-        if (playerMoves.isEmpty()) {
+    private Move minimaxMove(GameState currentState, Random random, boolean forPlayerOne) {
+        Player maximizer = forPlayerOne ? currentState.getPlayerOne() : currentState.getPlayerTwo();
+        Player minimizer = forPlayerOne ? currentState.getPlayerTwo() : currentState.getPlayerOne();
+
+        List<Move> maxMoves = currentState.availableMovesFor(maximizer);
+        if (maxMoves.isEmpty()) {
             return null;
         }
-        List<Move> npcMoves = currentState.availableMovesFor(currentState.getPlayerTwo());
-        if (npcMoves.isEmpty()) {
-            return playerMoves.get(random.nextInt(playerMoves.size()));
+        List<Move> minMoves = currentState.availableMovesFor(minimizer);
+        if (minMoves.isEmpty()) {
+            return maxMoves.get(random.nextInt(maxMoves.size()));
         }
+
         Move bestMove = null;
         int bestValue = Integer.MIN_VALUE;
-        for (Move playerMove : playerMoves) {
+        for (Move maxMove : maxMoves) {
             int worstValue = Integer.MAX_VALUE;
-            for (Move npcMove : npcMoves) {
-                GameState next = currentState.nextState(playerMove, npcMove, random);
+            for (Move minMove : minMoves) {
+                GameState next = forPlayerOne
+                        ? currentState.nextState(maxMove, minMove, random)
+                        : currentState.nextState(minMove, maxMove, random);
                 int value = evaluateState(next);
+                if (!forPlayerOne) {
+                    value = -value;
+                }
                 if (value < worstValue) {
                     worstValue = value;
                 }
             }
             if (worstValue > bestValue) {
                 bestValue = worstValue;
-                bestMove = playerMove;
+                bestMove = maxMove;
             }
         }
+
         if (bestMove == null) {
-            return playerMoves.get(random.nextInt(playerMoves.size()));
+            return maxMoves.get(random.nextInt(maxMoves.size()));
         }
         return bestMove;
     }
 
     private Move chooseSelfMove(GameState currentState, Random random) {
         if (random.nextDouble() < selfProbability) {
-            return minimaxMove(currentState, random);
+            return minimaxMove(currentState, random, false);
         }
         return randomMove(currentState.getPlayerTwo(), random);
     }
 
     private Move chooseOpponentMove(GameState currentState, Random random) {
         if (random.nextDouble() < opponentProbability) {
-            return minimaxMove(currentState, random);
+            return minimaxMove(currentState, random, true);
         }
         return randomMove(currentState.getPlayerOne(), random);
     }
