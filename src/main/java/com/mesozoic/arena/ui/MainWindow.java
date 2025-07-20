@@ -25,6 +25,7 @@ public class MainWindow extends JFrame {
     private static final int   BASE_STAT_ICON_SIZE   = 24;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
     private static final float STAT_LARGE_ICON_SIZE_MULT = 1.5f;
+    private static final int   TYPE_BOX_SIZE = 12;
 
     private final Battle   battle;
     private final Player   player, opponent;
@@ -240,6 +241,13 @@ public class MainWindow extends JFrame {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
+    private String typeBoxHtml(DinoType type) {
+        Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
+        return "<span style='display:inline-block;width:" + TYPE_BOX_SIZE + "px;" +
+                "height:" + TYPE_BOX_SIZE + "px;background-color:" +
+                colorHex(color) + ";'></span>";
+    }
+
     private String stageFragment(int stage, String iconPath) {
         if (stage == 0) {
             return "";
@@ -339,8 +347,9 @@ public class MainWindow extends JFrame {
         int damage = DamageCalculator.calculate(dino, target, move);
         String attackImg = iconHtml(ATTACK_ICON_PATH);
         String accuracyImg = iconHtml(ACCURACY_ICON_PATH);
+        String nameWithType = typeBoxHtml(move.getType()) + " " + move.getName();
         String label = String.format("<html>%s %s %d %s %.0f%s</html>",
-                move.getName(), attackImg, damage, accuracyImg, move.getAccuracy() * 100, "%");
+                nameWithType, attackImg, damage, accuracyImg, move.getAccuracy() * 100, "%");
         JButton button = new JButton(label);
         if (playerSide) {
             button.addActionListener(e -> doRound(move));
