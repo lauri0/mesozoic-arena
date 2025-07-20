@@ -3,6 +3,7 @@ package com.mesozoic.arena.ai.mcts;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Dinosaur;
+import com.mesozoic.arena.util.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,7 +173,7 @@ public class MCTSNode {
                 && random.nextDouble() < epsilon) {
             return children.get(random.nextInt(children.size()));
         }
-        double exploration = 2.0;
+        double exploration = Config.mctsExploration();
         MCTSNode best = null;
         double bestValue = Double.NEGATIVE_INFINITY;
         for (MCTSNode child : children) {

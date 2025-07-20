@@ -117,11 +117,7 @@ public class MCTSAgent implements OpponentAgent {
                 bestChild = child;
             }
         }
-        if (!root.getChildren().isEmpty()
-                && selectionRandom.nextDouble() < epsilon) {
-            bestChild = root.getChildren()
-                    .get(selectionRandom.nextInt(root.getChildren().size()));
-        }
+
 
         if (bestChild == null) {
             List<Move> moves = self.getActiveDinosaur().getMoves();

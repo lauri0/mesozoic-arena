@@ -71,6 +71,18 @@ public final class Config {
     }
 
     /**
+     * Returns the exploration constant used by the MCTS agent.
+     */
+    public static double mctsExploration() {
+        String value = properties.getProperty("mctsExploration", "2.0");
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException ignored) {
+            return 2.0;
+        }
+    }
+
+    /**
      * Returns the probability of using a minimax move during rollouts.
      */
     public static double mctsSelfMinimaxProbability() {
