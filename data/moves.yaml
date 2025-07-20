@@ -25,7 +25,7 @@ Charge:
   description: "Deal XX damage. YY accuracy."
   kind: body
 
-Club Smash:
+Smash:
   type: Crusher
   damage: 40
   accuracy: 0.9
@@ -36,7 +36,7 @@ Club Smash:
 
 Chomp:
   type: Crusher
-  damage: 50
+  damage: 48
   accuracy: 0.85
   priority: 0
   effects: []
@@ -70,7 +70,7 @@ Heal:
   description: "Recover 30 health. YY accuracy."
   kind: body
 
-Hatchet Bite:
+Tear:
   type: Bleeder
   damage: 40
   accuracy: 0.95

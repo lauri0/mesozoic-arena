@@ -77,12 +77,12 @@ public class MCTSAgent implements OpponentAgent {
                     expandedMove = node.getMove();
                     expansionCounter++;
                     if (expandedMove != null) {
-                        System.out.println("Expansion " + expansionCounter + ": " + expandedMove.getName());
+                        //System.out.println("Expansion " + expansionCounter + ": " + expandedMove.getName());
                     }
                 }
                 int result = node.rollout(simulationRandom);
                 if (expanded && expandedMove != null) {
-                    System.out.println("First rollout result for " + expandedMove.getName() + ": " + result);
+                    //System.out.println("First rollout result for " + expandedMove.getName() + ": " + result);
                 }
                 node.backpropagate(result);
                 continue;

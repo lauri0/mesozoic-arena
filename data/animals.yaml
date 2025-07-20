@@ -8,14 +8,14 @@ Allosaurus:
   image: assets/animals/allosaurus.png
   moves:
     - Bite
-    - Hatchet Bite
+    - Tear
     - Tail Slam
 
 Ceratosaurus:
   types: [Biter]
-  health: 110
+  health: 105
   speed: 110
-  head attack: 0.99
+  head attack: 0.95
   body attack: 0.75
   ability: None
   image: assets/animals/ceratosaurus.png
@@ -27,7 +27,7 @@ Ceratosaurus:
 Corythosaurus:
   types: [Grazer]
   health: 130
-  speed: 95
+  speed: 105
   head attack: 0.71
   body attack: 0.82
   ability: Supporter
@@ -39,9 +39,9 @@ Corythosaurus:
 
 Daspletosaurus:
   types: [Crusher]
-  health: 140
-  speed: 90
-  head attack: 1.2
+  health: 130
+  speed: 80
+  head attack: 1.1
   body attack: 0.8
   ability: Berserk
   image: assets/animals/daspletosaurus.png
@@ -60,7 +60,7 @@ Euoplocephalus:
   image: assets/animals/euoplocephalus.png
   moves:
     - Bite
-    - Club Smash
+    - Smash
     - Stomp
 
 Stegosaurus:
