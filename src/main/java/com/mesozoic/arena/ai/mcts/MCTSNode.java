@@ -2,7 +2,6 @@ package com.mesozoic.arena.ai.mcts;
 
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
-import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.util.Config;
 
 import java.util.ArrayList;
@@ -77,14 +76,6 @@ public class MCTSNode {
         return moves.get(random.nextInt(moves.size()));
     }
 
-    private static int totalHealth(Player player) {
-        int sum = 0;
-        for (Dinosaur dino : player.getDinosaurs()) {
-            sum += dino.getHealth();
-        }
-        return sum;
-    }
-
     private static int evaluateState(GameState gameState) {
         int winner = gameState.winner();
         if (winner == 1) {
@@ -93,14 +84,14 @@ public class MCTSNode {
         if (winner == -1) {
             return Integer.MIN_VALUE / 2;
         }
-        int p1Health = totalHealth(gameState.getPlayerOne());
-        int p2Health = totalHealth(gameState.getPlayerTwo());
+        int p1Health = gameState.getPlayerOne().getTotalHealth();
+        int p2Health = gameState.getPlayerTwo().getTotalHealth();
         return p1Health - p2Health;
     }
 
     private static double evaluateAdvantage(GameState gameState) {
-        int p1Health = totalHealth(gameState.getPlayerOne());
-        int p2Health = totalHealth(gameState.getPlayerTwo());
+        int p1Health = gameState.getPlayerOne().getTotalHealth();
+        int p2Health = gameState.getPlayerTwo().getTotalHealth();
         double advantage = (double) (p2Health - p1Health) / ADVANTAGE_SCALE;
         if (advantage > 0.5) {
             return 0.5;
