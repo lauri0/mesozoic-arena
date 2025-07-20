@@ -8,7 +8,6 @@ Allosaurus:
   image: assets/animals/allosaurus.png
   moves:
     - Bite
-    - Brace
     - Hatchet Bite
     - Tail Slam
 
@@ -22,7 +21,6 @@ Ceratosaurus:
   image: assets/animals/ceratosaurus.png
   moves:
     - Bite
-    - Brace
     - Charge
     - Dual Swipe
 
@@ -35,7 +33,6 @@ Corythosaurus:
   ability: Supporter
   image: assets/animals/corythosaurus.png
   moves:
-    - Brace
     - Heal
     - Kick
     - Tail Slam
@@ -49,7 +46,6 @@ Daspletosaurus:
   ability: Berserk
   image: assets/animals/daspletosaurus.png
   moves:
-    - Brace
     - Chomp
     - Stomp
     - Tail Slam
@@ -64,7 +60,6 @@ Euoplocephalus:
   image: assets/animals/euoplocephalus.png
   moves:
     - Bite
-    - Brace
     - Club Smash
     - Stomp
 
@@ -78,7 +73,6 @@ Stegosaurus:
   image: assets/animals/stegosaurus.png
   moves:
     - Bite
-    - Brace
     - Stomp
     - Thagomize
 
@@ -91,7 +85,6 @@ Styracosaurus:
   ability: Intimidate
   image: assets/animals/styracosaurus.png
   moves:
-    - Brace
     - Charge
     - Impale
     - Stomp
