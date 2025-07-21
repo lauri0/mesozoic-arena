@@ -214,7 +214,8 @@ public class MCTSNode {
             double stepBonus = 0.25 * (1.0 - steps / (double) MAX_ROLLOUT_STEPS);
             return 1.0 + healthBonus + stepBonus;
         } else if (winner == 1) {
-            return -1.0;
+            double healthPenalty = Math.max(0.0, -advantage) * 0.5;
+            return -1.0 - healthPenalty;
         }
         return advantage;
     }

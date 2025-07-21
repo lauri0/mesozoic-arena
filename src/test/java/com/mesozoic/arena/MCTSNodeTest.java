@@ -141,6 +141,6 @@ public class MCTSNodeTest {
         Random simulationRandom = new Random(0);
 
         double result = root.rollout(simulationRandom);
-        assertEquals(-1.0, result);
+        assertEquals(-1.05, result);
     }
 }
