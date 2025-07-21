@@ -5,8 +5,8 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Player;
-import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.engine.DamageCalculator;
+import com.mesozoic.arena.model.Ability;
 
 import javax.swing.*;
 import java.awt.*;
@@ -95,8 +95,18 @@ public class MainWindow extends JFrame {
         // Name with stage icons
         if (d == null) {
             panel.name.setText("None");
+            panel.abilityHeading.setVisible(false);
+            panel.ability.setText("");
         } else {
-            panel.name.setText("<html>" + formatDinoName(d, true, ACTIVE_IMG_WIDTH, true) + "</html>");
+            panel.name.setText("<html>" + formatDinoName(d, true, ACTIVE_IMG_WIDTH) + "</html>");
+            Ability ability = d.getAbility();
+            if (ability == null) {
+                panel.abilityHeading.setVisible(false);
+                panel.ability.setText("");
+            } else {
+                panel.abilityHeading.setVisible(true);
+                panel.ability.setText(ability.getName() + " - " + ability.getDescription());
+            }
         }
 
         // Stats with icons
@@ -293,22 +303,6 @@ public class MainWindow extends JFrame {
         return img.isEmpty() ? "" : " " + img;
     }
 
-    private String abilityLineHtml(Ability ability, int width, boolean withDescription) {
-        String text;
-        if (ability == null) {
-            text = "";
-        } else {
-            text = "Ability: " + ability.getName();
-            if (withDescription) {
-                text += " - " + ability.getDescription();
-            }
-        }
-        if (text.isEmpty()) {
-            return emptyTypeHtml(width);
-        }
-        return "<div style='width:" + width + "px;text-align:center;'>" + text + "</div>";
-    }
-
     private String typeBadgesHtml(java.util.List<DinoType> types) {
         StringBuilder sb = new StringBuilder();
         for (DinoType type : types) {
@@ -322,11 +316,10 @@ public class MainWindow extends JFrame {
         return sb.toString();
     }
 
-    private String formatDinoName(Dinosaur dino, boolean includeStatus, int imgWidth, boolean abilityDescription) {
+    private String formatDinoName(Dinosaur dino, boolean includeStatus, int imgWidth) {
         java.util.List<DinoType> types = dino.getTypes();
         StringBuilder sb = new StringBuilder();
-        sb.append(abilityLineHtml(dino.getAbility(), imgWidth, abilityDescription));
-        sb.append("<div>");
+        sb.append("<div style='width:").append(imgWidth).append("px;text-align:center;'>");
         sb.append(typeBadgesHtml(types)).append(dino.getName());
         if (includeStatus) {
             sb.append(stageFragment(dino.getHeadAttackStage(), HEAD_ICON_PATH));
@@ -339,10 +332,6 @@ public class MainWindow extends JFrame {
     }
 
 
-    private String emptyTypeHtml(int width) {
-        return "<span style='display:inline-block;width:" + width + "px;'>&nbsp;</span>";
-    }
-
     /**
      * Creates the detailed bench entry for the given dinosaur.
      */
@@ -354,10 +343,18 @@ public class MainWindow extends JFrame {
         JLabel img = new JLabel(loadIcon(dino.getImagePath(), BENCH_IMG_WIDTH, BENCH_IMG_HEIGHT));
         img.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel n = new JLabel("<html>" + formatDinoName(dino, false, BENCH_IMG_WIDTH, false) + "</html>");
+        JLabel n = new JLabel("<html>" + formatDinoName(dino, false, BENCH_IMG_WIDTH) + "</html>");
         n.setAlignmentX(Component.CENTER_ALIGNMENT);
         n.setHorizontalAlignment(JLabel.CENTER);
         n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
+
+        Ability dinoAbility = dino.getAbility();
+        JLabel abilityLabel = new JLabel();
+        abilityLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        abilityLabel.setFont(new JButton().getFont());
+        if (dinoAbility != null) {
+            abilityLabel.setText(dinoAbility.getName() + " - " + dinoAbility.getDescription());
+        }
 
         JLabel hp = new JLabel();
         setStatLabel(hp, HEALTH_ICON_PATH, dino.getHealth(), false);
@@ -380,6 +377,7 @@ public class MainWindow extends JFrame {
 
         column.add(img);
         column.add(n);
+        column.add(abilityLabel);
         column.add(stats);
         column.add(sw);
         return column;
@@ -413,6 +411,8 @@ public class MainWindow extends JFrame {
         final boolean isPlayerSide;
         final JLabel image   = new JLabel();
         final JLabel name    = new JLabel();
+        final JLabel abilityHeading = new JLabel("Ability:");
+        final JLabel ability = new JLabel();
         final JLabel health      = new JLabel();
         final JLabel headAttack  = new JLabel();
         final JLabel bodyAttack  = new JLabel();
@@ -436,6 +436,11 @@ public class MainWindow extends JFrame {
             // Center: stats + bench & moves
             Box info = Box.createVerticalBox();
             info.add(name);
+            abilityHeading.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ability.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ability.setFont(new JButton().getFont());
+            info.add(abilityHeading);
+            info.add(ability);
             JPanel statsRow = new JPanel(new GridLayout(1,4,5,0));
             statsRow.add(health);
             statsRow.add(headAttack);
