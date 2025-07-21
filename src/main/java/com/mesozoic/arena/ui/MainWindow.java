@@ -26,6 +26,10 @@ public class MainWindow extends JFrame {
     private static final int   BASE_STAT_FONT_SIZE   = 16;
     private static final float STAT_LARGE_ICON_SIZE_MULT = 1.5f;
     private static final int   TYPE_BOX_SIZE = 12;
+    private static final int   ACTIVE_IMG_WIDTH  = 384;
+    private static final int   ACTIVE_IMG_HEIGHT = 256;
+    private static final int   BENCH_IMG_WIDTH   = 120;
+    private static final int   BENCH_IMG_HEIGHT  = 80;
 
     private final Battle   battle;
     private final Player   player, opponent;
@@ -93,7 +97,7 @@ public class MainWindow extends JFrame {
         if (d == null) {
             panel.name.setText("None");
         } else {
-            panel.name.setText("<html>" + formatDinoName(d, true) + "</html>");
+            panel.name.setText("<html>" + formatDinoName(d, true, ACTIVE_IMG_WIDTH) + "</html>");
         }
 
         // Stats with icons
@@ -114,7 +118,7 @@ public class MainWindow extends JFrame {
 
         // Image
         if (d != null) {
-            panel.image.setIcon(loadIcon(d.getImagePath(), 384, 256));
+            panel.image.setIcon(loadIcon(d.getImagePath(), ACTIVE_IMG_WIDTH, ACTIVE_IMG_HEIGHT));
         } else {
             panel.image.setIcon(null);
         }
@@ -228,13 +232,14 @@ public class MainWindow extends JFrame {
             Map.entry(DinoType.SWIMMER, new Color(128, 0, 128))     // purple
     );
 
-    private String typeLabelHtml(DinoType type) {
+    private String typeLabelHtml(DinoType type, int width) {
         if (type == null) {
             return "";
         }
         Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
-        String typeName = type.name().substring(0, 1) + type.name().substring(1).toLowerCase();
-        return "<div style='background-color:" + colorHex(color) + ";text-align:center;'>" + typeName + "</div>";
+        String label = type.name().substring(0, 3).toUpperCase();
+        return "<span style='display:inline-block;width:" + width + "px;background-color:" +
+                colorHex(color) + ";text-align:center;font-weight:bold;'>" + label + "</span>";
     }
 
     private static String colorHex(Color color) {
@@ -267,10 +272,10 @@ public class MainWindow extends JFrame {
         return img.isEmpty() ? "" : " " + img;
     }
 
-    private String formatDinoName(Dinosaur dino, boolean includeStatus) {
+    private String formatDinoName(Dinosaur dino, boolean includeStatus, int imgWidth) {
         java.util.List<DinoType> types = dino.getTypes();
         StringBuilder sb = new StringBuilder();
-        sb.append(typeLabelsHtml(types));
+        sb.append(typeLabelsHtml(types, imgWidth));
         sb.append("<div>").append(dino.getName());
         if (includeStatus) {
             sb.append(stageFragment(dino.getAttackStage(), ATTACK_ICON_PATH));
@@ -281,23 +286,24 @@ public class MainWindow extends JFrame {
         return sb.toString();
     }
 
-    private String typeLabelsHtml(java.util.List<DinoType> types) {
+    private String typeLabelsHtml(java.util.List<DinoType> types, int imgWidth) {
         StringBuilder sb = new StringBuilder();
-        if (!types.isEmpty()) {
-            sb.append(typeLabelHtml(types.get(0)));
+        sb.append("<div>");
+        if (types.isEmpty()) {
+            sb.append(emptyTypeHtml(imgWidth));
+        } else if (types.size() == 1) {
+            sb.append(typeLabelHtml(types.get(0), imgWidth));
         } else {
-            sb.append(emptyTypeHtml());
+            int half = imgWidth / 2;
+            sb.append(typeLabelHtml(types.get(0), half));
+            sb.append(typeLabelHtml(types.get(1), imgWidth - half));
         }
-        if (types.size() > 1) {
-            sb.append(typeLabelHtml(types.get(1)));
-        } else {
-            sb.append(emptyTypeHtml());
-        }
+        sb.append("</div>");
         return sb.toString();
     }
 
-    private String emptyTypeHtml() {
-        return "<div>&nbsp;</div>";
+    private String emptyTypeHtml(int width) {
+        return "<span style='display:inline-block;width:" + width + "px;'>&nbsp;</span>";
     }
 
     /**
@@ -308,10 +314,10 @@ public class MainWindow extends JFrame {
         column.setLayout(new BoxLayout(column, BoxLayout.Y_AXIS));
         column.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
-        JLabel img = new JLabel(loadIcon(dino.getImagePath(), 120, 80));
+        JLabel img = new JLabel(loadIcon(dino.getImagePath(), BENCH_IMG_WIDTH, BENCH_IMG_HEIGHT));
         img.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel n = new JLabel("<html>" + formatDinoName(dino, false) + "</html>");
+        JLabel n = new JLabel("<html>" + formatDinoName(dino, false, BENCH_IMG_WIDTH) + "</html>");
         n.setAlignmentX(Component.CENTER_ALIGNMENT);
         n.setHorizontalAlignment(JLabel.CENTER);
         n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
