@@ -42,7 +42,7 @@ public class MainWindow extends JFrame {
         this.opponent = opponent;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1300, 950);
+        setSize(1800, 950);
 
         playerPanel   = new DinoPanel(true);
         opponentPanel = new DinoPanel(false);
@@ -217,7 +217,7 @@ public class MainWindow extends JFrame {
     private static final Map<DinoType, Color> TYPE_COLORS = Map.ofEntries(
             Map.entry(DinoType.BITER, new Color(255, 165, 0)),      // orange
             Map.entry(DinoType.BLEEDER, new Color(255, 0, 0)),      // red
-            Map.entry(DinoType.CHARGER, new Color(135, 42, 42)),    // brown
+            Map.entry(DinoType.CHARGER, new Color(135, 92, 52)),    // brown
             Map.entry(DinoType.CRUSHER, new Color(139, 0, 0)),      // darkred
             Map.entry(DinoType.DEFENDER, new Color(192, 192, 192)), // silver
             Map.entry(DinoType.GRAZER, new Color(50, 205, 50)),     // limegreen

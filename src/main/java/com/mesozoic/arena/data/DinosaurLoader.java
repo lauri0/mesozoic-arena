@@ -50,7 +50,7 @@ public class DinosaurLoader {
      * Selections will not include duplicates.
      */
     public Player createRandomPlayer() {
-        return new Player(selectRandomDinosaurs(4));
+        return new Player(selectRandomDinosaurs(5));
     }
 
     private List<Dinosaur> selectRandomDinosaurs(int count) {
