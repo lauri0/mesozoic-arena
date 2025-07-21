@@ -1,3 +1,5 @@
+package com.mesozoic.arena;
+
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Effect;
@@ -89,7 +91,7 @@ public class MoveEffectsTest {
         Battle battle = new Battle(p1, p2);
 
         battle.executeRound(frenzy, noop);
-        assertEquals(2, attacker.getAttackStage());
+        assertEquals(2, attacker.getHeadAttackStage());
     }
 
     @Test
@@ -103,7 +105,7 @@ public class MoveEffectsTest {
         Battle battle = new Battle(p1, p2);
 
         battle.executeRound(adrenaline, noop);
-        assertEquals(1, attacker.getAttackStage());
+        assertEquals(1, attacker.getHeadAttackStage());
         assertEquals(1, attacker.getSpeedStage());
     }
 
@@ -177,7 +179,7 @@ public class MoveEffectsTest {
         Battle battle = new Battle(p1, p2);
 
         battle.executeRound(fatigue, noop);
-        assertEquals(-1, attacker.getAttackStage());
+        assertEquals(-1, attacker.getHeadAttackStage());
     }
 
     @Test

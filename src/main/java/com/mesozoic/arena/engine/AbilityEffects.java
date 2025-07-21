@@ -27,7 +27,7 @@ public final class AbilityEffects {
         }
         String name = ability.getName();
         if ("Intimidate".equalsIgnoreCase(name) && opponent != null) {
-            opponent.adjustAttackStage(-1);
+            opponent.adjustHeadAttackStage(-1);
         }
     }
 
@@ -115,7 +115,7 @@ public final class AbilityEffects {
         }
         Ability ability = attacker.getAbility();
         if (ability != null && "Berserk".equalsIgnoreCase(ability.getName())) {
-            attacker.adjustAttackStage(1);
+            attacker.adjustHeadAttackStage(1);
         }
     }
 

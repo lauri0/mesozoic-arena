@@ -28,10 +28,10 @@ public class GameStateTest {
         Player playerOne = new Player(List.of(intimidator));
         Player playerTwo = new Player(List.of(target));
         new Battle(playerOne, playerTwo);
-        assertEquals(-1, target.getAttackStage());
+        assertEquals(-1, target.getHeadAttackStage());
 
         GameState state = new GameState(playerOne, playerTwo);
-        int stage = state.getPlayerTwo().getActiveDinosaur().getAttackStage();
+        int stage = state.getPlayerTwo().getActiveDinosaur().getHeadAttackStage();
         assertEquals(-1, stage);
     }
 

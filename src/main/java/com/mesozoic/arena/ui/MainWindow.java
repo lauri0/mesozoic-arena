@@ -273,7 +273,8 @@ public class MainWindow extends JFrame {
         sb.append(typeLabelsHtml(types));
         sb.append("<div>").append(dino.getName());
         if (includeStatus) {
-            sb.append(stageFragment(dino.getAttackStage(), ATTACK_ICON_PATH));
+            sb.append(stageFragment(dino.getHeadAttackStage(), HEAD_ICON_PATH));
+            sb.append(stageFragment(dino.getBodyAttackStage(), BODY_ICON_PATH));
             sb.append(stageFragment(dino.getSpeedStage(), SPEED_ICON_PATH));
             sb.append(ailmentFragment(dino.hasAilment("Bleeding"), BLEED_ICON_PATH));
         }

@@ -128,12 +128,12 @@ public class GameState {
         if (activeOne != null && activeOne.getAbility() != null
                 && "Intimidate".equalsIgnoreCase(activeOne.getAbility().getName())
                 && activeTwo != null) {
-            activeTwo.adjustAttackStage(1);
+            activeTwo.adjustHeadAttackStage(1);
         }
         if (activeTwo != null && activeTwo.getAbility() != null
                 && "Intimidate".equalsIgnoreCase(activeTwo.getAbility().getName())
                 && activeOne != null) {
-            activeOne.adjustAttackStage(1);
+            activeOne.adjustHeadAttackStage(1);
         }
     }
 }

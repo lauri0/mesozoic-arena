@@ -94,8 +94,8 @@ public class MCTSAgentTest {
             for (int i = 0; i < 3; i++) {
                 Move chosen = agent.chooseMove(self, enemy, List.of());
                 assertEquals("Win", chosen.getName());
-                assertEquals(0, self.getActiveDinosaur().getAttackStage());
-                assertEquals(0, enemy.getActiveDinosaur().getAttackStage());
+                assertEquals(0, self.getActiveDinosaur().getHeadAttackStage());
+                assertEquals(0, enemy.getActiveDinosaur().getHeadAttackStage());
             }
         } finally {
             restoreUseLLMAgent(original);

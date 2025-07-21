@@ -1,3 +1,5 @@
+package com.mesozoic.arena;
+
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Ability;
@@ -93,7 +95,7 @@ public class AbilityEffectsTest {
 
         battle.executeRound(strike, waitMove);
 
-        assertEquals(1, berserker.getAttackStage());
+        assertEquals(1, berserker.getHeadAttackStage());
     }
 
     @Test
@@ -163,7 +165,7 @@ public class AbilityEffectsTest {
         battle.executeRound(waitMove, strike);
 
         assertEquals(intimidator, p1.getActiveDinosaur());
-        assertEquals(-1, attacker.getAttackStage());
+        assertEquals(-1, attacker.getHeadAttackStage());
     }
 
     @Test

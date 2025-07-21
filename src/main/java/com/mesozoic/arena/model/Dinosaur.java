@@ -16,7 +16,8 @@ public class Dinosaur {
     private final Ability ability;
     private final double headAttack;
     private final double bodyAttack;
-    private int attackStage = 0;
+    private int headAttackStage = 0;
+    private int bodyAttackStage = 0;
     private final List<Move> moves;
     private final List<DinoType> types;
     private final List<Ailment> ailments = new ArrayList<>();
@@ -171,16 +172,24 @@ public class Dinosaur {
     }
 
 
-    public int getAttackStage() {
-        return attackStage;
+    public int getHeadAttackStage() {
+        return headAttackStage;
+    }
+
+    public int getBodyAttackStage() {
+        return bodyAttackStage;
     }
 
     public int getSpeedStage() {
         return speedStage;
     }
 
-    public void adjustAttackStage(int amount) {
-        attackStage = clampStage(attackStage + amount);
+    public void adjustHeadAttackStage(int amount) {
+        headAttackStage = clampStage(headAttackStage + amount);
+    }
+
+    public void adjustBodyAttackStage(int amount) {
+        bodyAttackStage = clampStage(bodyAttackStage + amount);
     }
 
     public void adjustSpeedStage(int amount) {
@@ -188,16 +197,17 @@ public class Dinosaur {
     }
 
     public void resetStages() {
-        attackStage = 0;
+        headAttackStage = 0;
+        bodyAttackStage = 0;
         speedStage = 0;
     }
 
     public double getEffectiveHeadAttack() {
-        return headAttack * stageMultiplier(attackStage);
+        return headAttack * stageMultiplier(headAttackStage);
     }
 
     public double getEffectiveBodyAttack() {
-        return bodyAttack * stageMultiplier(attackStage);
+        return bodyAttack * stageMultiplier(bodyAttackStage);
     }
 
     public int getEffectiveSpeed() {
@@ -217,7 +227,8 @@ public class Dinosaur {
         Dinosaur clone = new Dinosaur(name, maxHealth, speed, imagePath,
                 headAttack, bodyAttack, moveCopies, ability, typeCopies);
         clone.health = health;
-        clone.attackStage = attackStage;
+        clone.headAttackStage = headAttackStage;
+        clone.bodyAttackStage = bodyAttackStage;
         clone.speedStage = speedStage;
         clone.ailments.addAll(ailments);
         return clone;
@@ -235,8 +246,8 @@ public class Dinosaur {
 
     private static float stageMultiplier(int stage) {
         if (stage >= 0) {
-            return (4f + stage) / 4f;
+            return (2f + stage) / 2f;
         }
-        return 4f / (4 - stage);
+        return 2f / (2 - stage);
     }
 }

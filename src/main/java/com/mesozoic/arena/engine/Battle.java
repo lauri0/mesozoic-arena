@@ -368,14 +368,14 @@ public class Battle {
             }
         }
         if (MoveEffects.containsEffect(move, "frenzy")) {
-            active.adjustAttackStage(2);
+            active.adjustHeadAttackStage(2);
         }
         if (MoveEffects.containsEffect(move, "adrenaline")) {
-            active.adjustAttackStage(1);
+            active.adjustHeadAttackStage(1);
             active.adjustSpeedStage(1);
         }
         if (MoveEffects.containsEffect(move, "fatigue")) {
-            active.adjustAttackStage(-1);
+            active.adjustHeadAttackStage(-1);
         }
         if (MoveEffects.containsEffect(move, "slow")) {
             Dinosaur defender = defendingPlayer.getActiveDinosaur();
