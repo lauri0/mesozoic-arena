@@ -188,11 +188,11 @@ public class MainWindow extends JFrame {
         table.append("<html><body><table border='1' cellpadding='4' cellspacing='0'>");
         table.append("<tr><th>Atk/Def</th>");
         for (DinoType defend : types) {
-            table.append("<th>").append(defend.name().substring(0, 3)).append("</th>");
+            table.append(typeHeaderCellHtml(defend));
         }
         table.append("</tr>");
         for (DinoType attack : types) {
-            table.append("<tr><th>").append(attack.name().substring(0, 3)).append("</th>");
+            table.append("<tr>").append(typeHeaderCellHtml(attack));
             for (DinoType defend : types) {
                 double multiplier = defend.getMultiplierFrom(attack);
                 String color;
@@ -272,6 +272,12 @@ public class MainWindow extends JFrame {
         return "<span style='display:inline-block;width:" + TYPE_BOX_SIZE + "px;" +
                 "height:" + TYPE_BOX_SIZE + "px;background-color:" +
                 colorHex(color) + ";'>&nbsp;</span>";
+    }
+
+    private String typeHeaderCellHtml(DinoType type) {
+        Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
+        return "<th style='background-color:" + colorHex(color) + ";'>"
+                + type.name().substring(0, 3) + "</th>";
     }
 
     private String stageFragment(int stage, String iconPath) {
