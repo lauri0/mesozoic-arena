@@ -4,8 +4,8 @@ import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.model.Move;
-import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.engine.DamageCalculator;
 
 import javax.swing.*;
@@ -97,7 +97,7 @@ public class MainWindow extends JFrame {
         if (d == null) {
             panel.name.setText("None");
         } else {
-            panel.name.setText("<html>" + formatDinoName(d, true, ACTIVE_IMG_WIDTH) + "</html>");
+            panel.name.setText("<html>" + formatDinoName(d, true, ACTIVE_IMG_WIDTH, true) + "</html>");
         }
 
         // Stats with icons
@@ -232,15 +232,6 @@ public class MainWindow extends JFrame {
             Map.entry(DinoType.SWIMMER, new Color(128, 0, 128))     // purple
     );
 
-    private String typeLabelHtml(DinoType type, int width) {
-        if (type == null) {
-            return "";
-        }
-        Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
-        String label = type.name().substring(0, 3).toUpperCase();
-        return "<span style='display:inline-block;width:" + width + "px;background-color:" +
-                colorHex(color) + ";text-align:center;font-weight:bold;'>" + label + "</span>";
-    }
 
     private static String colorHex(Color color) {
         return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
@@ -272,11 +263,41 @@ public class MainWindow extends JFrame {
         return img.isEmpty() ? "" : " " + img;
     }
 
-    private String formatDinoName(Dinosaur dino, boolean includeStatus, int imgWidth) {
+    private String abilityLineHtml(Ability ability, int width, boolean withDescription) {
+        String text;
+        if (ability == null) {
+            text = "";
+        } else {
+            text = "Ability: " + ability.getName();
+            if (withDescription) {
+                text += " - " + ability.getDescription();
+            }
+        }
+        if (text.isEmpty()) {
+            return emptyTypeHtml(width);
+        }
+        return "<div style='width:" + width + "px;text-align:center;'>" + text + "</div>";
+    }
+
+    private String typeBadgesHtml(java.util.List<DinoType> types) {
+        StringBuilder sb = new StringBuilder();
+        for (DinoType type : types) {
+            Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
+            sb.append("<span style='background-color:")
+                    .append(colorHex(color))
+                    .append(";padding:2px 4px;margin-right:2px;font-weight:bold;'>")
+                    .append(type.name().substring(0, 3))
+                    .append("</span>");
+        }
+        return sb.toString();
+    }
+
+    private String formatDinoName(Dinosaur dino, boolean includeStatus, int imgWidth, boolean abilityDescription) {
         java.util.List<DinoType> types = dino.getTypes();
         StringBuilder sb = new StringBuilder();
-        sb.append(typeLabelsHtml(types, imgWidth));
-        sb.append("<div>").append(dino.getName());
+        sb.append(abilityLineHtml(dino.getAbility(), imgWidth, abilityDescription));
+        sb.append("<div>");
+        sb.append(typeBadgesHtml(types)).append(dino.getName());
         if (includeStatus) {
             sb.append(stageFragment(dino.getHeadAttackStage(), HEAD_ICON_PATH));
             sb.append(stageFragment(dino.getBodyAttackStage(), BODY_ICON_PATH));
@@ -287,21 +308,6 @@ public class MainWindow extends JFrame {
         return sb.toString();
     }
 
-    private String typeLabelsHtml(java.util.List<DinoType> types, int imgWidth) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<div>");
-        if (types.isEmpty()) {
-            sb.append(emptyTypeHtml(imgWidth));
-        } else if (types.size() == 1) {
-            sb.append(typeLabelHtml(types.get(0), imgWidth));
-        } else {
-            int half = imgWidth / 2;
-            sb.append(typeLabelHtml(types.get(0), half));
-            sb.append(typeLabelHtml(types.get(1), imgWidth - half));
-        }
-        sb.append("</div>");
-        return sb.toString();
-    }
 
     private String emptyTypeHtml(int width) {
         return "<span style='display:inline-block;width:" + width + "px;'>&nbsp;</span>";
@@ -318,7 +324,7 @@ public class MainWindow extends JFrame {
         JLabel img = new JLabel(loadIcon(dino.getImagePath(), BENCH_IMG_WIDTH, BENCH_IMG_HEIGHT));
         img.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel n = new JLabel("<html>" + formatDinoName(dino, false, BENCH_IMG_WIDTH) + "</html>");
+        JLabel n = new JLabel("<html>" + formatDinoName(dino, false, BENCH_IMG_WIDTH, false) + "</html>");
         n.setAlignmentX(Component.CENTER_ALIGNMENT);
         n.setHorizontalAlignment(JLabel.CENTER);
         n.setFont(n.getFont().deriveFont(Font.BOLD, 14f));
