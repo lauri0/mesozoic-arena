@@ -245,7 +245,7 @@ public class MainWindow extends JFrame {
         Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
         return "<span style='display:inline-block;width:" + TYPE_BOX_SIZE + "px;" +
                 "height:" + TYPE_BOX_SIZE + "px;background-color:" +
-                colorHex(color) + ";'></span>";
+                colorHex(color) + ";'>&nbsp;</span>";
     }
 
     private String stageFragment(int stage, String iconPath) {
