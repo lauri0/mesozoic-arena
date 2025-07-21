@@ -20,7 +20,6 @@ public class MainWindow extends JFrame {
     private static final String BLEED_ICON_PATH   = "assets/icons/bleed.png";
     private static final String HEAD_ICON_PATH    = "assets/icons/head.png";
     private static final String BODY_ICON_PATH    = "assets/icons/tail.png";
-    private static final String TYPE_CHART_PATH   = "assets/other/type_chart.PNG";
 
     private static final int   BASE_STAT_ICON_SIZE   = 24;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
@@ -184,12 +183,43 @@ public class MainWindow extends JFrame {
     }
 
     private void openTypeChart() {
-        ImageIcon icon = loadIcon(TYPE_CHART_PATH);
-        if (icon.getIconWidth() <= 0) {
-            JOptionPane.showMessageDialog(this, "Type chart not found.");
-            return;
+        DinoType[] types = DinoType.values();
+        StringBuilder table = new StringBuilder();
+        table.append("<html><body><table border='1' cellpadding='4' cellspacing='0'>");
+        table.append("<tr><th>Atk/Def</th>");
+        for (DinoType defend : types) {
+            table.append("<th>").append(defend.name().substring(0, 3)).append("</th>");
         }
-        JLabel label = new JLabel(icon);
+        table.append("</tr>");
+        for (DinoType attack : types) {
+            table.append("<tr><th>").append(attack.name().substring(0, 3)).append("</th>");
+            for (DinoType defend : types) {
+                double multiplier = defend.getMultiplierFrom(attack);
+                String color;
+                if (multiplier == 2.0) {
+                    color = "#ccffcc"; // green
+                } else if (multiplier == 0.5) {
+                    color = "#ffcccc"; // red
+                } else {
+                    color = "#ffffff"; // white
+                }
+                table.append("<td style='background-color:")
+                        .append(color)
+                        .append(";text-align:center;'>");
+                if (multiplier == 2.0) {
+                    table.append("2x");
+                } else if (multiplier == 0.5) {
+                    table.append("0.5x");
+                } else {
+                    table.append("1x");
+                }
+                table.append("</td>");
+            }
+            table.append("</tr>");
+        }
+        table.append("</table></body></html>");
+
+        JLabel label = new JLabel(table.toString());
         JFrame frame = new JFrame("Type Chart");
         frame.setLayout(new BorderLayout());
         frame.add(new JScrollPane(label), BorderLayout.CENTER);
