@@ -36,8 +36,9 @@ Corythosaurus:
   ability: Regenerator
   image: assets/animals/corythosaurus.png
   moves:
-    - Heal
     - Kick
+    - Spin Kick
+    - Stomp
     - Tail Slam
 
 Daspletosaurus:
