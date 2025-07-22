@@ -11,3 +11,6 @@ fatigue: Lowers your attack by one stage after use.
 recoil: Deals 25% of the damage dealt back to the user.
 big drain: Heals the user for 50% of the damage dealt.
 small drain: Heals the user for 25% of the damage dealt.
+trample: Deals 10 damage to the next dinosaur on the enemy bench.
+retaliate: Deals 50% extra damage if the user was hit earlier in the round.
+healing mist: Clears all ailments and heals the user by 25 HP.
