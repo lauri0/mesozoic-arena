@@ -19,7 +19,7 @@ public class MainWindow extends JFrame {
     private static final String ACCURACY_ICON_PATH = "assets/icons/accuracy.png";
     private static final String BLEED_ICON_PATH   = "assets/icons/bleed.png";
     private static final String HEAD_ICON_PATH    = "assets/icons/head.png";
-    private static final String BODY_ICON_PATH    = "assets/icons/tail.png";
+    private static final String BODY_ICON_PATH    = "assets/icons/claw.png";
 
     private static final int   BASE_STAT_ICON_SIZE   = 32;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
@@ -280,7 +280,7 @@ public class MainWindow extends JFrame {
     private String typeHeaderCellHtml(DinoType type) {
         Color color = TYPE_COLORS.getOrDefault(type, Color.LIGHT_GRAY);
         return "<th style='background-color:" + colorHex(color) + ";'>"
-                + type.name().substring(0, 3) + "</th>";
+                + type.name().substring(0, 2) + "</th>";
     }
 
     private String stageFragment(int stage, String iconPath) {
