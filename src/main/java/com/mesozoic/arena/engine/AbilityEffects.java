@@ -3,6 +3,7 @@ package com.mesozoic.arena.engine;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Move;
+import java.util.Random;
 
 /**
  * Utility methods for applying ability based effects.
@@ -55,6 +56,12 @@ public final class AbilityEffects {
             return Math.round(damage / 3f);
         }
 
+        if ("Resilient".equalsIgnoreCase(name)
+                && defender.getHealth() > 20
+                && damage >= defender.getHealth()) {
+            return defender.getHealth() - 1;
+        }
+
         return damage;
     }
 
@@ -90,9 +97,15 @@ public final class AbilityEffects {
         }
 
         Ability ability = defender.getAbility();
-        if (ability != null && "Spiky Body".equalsIgnoreCase(ability.getName())
-                && move.getDamage() > 0) {
+        if (ability == null) {
+            return;
+        }
+        String name = ability.getName();
+        if ("Spiky Body".equalsIgnoreCase(name) && move.getDamage() > 0) {
             attacker.adjustHealth(-10);
+        }
+        if ("Tiring".equalsIgnoreCase(name) && move.getDamage() > 0) {
+            attacker.adjustSpeedStage(-1);
         }
     }
 
@@ -114,8 +127,16 @@ public final class AbilityEffects {
             return;
         }
         Ability ability = attacker.getAbility();
-        if (ability != null && "Berserk".equalsIgnoreCase(ability.getName())) {
+        if (ability == null) {
+            return;
+        }
+        String name = ability.getName();
+        if ("Berserk".equalsIgnoreCase(name)) {
             attacker.adjustHeadAttackStage(1);
+        }
+        if ("Scavenger".equalsIgnoreCase(name)) {
+            int healAmount = AilmentEffects.modifyHealing(attacker, 20);
+            attacker.adjustHealth(healAmount);
         }
     }
 
@@ -135,6 +156,26 @@ public final class AbilityEffects {
             return Math.min(1.0, move.getAccuracy() + 0.15);
         }
         return move.getAccuracy();
+    }
+
+    /**
+     * Determines if the first incoming attack should miss due to Camouflage.
+     *
+     * @param defender the dinosaur being targeted
+     * @param random   source of randomness
+     * @return {@code true} if the attack misses, otherwise {@code false}
+     */
+    public static boolean firstAttackMiss(Dinosaur defender, Random random) {
+        if (defender == null || random == null) {
+            return false;
+        }
+        Ability ability = defender.getAbility();
+        if (ability != null && "Camouflage".equalsIgnoreCase(ability.getName())
+                && !defender.isCamouflageUsed()) {
+            defender.setCamouflageUsed(true);
+            return random.nextDouble() < 0.5;
+        }
+        return false;
     }
 
     /**

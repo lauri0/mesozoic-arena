@@ -22,6 +22,7 @@ public class Dinosaur {
     private final List<Move> moves;
     private final List<DinoType> types;
     private final List<Ailment> ailments = new ArrayList<>();
+    private boolean camouflageUsed = false;
 
     public Dinosaur(String name, int health, int speed, String imagePath,
                     double headAttack, double bodyAttack, List<Move> moves, Ability ability) {
@@ -173,6 +174,14 @@ public class Dinosaur {
         ailments.removeIf(a -> ailmentName.equalsIgnoreCase(a.getName()));
     }
 
+    public boolean isCamouflageUsed() {
+        return camouflageUsed;
+    }
+
+    public void setCamouflageUsed(boolean used) {
+        this.camouflageUsed = used;
+    }
+
     public void adjustHealth(int amount) {
         health += amount;
         if (health > maxHealth) {
@@ -243,6 +252,7 @@ public class Dinosaur {
         clone.bodyAttackStage = bodyAttackStage;
         clone.speedStage = speedStage;
         clone.ailments.addAll(ailments);
+        clone.camouflageUsed = camouflageUsed;
         return clone;
     }
 
