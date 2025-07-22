@@ -1,12 +1,8 @@
 package com.mesozoic.arena.ui;
 
 import com.mesozoic.arena.engine.Battle;
-import com.mesozoic.arena.model.Dinosaur;
-import com.mesozoic.arena.model.DinoType;
-import com.mesozoic.arena.model.Move;
-import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.model.*;
 import com.mesozoic.arena.engine.DamageCalculator;
-import com.mesozoic.arena.model.Ability;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,7 +41,7 @@ public class MainWindow extends JFrame {
         this.opponent = opponent;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1800, 950);
+        setSize(1850, 950);
 
         playerPanel   = new DinoPanel(true);
         opponentPanel = new DinoPanel(false);
@@ -66,7 +62,7 @@ public class MainWindow extends JFrame {
         npcHeader.add(npcLabel);
         npcPanel.add(npcHeader, BorderLayout.NORTH);
         npcPanel.add(new JScrollPane(npcArea), BorderLayout.CENTER);
-        npcPanel.setPreferredSize(new Dimension(350, 100));
+        npcPanel.setPreferredSize(new Dimension(400, 100));
         add(npcPanel, BorderLayout.EAST);
 
         logArea.setEditable(false);
@@ -197,7 +193,7 @@ public class MainWindow extends JFrame {
     private String buildTypeChartHtml() {
         DinoType[] types = DinoType.values();
         StringBuilder table = new StringBuilder();
-        table.append("<html><body style='font-size:80%'><table border='1' cellpadding='4' cellspacing='0'>");
+        table.append("<html><body style='font-size:84%'><table border='1' cellpadding='4' cellspacing='0'>");
         table.append("<tr><th>Atk/Def</th>");
         for (DinoType defend : types) {
             table.append(typeHeaderCellHtml(defend));
@@ -244,14 +240,6 @@ public class MainWindow extends JFrame {
         }
         int size = Math.round(BASE_STAT_ICON_SIZE * 0.75f);
         return "<img src='" + url + "' width='" + size + "' height='" + size + "'/>";
-    }
-
-    private String typeIconHtml(DinoType type) {
-        if (type == null) {
-            return "";
-        }
-        String path = "assets/icons/" + type.name().toLowerCase() + ".png";
-        return iconHtml(path);
     }
 
     private static final Map<DinoType, Color> TYPE_COLORS = Map.ofEntries(
@@ -312,7 +300,7 @@ public class MainWindow extends JFrame {
             sb.append("<span style='background-color:")
                     .append(colorHex(color))
                     .append(";padding:2px 4px;margin-right:2px;font-weight:bold;'>")
-                    .append(type.name().substring(0, 3))
+                    .append(type.name().substring(0, 2))
                     .append("</span>");
         }
         return sb.toString();
@@ -388,7 +376,7 @@ public class MainWindow extends JFrame {
     private JButton createMoveButton(Dinosaur dino, Move move, boolean playerSide) {
         Dinosaur target = playerSide ? opponent.getActiveDinosaur() : player.getActiveDinosaur();
         int damage = DamageCalculator.calculate(dino, target, move);
-        String attackImg = iconHtml(ATTACK_ICON_PATH);
+        String attackImg = MoveType.BODY == move.getKind() ? iconHtml(HEAD_ICON_PATH) : iconHtml(BODY_ICON_PATH);
         String accuracyImg = iconHtml(ACCURACY_ICON_PATH);
         String nameWithType = typeBoxHtml(move.getType()) + " " + move.getName();
         String label = String.format("<html>%s %s %d %s %.0f%s</html>",
@@ -432,10 +420,12 @@ public class MainWindow extends JFrame {
 
             // Top row: image and team stats
             Box statsBox = Box.createVerticalBox();
-            teamHeading.setFont(teamHeading.getFont().deriveFont(Font.BOLD));
+            teamHeading.setFont(teamHeading.getFont().deriveFont(Font.BOLD, 14f));
             teamHeading.setAlignmentX(Component.CENTER_ALIGNMENT);
             teamSupply.setAlignmentX(Component.CENTER_ALIGNMENT);
+            teamSupply.setFont(teamSupply.getFont().deriveFont(Font.BOLD, 14f));
             teamHealth.setAlignmentX(Component.CENTER_ALIGNMENT);
+            teamHealth.setFont(teamHealth.getFont().deriveFont(Font.BOLD, 14f));
             statsBox.add(teamHeading);
             statsBox.add(teamSupply);
             statsBox.add(teamHealth);
