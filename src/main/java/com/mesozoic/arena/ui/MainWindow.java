@@ -131,6 +131,9 @@ public class MainWindow extends JFrame {
             panel.image.setIcon(null);
         }
 
+        panel.teamSupply.setText("Team Supply: " + who.getTotalSupply());
+        panel.teamHealth.setText("Total HP: " + who.getTotalHealth());
+
         panel.bench.removeAll();
         for (Dinosaur dd : who.getDinosaurs()) {
             if (dd.equals(d)) {
@@ -416,6 +419,9 @@ public class MainWindow extends JFrame {
         final JLabel headAttack  = new JLabel();
         final JLabel bodyAttack  = new JLabel();
         final JLabel speed       = new JLabel();
+        final JLabel teamHeading = new JLabel("Team Stats");
+        final JLabel teamSupply  = new JLabel();
+        final JLabel teamHealth  = new JLabel();
         final JPanel bench   = new JPanel(new FlowLayout(FlowLayout.LEFT, 5,5));
         final JPanel moves   = new JPanel(new GridLayout(0,2,5,5));
 
@@ -424,9 +430,27 @@ public class MainWindow extends JFrame {
             setLayout(new BorderLayout(10,10));
             setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
 
-            // Top: dino picture
-            image.setHorizontalAlignment(JLabel.CENTER);
-            add(image, BorderLayout.NORTH);
+            // Top row: image and team stats
+            Box statsBox = Box.createVerticalBox();
+            teamHeading.setFont(teamHeading.getFont().deriveFont(Font.BOLD));
+            teamHeading.setAlignmentX(Component.CENTER_ALIGNMENT);
+            teamSupply.setAlignmentX(Component.CENTER_ALIGNMENT);
+            teamHealth.setAlignmentX(Component.CENTER_ALIGNMENT);
+            statsBox.add(teamHeading);
+            statsBox.add(teamSupply);
+            statsBox.add(teamHealth);
+
+            JPanel top = new JPanel(new BorderLayout());
+            if (isPlayer) {
+                image.setHorizontalAlignment(JLabel.LEFT);
+                top.add(image, BorderLayout.WEST);
+                top.add(statsBox, BorderLayout.EAST);
+            } else {
+                image.setHorizontalAlignment(JLabel.RIGHT);
+                top.add(statsBox, BorderLayout.WEST);
+                top.add(image, BorderLayout.EAST);
+            }
+            add(top, BorderLayout.NORTH);
 
             name.setHorizontalAlignment(JLabel.CENTER);
             name.setFont(name.getFont().deriveFont(Font.BOLD, 24f));
