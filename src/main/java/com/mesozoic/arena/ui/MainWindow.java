@@ -60,10 +60,9 @@ public class MainWindow extends JFrame {
         npcArea.setWrapStyleWord(true);
         JPanel npcPanel = new JPanel(new BorderLayout());
         JLabel npcLabel = new JLabel("NPC's thoughts", JLabel.CENTER);
-        JButton typeChartButton = new JButton("Type Chart");
-        typeChartButton.addActionListener(e -> openTypeChart());
+        JLabel typeChart = createTypeChartLabel();
         Box npcHeader = Box.createVerticalBox();
-        npcHeader.add(typeChartButton);
+        npcHeader.add(typeChart);
         npcHeader.add(npcLabel);
         npcPanel.add(npcHeader, BorderLayout.NORTH);
         npcPanel.add(new JScrollPane(npcArea), BorderLayout.CENTER);
@@ -192,10 +191,10 @@ public class MainWindow extends JFrame {
         return new ImageIcon(img);
     }
 
-    private void openTypeChart() {
+    private String buildTypeChartHtml() {
         DinoType[] types = DinoType.values();
         StringBuilder table = new StringBuilder();
-        table.append("<html><body><table border='1' cellpadding='4' cellspacing='0'>");
+        table.append("<html><body style='font-size:80%'><table border='1' cellpadding='4' cellspacing='0'>");
         table.append("<tr><th>Atk/Def</th>");
         for (DinoType defend : types) {
             table.append(typeHeaderCellHtml(defend));
@@ -228,17 +227,11 @@ public class MainWindow extends JFrame {
             table.append("</tr>");
         }
         table.append("</table></body></html>");
+        return table.toString();
+    }
 
-        JLabel label = new JLabel(table.toString());
-        JFrame frame = new JFrame("Type Chart");
-        frame.setLayout(new BorderLayout());
-        frame.add(new JScrollPane(label), BorderLayout.CENTER);
-        JButton close = new JButton("Close");
-        close.addActionListener(e -> frame.dispose());
-        frame.add(close, BorderLayout.SOUTH);
-        frame.pack();
-        frame.setLocationRelativeTo(this);
-        frame.setVisible(true);
+    private JLabel createTypeChartLabel() {
+        return new JLabel(buildTypeChartHtml());
     }
 
     private String iconHtml(String iconPath) {
