@@ -30,7 +30,7 @@ Corythosaurus:
   speed: 105
   head attack: 0.71
   body attack: 0.82
-  ability: Supporter
+  ability: Regenerator
   image: assets/animals/corythosaurus.png
   moves:
     - Heal

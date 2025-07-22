@@ -21,7 +21,7 @@ public class MainWindow extends JFrame {
     private static final String HEAD_ICON_PATH    = "assets/icons/head.png";
     private static final String BODY_ICON_PATH    = "assets/icons/tail.png";
 
-    private static final int   BASE_STAT_ICON_SIZE   = 24;
+    private static final int   BASE_STAT_ICON_SIZE   = 32;
     private static final int   BASE_STAT_FONT_SIZE   = 16;
     private static final float STAT_LARGE_ICON_SIZE_MULT = 1.5f;
     private static final int   TYPE_BOX_SIZE = 12;
@@ -359,7 +359,7 @@ public class MainWindow extends JFrame {
         abilityLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         abilityLabel.setFont(new JButton().getFont());
         if (dinoAbility != null) {
-            abilityLabel.setText(dinoAbility.getName() + " - " + dinoAbility.getDescription());
+            abilityLabel.setText(dinoAbility.getName());
         }
 
         JLabel hp = new JLabel();
@@ -442,11 +442,6 @@ public class MainWindow extends JFrame {
             // Center: stats + bench & moves
             Box info = Box.createVerticalBox();
             info.add(name);
-            abilityHeading.setAlignmentX(Component.CENTER_ALIGNMENT);
-            ability.setAlignmentX(Component.CENTER_ALIGNMENT);
-            ability.setFont(new JButton().getFont());
-            info.add(abilityHeading);
-            info.add(ability);
             JPanel statsRow = new JPanel(new GridLayout(1,4,5,0));
             statsRow.add(health);
             statsRow.add(headAttack);
@@ -454,6 +449,11 @@ public class MainWindow extends JFrame {
             statsRow.add(speed);
             statsRow.setAlignmentX(Component.CENTER_ALIGNMENT);
             info.add(statsRow);
+            info.add(Box.createVerticalStrut(10));
+            ability.setAlignmentX(Component.CENTER_ALIGNMENT);
+            ability.setFont(new JButton().getFont());
+            info.add(abilityHeading);
+            info.add(ability);
             info.add(Box.createVerticalStrut(10));
             info.add(new JLabel("Moves:"));
             info.add(moves);
