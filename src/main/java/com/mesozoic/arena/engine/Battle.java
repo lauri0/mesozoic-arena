@@ -184,19 +184,38 @@ public class Battle {
             lastP2Action = lastRecord.getNpcAction();
         }
 
+        boolean playerOneHit = false;
+        boolean playerTwoHit = false;
+
         if (p1First) {
             p1Braced = MoveEffects.hasBraceEffect(playerOneMove, lastP1Action);
-            boolean fainted = performTurn(playerOne, playerTwo, playerOneMove, p2Braced, random);
+            int p2HealthBefore = playerTwo.getActiveDinosaur().getHealth();
+            boolean fainted = performTurn(playerOne, playerTwo, playerOneMove, p2Braced,
+                    false, random);
+            playerTwoHit = playerTwo.getActiveDinosaur() != null
+                    && playerTwo.getActiveDinosaur().getHealth() < p2HealthBefore;
             if (winner == null && !fainted) {
                 p2Braced = MoveEffects.hasBraceEffect(playerTwoMove, lastP2Action);
-                performTurn(playerTwo, playerOne, playerTwoMove, p1Braced, random);
+                int p1HealthBefore = playerOne.getActiveDinosaur().getHealth();
+                performTurn(playerTwo, playerOne, playerTwoMove, p1Braced, playerTwoHit,
+                        random);
+                playerOneHit = playerOne.getActiveDinosaur() != null
+                        && playerOne.getActiveDinosaur().getHealth() < p1HealthBefore;
             }
         } else {
             p2Braced = MoveEffects.hasBraceEffect(playerTwoMove, lastP2Action);
-            boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove, p1Braced, random);
+            int p1HealthBefore = playerOne.getActiveDinosaur().getHealth();
+            boolean fainted = performTurn(playerTwo, playerOne, playerTwoMove, p1Braced,
+                    false, random);
+            playerOneHit = playerOne.getActiveDinosaur() != null
+                    && playerOne.getActiveDinosaur().getHealth() < p1HealthBefore;
             if (winner == null && !fainted) {
                 p1Braced = MoveEffects.hasBraceEffect(playerOneMove, lastP1Action);
-                performTurn(playerOne, playerTwo, playerOneMove, p2Braced, random);
+                int p2HealthBefore = playerTwo.getActiveDinosaur().getHealth();
+                performTurn(playerOne, playerTwo, playerOneMove, p2Braced, playerOneHit,
+                        random);
+                playerTwoHit = playerTwo.getActiveDinosaur() != null
+                        && playerTwo.getActiveDinosaur().getHealth() < p2HealthBefore;
             }
         }
 
@@ -238,7 +257,7 @@ public class Battle {
     }
 
     private boolean performTurn(Player actingPlayer, Player opposingPlayer, Move move,
-            boolean defenderBraced, Random random) {
+            boolean defenderBraced, boolean attackerHitEarlier, Random random) {
         int repeatCount = MoveEffects.getRepeatCount(move);
         boolean defenderFainted = false;
         Dinosaur initialAttacker = actingPlayer.getActiveDinosaur();
@@ -261,6 +280,7 @@ public class Battle {
             applyMoveEffects(actingPlayer, opposingPlayer, move);
             if (!defenderBraced) {
                 int totalDamage = DamageCalculator.calculate(attacker, defender, move);
+                totalDamage = MoveEffects.applyRetaliate(move, totalDamage, attackerHitEarlier);
                 totalDamage = AbilityEffects.modifyIncomingDamage(defender, totalDamage);
                 int beforeHealth = defender.getHealth();
                 defender.adjustHealth(-totalDamage);
@@ -270,6 +290,12 @@ public class Battle {
                     attacker.adjustHealth(-recoil);
                 }
                 MoveEffects.applyDrain(attacker, move, damageDealt);
+                if (MoveEffects.containsEffect(move, "trample") && damageDealt > 0) {
+                    Dinosaur benchTarget = getNextBenchDinosaur(opposingPlayer);
+                    if (benchTarget != null) {
+                        benchTarget.adjustHealth(-10);
+                    }
+                }
                 String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
                 String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
                 addEvent(actorLabel + attacker.getName() + " used " + move.getName() +
@@ -354,6 +380,16 @@ public class Battle {
         AbilityEffects.onEntry(next, opponent.getActiveDinosaur());
     }
 
+    private Dinosaur getNextBenchDinosaur(Player player) {
+        List<Dinosaur> dinos = player.getDinosaurs();
+        Dinosaur active = player.getActiveDinosaur();
+        int index = dinos.indexOf(active);
+        if (index >= 0 && index < dinos.size() - 1) {
+            return dinos.get(index + 1);
+        }
+        return null;
+    }
+
 
     private void applyMoveEffects(Player actingPlayer, Player defendingPlayer, Move move) {
         Dinosaur active = actingPlayer.getActiveDinosaur();
@@ -370,6 +406,11 @@ public class Battle {
                 int healAmount = AilmentEffects.modifyHealing(dinosaur, 10);
                 dinosaur.adjustHealth(healAmount);
             }
+        }
+        if (MoveEffects.containsEffect(move, "healing mist")) {
+            active.clearAilments();
+            int healAmount = AilmentEffects.modifyHealing(active, 25);
+            active.adjustHealth(healAmount);
         }
         if (MoveEffects.containsEffect(move, "frenzy")) {
             active.adjustHeadAttackStage(2);

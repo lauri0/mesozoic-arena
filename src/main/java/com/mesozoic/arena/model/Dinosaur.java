@@ -174,6 +174,13 @@ public class Dinosaur {
         ailments.removeIf(a -> ailmentName.equalsIgnoreCase(a.getName()));
     }
 
+    /**
+     * Removes all ailments currently affecting this dinosaur.
+     */
+    public void clearAilments() {
+        ailments.clear();
+    }
+
     public boolean isCamouflageUsed() {
         return camouflageUsed;
     }
