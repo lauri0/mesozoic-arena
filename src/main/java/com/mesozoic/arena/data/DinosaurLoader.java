@@ -7,6 +7,7 @@ import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.DinoType;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Player;
+import com.mesozoic.arena.util.Config;
 import org.yaml.snakeyaml.Yaml;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -46,21 +47,27 @@ public class DinosaurLoader {
     }
 
     /**
-     * Returns a new player containing three randomly selected dinosaurs.
-     * Selections will not include duplicates.
+     * Returns a new player containing up to five randomly selected dinosaurs.
+     * Selections will not include duplicates and honor the supply budget.
      */
     public Player createRandomPlayer() {
-        return new Player(selectRandomDinosaurs(5));
+        return new Player(selectRandomDinosaurs(5, Config.supplyBudget()));
     }
 
-    private List<Dinosaur> selectRandomDinosaurs(int count) {
+    private List<Dinosaur> selectRandomDinosaurs(int maxCount, int budget) {
         List<Dinosaur> shuffledDinosaurs = new ArrayList<>(availableDinosaurs);
         Collections.shuffle(shuffledDinosaurs, new Random());
         List<Dinosaur> selection = new ArrayList<>();
-        int limit = Math.min(count, shuffledDinosaurs.size());
-        for (int index = 0; index < limit; index++) {
-            Dinosaur template = shuffledDinosaurs.get(index);
-            selection.add(template.copy());
+        int remainingBudget = budget;
+        for (Dinosaur template : shuffledDinosaurs) {
+            int cost = template.getSupply();
+            if (cost <= remainingBudget) {
+                selection.add(template.copy());
+                remainingBudget -= cost;
+            }
+            if (selection.size() >= maxCount || remainingBudget <= 0) {
+                break;
+            }
         }
         return selection;
     }
@@ -86,6 +93,7 @@ public class DinosaurLoader {
     private Dinosaur parseDinosaur(String name, Map<String, Object> values) throws IOException {
         int health = ((Number) values.get("health")).intValue();
         int speed = ((Number) values.get("speed")).intValue();
+        int supply = ((Number) values.getOrDefault("supply", 0)).intValue();
         double defaultAttack = ((Number) values.getOrDefault("attack", 1)).doubleValue();
         double headAttack = ((Number) values.getOrDefault("head attack", defaultAttack)).doubleValue();
         double bodyAttack = ((Number) values.getOrDefault("body attack", defaultAttack)).doubleValue();
@@ -110,7 +118,7 @@ public class DinosaurLoader {
         Ability ability = abilityTemplates.get(abilityName);
 
         return new Dinosaur(name, health, speed, imagePath, headAttack, bodyAttack,
-                moves, ability, types);
+                moves, ability, supply, types);
     }
 
     private List<Move> resolveMoves(List<String> names) {
