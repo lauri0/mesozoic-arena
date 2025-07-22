@@ -214,5 +214,99 @@ public class AbilityEffectsTest {
 
         assertEquals(90, healer.getHealth());
     }
+
+    @Test
+    public void testResilientSurvivesFatalHit() {
+        Move strike = new Move("Strike", 50, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, List.of());
+
+        Dinosaur attacker = new Dinosaur(
+                "Attacker", 100, 50, "assets/animals/allosaurus.png", 1,
+                1, List.of(strike), null);
+        Dinosaur sturdy = new Dinosaur(
+                "Sturdy", 30, 50, "assets/animals/allosaurus.png", 10,
+                10, List.of(waitMove), new Ability("Resilient", ""));
+
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(sturdy));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(strike, waitMove);
+
+        assertEquals(1, sturdy.getHealth());
+    }
+
+    @Test
+    public void testScavengerHealsOnKnockOut() {
+        Move strike = new Move("Strike", 30, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, List.of());
+
+        Dinosaur scavenger = new Dinosaur(
+                "Scav", 100, 50, "assets/animals/allosaurus.png", 1,
+                1, List.of(strike), new Ability("Scavenger", ""));
+        Dinosaur target = new Dinosaur(
+                "Target", 20, 50, "assets/animals/allosaurus.png", 10,
+                10, List.of(waitMove), null);
+
+        Player p1 = new Player(List.of(scavenger));
+        Player p2 = new Player(List.of(target));
+        Battle battle = new Battle(p1, p2);
+
+        scavenger.adjustHealth(-40);
+        battle.executeRound(strike, waitMove);
+
+        assertEquals(80, scavenger.getHealth());
+    }
+
+    @Test
+    public void testCamouflageBlocksFirstHit() {
+        Move strike = new Move("Strike", 20, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, List.of());
+
+        Dinosaur attacker = new Dinosaur(
+                "Attacker", 100, 50, "assets/animals/allosaurus.png", 1,
+                1, List.of(strike), null);
+        Dinosaur stealthy = new Dinosaur(
+                "Stealthy", 100, 50, "assets/animals/allosaurus.png", 10,
+                10, List.of(waitMove), new Ability("Camouflage", ""));
+
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(stealthy));
+        Battle battle = new Battle(p1, p2);
+
+        Random rng = new Random() {
+            @Override
+            public double nextDouble() {
+                return 0.4;
+            }
+        };
+
+        battle.executeRound(strike, waitMove, rng);
+        assertEquals(100, stealthy.getHealth());
+
+        battle.executeRound(strike, waitMove, rng);
+        assertEquals(85, stealthy.getHealth());
+    }
+
+    @Test
+    public void testTiringLowersOpponentSpeed() {
+        Move strike = new Move("Strike", 5, 0, List.of());
+        Move waitMove = new Move("Wait", 0, 0, List.of());
+
+        Dinosaur attacker = new Dinosaur(
+                "Attacker", 100, 50, "assets/animals/allosaurus.png", 1,
+                1, List.of(strike), null);
+        Dinosaur tiring = new Dinosaur(
+                "Tiring", 100, 50, "assets/animals/allosaurus.png", 10,
+                10, List.of(waitMove), new Ability("Tiring", ""));
+
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(tiring));
+        Battle battle = new Battle(p1, p2);
+
+        battle.executeRound(strike, waitMove);
+
+        assertEquals(-1, attacker.getSpeedStage());
+    }
 }
 

@@ -33,8 +33,11 @@ public class Battle {
     private int turn = 1;
     private Player winner;
 
-    private boolean moveHits(Dinosaur attacker, Move move, Random random) {
-        if (move == null || attacker == null) {
+    private boolean moveHits(Dinosaur attacker, Dinosaur defender, Move move, Random random) {
+        if (move == null || attacker == null || defender == null) {
+            return false;
+        }
+        if (AbilityEffects.firstAttackMiss(defender, random)) {
             return false;
         }
         double accuracy = AbilityEffects.modifyAccuracy(attacker, move);
@@ -249,7 +252,7 @@ public class Battle {
                 return defenderFainted;
             }
 
-            if (!moveHits(attacker, move, random)) {
+            if (!moveHits(attacker, defender, move, random)) {
                 logMiss(actingPlayer, attacker, move);
                 defenderBraced = false;
                 continue;
