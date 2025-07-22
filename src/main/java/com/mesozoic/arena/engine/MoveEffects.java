@@ -83,19 +83,4 @@ public final class MoveEffects {
         healAmount = AilmentEffects.modifyHealing(user, healAmount);
         user.adjustHealth(healAmount);
     }
-
-    /**
-     * Applies the retaliate damage bonus when appropriate.
-     *
-     * @param move         the move being used
-     * @param damage       the calculated damage
-     * @param wasHitBefore whether the user was hit earlier in the round
-     * @return the damage after applying the retaliate effect
-     */
-    public static int applyRetaliate(Move move, int damage, boolean wasHitBefore) {
-        if (wasHitBefore && containsEffect(move, "retaliate")) {
-            return Math.toIntExact(Math.round(damage * 1.5));
-        }
-        return damage;
-    }
 }
