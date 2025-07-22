@@ -122,4 +122,15 @@ public class Player {
         }
         return total;
     }
+
+    /**
+     * Returns the combined supply cost of all dinosaurs on the team.
+     */
+    public int getTotalSupply() {
+        int total = 0;
+        for (Dinosaur dinosaur : dinosaurs) {
+            total += dinosaur.getSupply();
+        }
+        return total;
+    }
 }
