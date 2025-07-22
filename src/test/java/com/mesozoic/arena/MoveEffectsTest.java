@@ -5,6 +5,8 @@ import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.Battle;
+import com.mesozoic.arena.model.MoveType;
+import com.mesozoic.arena.model.DinoType;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -194,5 +196,45 @@ public class MoveEffectsTest {
 
         battle.executeRound(recoil, noop);
         assertEquals(97, attacker.getHealth());
+    }
+
+    @Test
+    public void testBigDrainHealsHalfDamage() {
+        Move drain = new Move("Drain", 20, 0, "", MoveType.HEAD, DinoType.RUNNER,
+                List.of(new Effect("big drain")), 1.0);
+        Move noop = new Move("Wait", 0, 0, List.of());
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 1, 1,
+                List.of(drain), null, List.of(DinoType.CHARGER));
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 1, 1,
+                List.of(noop), null);
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(defender));
+        Battle battle = new Battle(p1, p2);
+
+        attacker.adjustHealth(-40);
+        battle.executeRound(drain, noop);
+
+        assertEquals(70, attacker.getHealth());
+        assertEquals(80, defender.getHealth());
+    }
+
+    @Test
+    public void testSmallDrainHealsQuarterDamage() {
+        Move drain = new Move("Nibble", 20, 0, "", MoveType.HEAD, DinoType.RUNNER,
+                List.of(new Effect("small drain")), 1.0);
+        Move noop = new Move("Wait", 0, 0, List.of());
+        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 1, 1,
+                List.of(drain), null, List.of(DinoType.CHARGER));
+        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 1, 1,
+                List.of(noop), null);
+        Player p1 = new Player(List.of(attacker));
+        Player p2 = new Player(List.of(defender));
+        Battle battle = new Battle(p1, p2);
+
+        attacker.adjustHealth(-40);
+        battle.executeRound(drain, noop);
+
+        assertEquals(65, attacker.getHealth());
+        assertEquals(80, defender.getHealth());
     }
 }

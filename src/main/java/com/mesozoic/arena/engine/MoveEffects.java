@@ -2,6 +2,7 @@ package com.mesozoic.arena.engine;
 
 import com.mesozoic.arena.model.Effect;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.Dinosaur;
 
 /**
  * Utility functions for processing move based effects.
@@ -55,5 +56,31 @@ public final class MoveEffects {
             return 2;
         }
         return 1;
+    }
+
+    /**
+     * Applies drain healing based on the damage dealt and move effects.
+     * Heals half the damage for big drain or a quarter for small drain.
+     *
+     * @param user        the dinosaur using the move
+     * @param move        the move being used
+     * @param damageDealt the damage inflicted on the opponent
+     */
+    public static void applyDrain(Dinosaur user, Move move, int damageDealt) {
+        if (user == null || move == null || damageDealt <= 0) {
+            return;
+        }
+        int percent = 0;
+        if (containsEffect(move, "big drain")) {
+            percent = 50;
+        } else if (containsEffect(move, "small drain")) {
+            percent = 25;
+        }
+        if (percent == 0) {
+            return;
+        }
+        int healAmount = damageDealt * percent / 100;
+        healAmount = AilmentEffects.modifyHealing(user, healAmount);
+        user.adjustHealth(healAmount);
     }
 }

@@ -266,6 +266,7 @@ public class Battle {
                     int recoil = damageDealt / 4;
                     attacker.adjustHealth(-recoil);
                 }
+                MoveEffects.applyDrain(attacker, move, damageDealt);
                 String actorLabel = actingPlayer == playerOne ? "Player " : "NPC ";
                 String defenderLabel = opposingPlayer == playerOne ? "Player " : "NPC ";
                 addEvent(actorLabel + attacker.getName() + " used " + move.getName() +

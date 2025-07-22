@@ -9,3 +9,5 @@ slow: Reduces the opponent's speed by one stage.
 switch out: After attacking, immediately switch to the next dinosaur.
 fatigue: Lowers your attack by one stage after use.
 recoil: Deals 25% of the damage dealt back to the user.
+big drain: Heals the user for 50% of the damage dealt.
+small drain: Heals the user for 25% of the damage dealt.
