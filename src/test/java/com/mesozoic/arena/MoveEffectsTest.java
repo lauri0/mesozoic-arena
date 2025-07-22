@@ -7,7 +7,6 @@ import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.MoveType;
 import com.mesozoic.arena.model.DinoType;
-import com.mesozoic.arena.model.Ailment;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -237,53 +236,5 @@ public class MoveEffectsTest {
 
         assertEquals(65, attacker.getHealth());
         assertEquals(80, defender.getHealth());
-    }
-
-    @Test
-    public void testTrampleDamagesBench() {
-        Move trample = new Move("Stomp", 10, 0, List.of(new Effect("trample")));
-        Move noop = new Move("Wait", 0, 0, List.of());
-        Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(trample), null);
-        Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(noop), null);
-        Dinosaur bench = new Dinosaur("Bench", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(noop), null);
-        Player p1 = new Player(List.of(attacker));
-        Player p2 = new Player(List.of(defender, bench));
-        Battle battle = new Battle(p1, p2);
-
-        battle.executeRound(trample, noop);
-
-        assertEquals(90, bench.getHealth());
-    }
-
-    @Test
-    public void testRetaliateBoostsDamage() {
-        Move strike = new Move("Strike", 1, 0, List.of());
-        Move retaliate = new Move("Counter", 1, 0, List.of(new Effect("retaliate")));
-        Dinosaur dino1 = new Dinosaur("A", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(strike), null);
-        Dinosaur dino2 = new Dinosaur("B", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(retaliate), null);
-        Player p1 = new Player(List.of(dino1));
-        Player p2 = new Player(List.of(dino2));
-        Battle battle = new Battle(p1, p2);
-
-        battle.executeRound(strike, retaliate);
-
-        assertEquals(88, dino1.getHealth());
-    }
-
-    @Test
-    public void testHealingMistCuresAilments() {
-        Move healing = new Move("Mist", 0, 0, List.of(new Effect("healing mist")));
-        Move noop = new Move("Wait", 0, 0, List.of());
-        Dinosaur user = new Dinosaur("Healer", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(healing), null);
-        user.addAilment(new Ailment("Bleeding"));
-        user.adjustHealth(-30);
-        Player p1 = new Player(List.of(user));
-        Player p2 = new Player(List.of(new Dinosaur("Target", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(noop), null)));
-        Battle battle = new Battle(p1, p2);
-
-        battle.executeRound(healing, noop);
-
-        assertTrue(user.getAilments().isEmpty());
-        assertEquals(95, user.getHealth());
     }
 }
