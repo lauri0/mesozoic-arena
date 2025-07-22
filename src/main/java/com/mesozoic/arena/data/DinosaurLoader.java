@@ -154,10 +154,6 @@ public class DinosaurLoader {
         }
     }
 
-    private Dinosaur copyDinosaur(Dinosaur source) {
-        return source.copy();
-    }
-
     private Map<String, Move> loadMoves() throws IOException {
         Map<String, Move> map = new HashMap<>();
         Yaml yaml = new Yaml();
