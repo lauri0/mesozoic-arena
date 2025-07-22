@@ -11,6 +11,7 @@ public class Dinosaur {
     private int health;
     private final int maxHealth;
     private final int speed;
+    private final int supply;
     private int speedStage = 0;
     private final String imagePath;
     private final Ability ability;
@@ -24,13 +25,19 @@ public class Dinosaur {
 
     public Dinosaur(String name, int health, int speed, String imagePath,
                     double headAttack, double bodyAttack, List<Move> moves, Ability ability) {
-        this(name, health, speed, imagePath, headAttack, bodyAttack, moves, ability,
+        this(name, health, speed, imagePath, headAttack, bodyAttack, moves, ability, 0,
                 List.of(DinoType.BITER));
     }
 
     public Dinosaur(String name, int health, int speed, String imagePath,
                     double headAttack, double bodyAttack, List<Move> moves,
                     Ability ability, List<DinoType> types) {
+        this(name, health, speed, imagePath, headAttack, bodyAttack, moves, ability, 0, types);
+    }
+
+    public Dinosaur(String name, int health, int speed, String imagePath,
+                    double headAttack, double bodyAttack, List<Move> moves,
+                    Ability ability, int supply, List<DinoType> types) {
         this.name = name;
         this.health = health;
         this.maxHealth = health;
@@ -39,6 +46,7 @@ public class Dinosaur {
         this.ability = ability;
         this.headAttack = headAttack;
         this.bodyAttack = bodyAttack;
+        this.supply = supply;
         if (moves == null) {
             this.moves = new ArrayList<>();
         } else {
@@ -65,6 +73,10 @@ public class Dinosaur {
 
     public int getSpeed() {
         return speed;
+    }
+
+    public int getSupply() {
+        return supply;
     }
 
     public String getImagePath() {
@@ -225,7 +237,7 @@ public class Dinosaur {
         List<DinoType> typeCopies = new ArrayList<>(types);
 
         Dinosaur clone = new Dinosaur(name, maxHealth, speed, imagePath,
-                headAttack, bodyAttack, moveCopies, ability, typeCopies);
+                headAttack, bodyAttack, moveCopies, ability, supply, typeCopies);
         clone.health = health;
         clone.headAttackStage = headAttackStage;
         clone.bodyAttackStage = bodyAttackStage;

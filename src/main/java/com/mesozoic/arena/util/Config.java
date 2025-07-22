@@ -106,6 +106,18 @@ public final class Config {
         }
     }
 
+    /**
+     * Returns the supply budget used when generating random teams.
+     */
+    public static int supplyBudget() {
+        String value = properties.getProperty("supplyBudget", "30");
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException ignored) {
+            return 30;
+        }
+    }
+
 
     /**
      * Returns the Gemini API key from {@code gemini.env} or an empty string if
