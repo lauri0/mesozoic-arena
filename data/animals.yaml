@@ -5,7 +5,7 @@ Allosaurus:
   speed: 100
   head attack: 1.1
   body attack: 0.8
-  ability: Sharpshooter
+  ability: Precise
   image: assets/animals/allosaurus.png
   moves:
     - Bite
@@ -35,7 +35,7 @@ Carnotaurus:
   speed: 118
   head attack: 0.93
   body attack: 0.68
-  ability: Scavenger
+  ability: Scavenge
   image: assets/animals/carnotaurus.png
   moves:
     - Frenzy
@@ -50,7 +50,7 @@ Ceratosaurus:
   speed: 103
   head attack: 0.91
   body attack: 0.61
-  ability: Scavenger
+  ability: Scavenge
   image: assets/animals/ceratosaurus.png
   moves:
     - Bite

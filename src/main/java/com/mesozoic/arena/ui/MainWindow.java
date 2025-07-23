@@ -376,7 +376,7 @@ public class MainWindow extends JFrame {
     private JButton createMoveButton(Dinosaur dino, Move move, boolean playerSide) {
         Dinosaur target = playerSide ? opponent.getActiveDinosaur() : player.getActiveDinosaur();
         int damage = DamageCalculator.calculate(dino, target, move);
-        String attackImg = MoveType.BODY == move.getKind() ? iconHtml(HEAD_ICON_PATH) : iconHtml(BODY_ICON_PATH);
+        String attackImg = MoveType.BODY == move.getKind() ? iconHtml(BODY_ICON_PATH) : iconHtml(HEAD_ICON_PATH);
         String accuracyImg = iconHtml(ACCURACY_ICON_PATH);
         String nameWithType = typeBoxHtml(move.getType()) + " " + move.getName();
         String label = String.format("<html>%s %s %d %s %.0f%s</html>",

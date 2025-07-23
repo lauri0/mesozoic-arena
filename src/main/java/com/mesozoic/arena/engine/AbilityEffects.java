@@ -136,7 +136,7 @@ public final class AbilityEffects {
         if ("Berserk".equalsIgnoreCase(name)) {
             attacker.adjustHeadAttackStage(1);
         }
-        if ("Scavenger".equalsIgnoreCase(name)) {
+        if ("Scavenge".equalsIgnoreCase(name)) {
             int healAmount = AilmentEffects.modifyHealing(attacker, 20);
             attacker.adjustHealth(healAmount);
         }
