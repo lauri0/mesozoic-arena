@@ -1,30 +1,62 @@
 Allosaurus:
   types: [Bleeder]
   supply: 5
-  health: 140
+  health: 135
   speed: 100
   head attack: 1.1
   body attack: 0.8
-  ability: None
+  ability: Sharpshooter
   image: assets/animals/allosaurus.png
   moves:
     - Bite
+    - Draining Bite
     - Tear
     - Tail Slam
 
+Amargasaurus:
+  types: [Landscaper]
+  supply: 6
+  health: 165
+  speed: 59
+  head attack: 0.53
+  body attack: 0.96
+  ability: Spiky Body
+  image: assets/animals/amargasaurus.png
+  moves:
+    - Leg Kick
+    - Stomp
+    - Tail Slam
+    - Tail Smash
+
+Carnotaurus:
+  types: [Biter, Runner]
+  supply: 5
+  health: 115
+  speed: 118
+  head attack: 0.93
+  body attack: 0.68
+  ability: Scavenger
+  image: assets/animals/carnotaurus.png
+  moves:
+    - Frenzy
+    - Reckless Charge
+    - Spin Kick
+    - Tear
+
 Ceratosaurus:
   types: [Biter]
-  supply: 5
+  supply: 4
   health: 105
-  speed: 110
-  head attack: 0.95
-  body attack: 0.75
-  ability: None
+  speed: 103
+  head attack: 0.91
+  body attack: 0.61
+  ability: Scavenger
   image: assets/animals/ceratosaurus.png
   moves:
     - Bite
-    - Charge
     - Dual Swipe
+    - Frenzy
+    - Strong Bite
 
 Corythosaurus:
   types: [Grazer]
@@ -36,9 +68,9 @@ Corythosaurus:
   ability: Regenerator
   image: assets/animals/corythosaurus.png
   moves:
-    - Kick
+    - Healing Call
+    - Leg Kick
     - Spin Kick
-    - Stomp
     - Tail Slam
 
 Daspletosaurus:
@@ -51,28 +83,60 @@ Daspletosaurus:
   ability: Berserk
   image: assets/animals/daspletosaurus.png
   moves:
-    - Chomp
+    - Crushing Bite
     - Stomp
+    - Strong Bite
     - Tail Slam
+
+Dilophosaurus:
+  types: [Biter, Runner]
+  supply: 3
+  health: 85
+  speed: 112
+  head attack: 0.79
+  body attack: 0.45
+  ability: Camouflage
+  image: assets/animals/dilophosaurus.png
+  moves:
+    - Disarming Bite
+    - Dual Swipe
+    - Frenzy
+    - Tail Swipe
+
+Einiosaurus:
+  types: [Charger]
+  supply: 4
+  health: 95
+  speed: 85
+  head attack: 0.71
+  body attack: 0.51
+  ability: Intimidate
+  image: assets/animals/einiosaurus.png
+  moves:
+    - Impale
+    - Reckless Charge
+    - Regenerate
+    - Spin Kick
 
 Euoplocephalus:
   types: [Crusher, Defender]
   supply: 5
-  health: 90
-  speed: 60
+  health: 95
+  speed: 62
   head attack: 0.52
   body attack: 0.74
   ability: Tough
   image: assets/animals/euoplocephalus.png
   moves:
     - Bite
-    - Smash
+    - Club Smash
+    - Regenerate
     - Stomp
 
 Stegosaurus:
   types: [Impaler]
   supply: 6
-  health: 160
+  health: 150
   speed: 65
   head attack: 0.65
   body attack: 1.05
@@ -80,19 +144,21 @@ Stegosaurus:
   image: assets/animals/stegosaurus.png
   moves:
     - Bite
+    - Regenerate
     - Stomp
     - Thagomize
 
 Styracosaurus:
   types: [Charger]
   supply: 5
-  health: 105
+  health: 110
   speed: 75
   head attack: 0.86
   body attack: 0.67
   ability: Intimidate
   image: assets/animals/styracosaurus.png
   moves:
-    - Charge
     - Impale
+    - Reckless Charge
+    - Regenerate
     - Stomp

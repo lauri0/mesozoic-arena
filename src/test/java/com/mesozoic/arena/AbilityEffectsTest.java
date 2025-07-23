@@ -169,14 +169,14 @@ public class AbilityEffectsTest {
     }
 
     @Test
-    public void testSharpshooterBoostsAccuracy() {
-        Move lowAcc = new Move("LowAcc", 10, 0, "", MoveType.BODY,
+    public void testPreciseBoostsAccuracy() {
+        Move lowAcc = new Move("LowAcc", 10, 0, "", MoveType.HEAD,
                 DinoType.BITER, List.of(), 0.8);
         Move waitMove = new Move("Wait", 0, 0, List.of());
 
         Dinosaur sharpshooter = new Dinosaur("Sharp", 100, 50,
                 "assets/animals/allosaurus.png", 1, 1, List.of(lowAcc),
-                new Ability("Sharpshooter", ""));
+                new Ability("Precise", ""));
         Dinosaur target = new Dinosaur("Target", 100, 50,
                 "assets/animals/allosaurus.png", 1, 1, List.of(waitMove), null);
 

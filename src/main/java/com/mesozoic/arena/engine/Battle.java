@@ -361,7 +361,11 @@ public class Battle {
             return;
         }
 
-        if (MoveEffects.containsEffect(move, "heal")) {
+        if (MoveEffects.containsEffect(move, "small heal")) {
+            int healAmount = AilmentEffects.modifyHealing(active, 10);
+            active.adjustHealth(healAmount);
+        }
+        if (MoveEffects.containsEffect(move, "big heal")) {
             int healAmount = AilmentEffects.modifyHealing(active, 30);
             active.adjustHealth(healAmount);
         }
@@ -375,7 +379,7 @@ public class Battle {
             active.adjustHeadAttackStage(2);
         }
         if (MoveEffects.containsEffect(move, "adrenaline")) {
-            active.adjustHeadAttackStage(1);
+            active.adjustBodyAttackStage(1);
             active.adjustSpeedStage(1);
         }
         if (MoveEffects.containsEffect(move, "fatigue")) {

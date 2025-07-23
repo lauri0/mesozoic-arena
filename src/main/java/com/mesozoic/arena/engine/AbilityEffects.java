@@ -3,6 +3,8 @@ package com.mesozoic.arena.engine;
 import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Ability;
 import com.mesozoic.arena.model.Move;
+import com.mesozoic.arena.model.MoveType;
+
 import java.util.Random;
 
 /**
@@ -152,7 +154,7 @@ public final class AbilityEffects {
             return move == null ? 0.0 : move.getAccuracy();
         }
         Ability ability = user.getAbility();
-        if (ability != null && "Sharpshooter".equalsIgnoreCase(ability.getName())) {
+        if (ability != null && "Precise".equalsIgnoreCase(ability.getName()) && MoveType.HEAD.equals(move.getKind())) {
             return Math.min(1.0, move.getAccuracy() + 0.15);
         }
         return move.getAccuracy();

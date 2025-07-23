@@ -1,11 +1,13 @@
 brace: Negates damage from the next attack after use.
-heal: Restores 30 HP to the active dinosaur.
+big heal: Restores 30 HP to the active dinosaur.
+small heal: Restores 10 HP to the active dinosaur.
 area heal: Restores 10 HP to all dinosaurs on the team.
 double attack: Executes the move twice in a single turn.
 triple attack: Executes the move three times in a single turn.
-frenzy: Increases the user's attack by two stages.
-adrenaline: Increases the user's attack and speed by one stage.
+frenzy: Increases the user's head attack by two stages.
+adrenaline: Increases the user's body attack and speed by one stage.
 slow: Reduces the opponent's speed by one stage.
+disarm: Reduces the opponent's body attack by one stage.
 switch out: After attacking, immediately switch to the next dinosaur.
 fatigue: Lowers your attack by one stage after use.
 recoil: Deals 25% of the damage dealt back to the user.

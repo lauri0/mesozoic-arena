@@ -34,7 +34,7 @@ public class MoveEffectsTest {
 
     @Test
     public void testHealCapsAtMax() {
-        Move heal = new Move("Recover", 0, 0, List.of(new Effect("heal")));
+        Move heal = new Move("Recover", 0, 0, List.of(new Effect("big heal")));
         Move noop = new Move("Wait", 0, 0, List.of());
         Dinosaur active = new Dinosaur("Active", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(heal), null);
         Dinosaur bench = new Dinosaur("Bench", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(noop), null);
@@ -107,7 +107,7 @@ public class MoveEffectsTest {
         Battle battle = new Battle(p1, p2);
 
         battle.executeRound(adrenaline, noop);
-        assertEquals(1, attacker.getHeadAttackStage());
+        assertEquals(1, attacker.getBodyAttackStage());
         assertEquals(1, attacker.getSpeedStage());
     }
 
@@ -142,7 +142,7 @@ public class MoveEffectsTest {
     @Test
     public void testBleedingHalvesHealing() {
         Move bleed = new Move("Cut", 0, 0, List.of(new Effect("bleed")));
-        Move heal = new Move("Recover", 0, 0, List.of(new Effect("heal")));
+        Move heal = new Move("Recover", 0, 0, List.of(new Effect("big heal")));
         Move noop = new Move("Wait", 0, 0, List.of());
         Dinosaur attacker = new Dinosaur("Attacker", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(bleed), null);
         Dinosaur defender = new Dinosaur("Defender", 100, 50, "assets/animals/allosaurus.png", 10, 10, List.of(heal), null);
