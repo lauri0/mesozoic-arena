@@ -14,6 +14,8 @@ public final class Config {
     private static final String GEMINI_ENV_FILE = "gemini.env";
     private static final Properties properties = new Properties();
     private static final Properties secrets = new Properties();
+    private static final java.nio.file.Path CONFIG_PATH =
+            java.nio.file.Path.of("data", CONFIG_FILE);
 
     static {
         loadProperties(CONFIG_FILE, properties);
@@ -32,6 +34,13 @@ public final class Config {
 
         try (InputStream in = Files.newInputStream(Path.of(fileName))) {
             target.load(in);
+        } catch (IOException ignored) {
+        }
+    }
+
+    private static void saveProperties() {
+        try (java.io.OutputStream out = java.nio.file.Files.newOutputStream(CONFIG_PATH)) {
+            properties.store(out, null);
         } catch (IOException ignored) {
         }
     }
@@ -116,6 +125,14 @@ public final class Config {
         } catch (NumberFormatException ignored) {
             return 30;
         }
+    }
+
+    /**
+     * Updates the supply budget in memory and writes it to {@code data/constants.ini}.
+     */
+    public static void setSupplyBudget(int budget) {
+        properties.setProperty("supplyBudget", Integer.toString(budget));
+        saveProperties();
     }
 
 
