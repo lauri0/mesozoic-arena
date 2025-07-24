@@ -55,21 +55,70 @@ public class DinosaurLoader {
     }
 
     private List<Dinosaur> selectRandomDinosaurs(int maxCount, int budget) {
-        List<Dinosaur> shuffledDinosaurs = new ArrayList<>(availableDinosaurs);
-        Collections.shuffle(shuffledDinosaurs, new Random());
-        List<Dinosaur> selection = new ArrayList<>();
-        int remainingBudget = budget;
-        for (Dinosaur template : shuffledDinosaurs) {
-            int cost = template.getSupply();
-            if (cost <= remainingBudget) {
-                selection.add(template.copy());
-                remainingBudget -= cost;
+        List<Dinosaur> pool = new ArrayList<>(availableDinosaurs);
+        Collections.shuffle(pool, new Random());
+        BestTeamFinder finder = new BestTeamFinder(pool, maxCount, budget);
+        List<Dinosaur> chosen = finder.pick();
+        List<Dinosaur> copies = new ArrayList<>();
+        for (Dinosaur dino : chosen) {
+            copies.add(dino.copy());
+        }
+        return copies;
+    }
+
+    private static class BestTeamFinder {
+        private final List<Dinosaur> dinosaurs;
+        private final int maxCount;
+        private final int budget;
+        private final Random random = new Random();
+
+        private int highestSupply;
+        private final List<List<Dinosaur>> bestTeams = new ArrayList<>();
+
+        BestTeamFinder(List<Dinosaur> dinosaurs, int maxCount, int budget) {
+            this.dinosaurs = dinosaurs;
+            this.maxCount = maxCount;
+            this.budget = budget;
+        }
+
+        List<Dinosaur> pick() {
+            search(0, new ArrayList<>(), 0);
+            if (bestTeams.isEmpty()) {
+                return List.of();
             }
-            if (selection.size() >= maxCount || remainingBudget <= 0) {
-                break;
+            return bestTeams.get(random.nextInt(bestTeams.size()));
+        }
+
+        private void search(int index, List<Dinosaur> current, int supply) {
+            if (supply > budget || current.size() > maxCount) {
+                return;
+            }
+            if (index == dinosaurs.size()) {
+                evaluate(current, supply);
+                return;
+            }
+
+            Dinosaur dino = dinosaurs.get(index);
+
+            current.add(dino);
+            search(index + 1, current, supply + dino.getSupply());
+            current.remove(current.size() - 1);
+
+            search(index + 1, current, supply);
+        }
+
+        private void evaluate(List<Dinosaur> team, int supply) {
+            if (supply > budget) {
+                return;
+            }
+            if (supply > highestSupply) {
+                highestSupply = supply;
+                bestTeams.clear();
+                bestTeams.add(new ArrayList<>(team));
+            } else if (supply == highestSupply) {
+                bestTeams.add(new ArrayList<>(team));
             }
         }
-        return selection;
     }
 
     private List<Dinosaur> loadDinosaurs() throws IOException {
