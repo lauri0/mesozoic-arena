@@ -7,6 +7,7 @@ Supporter: 0 damage moves gain +1 priority.
 Berserk: Attack increases by one stage after each knockout.
 Tough: Reduces incoming damage threefold when at full health.
 Precise: Increases head move accuracy by 15 percentage points.
+Controlled: Increases body move accuracy by 10 percentage points.
 Regenerator: Heals 10 health whenever a move is used.
 Resilient: Survives fatal blows with 1 HP if above 20 HP.
 Scavenge: Restores 20 HP after knocking out an opponent.

@@ -156,6 +156,8 @@ public final class AbilityEffects {
         Ability ability = user.getAbility();
         if (ability != null && "Precise".equalsIgnoreCase(ability.getName()) && MoveType.HEAD.equals(move.getKind())) {
             return Math.min(1.0, move.getAccuracy() + 0.15);
+        } else if (ability != null && "Controlled".equalsIgnoreCase(ability.getName()) && MoveType.BODY.equals(move.getKind())) {
+            return Math.min(1.0, move.getAccuracy() + 0.1);
         }
         return move.getAccuracy();
     }

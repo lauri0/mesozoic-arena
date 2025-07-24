@@ -243,7 +243,7 @@ public class AbilityEffectsTest {
 
         Dinosaur scavenger = new Dinosaur(
                 "Scav", 100, 50, "assets/animals/allosaurus.png", 1,
-                1, List.of(strike), new Ability("Scavenger", ""));
+                1, List.of(strike), new Ability("Scavenge", ""));
         Dinosaur target = new Dinosaur(
                 "Target", 20, 50, "assets/animals/allosaurus.png", 10,
                 10, List.of(waitMove), null);

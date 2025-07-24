@@ -16,11 +16,11 @@ Allosaurus:
 Amargasaurus:
   types: [Landscaper]
   supply: 6
-  health: 165
+  health: 155
   speed: 59
-  head attack: 0.53
-  body attack: 0.96
-  ability: Spiky Body
+  head attack: 0.43
+  body attack: 0.71
+  ability: Controlled
   image: assets/animals/amargasaurus.png
   moves:
     - Leg Kick
