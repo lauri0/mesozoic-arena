@@ -3,6 +3,7 @@ package com.mesozoic.arena.ui;
 import com.mesozoic.arena.engine.Battle;
 import com.mesozoic.arena.model.*;
 import com.mesozoic.arena.engine.DamageCalculator;
+import com.mesozoic.arena.util.Config;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,6 +43,7 @@ public class MainWindow extends JFrame {
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1850, 950);
+        setupMenuBar();
 
         playerPanel   = new DinoPanel(true);
         opponentPanel = new DinoPanel(false);
@@ -82,6 +84,55 @@ public class MainWindow extends JFrame {
         updateDinoPanel(opponentPanel, opponent);
         logArea.setText(String.join("\n", battle.getEventLog()));
         npcArea.setText(String.join("\n", battle.getAiLog()));
+    }
+
+    private void setupMenuBar() {
+        JMenuBar bar = new JMenuBar();
+        JMenu file = new JMenu("File");
+
+        JMenuItem settings = new JMenuItem("Settings");
+        settings.addActionListener(e -> openSettingsDialog());
+        JMenuItem exit = new JMenuItem("Exit");
+        exit.addActionListener(e -> System.exit(0));
+
+        file.add(settings);
+        file.add(exit);
+        bar.add(file);
+        setJMenuBar(bar);
+    }
+
+    private void openSettingsDialog() {
+        JDialog dialog = new JDialog(this, "Settings", true);
+        JLabel label = new JLabel("Supply Budget:");
+        JTextField budgetField = new JTextField(String.valueOf(Config.supplyBudget()), 10);
+
+        JButton save = new JButton("Save");
+        JButton cancel = new JButton("Cancel");
+
+        save.addActionListener(ev -> {
+            try {
+                int value = Integer.parseInt(budgetField.getText().trim());
+                Config.setSupplyBudget(value);
+                dialog.dispose();
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(dialog, "Invalid number", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        cancel.addActionListener(ev -> dialog.dispose());
+
+        JPanel fields = new JPanel(new FlowLayout());
+        fields.add(label);
+        fields.add(budgetField);
+
+        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttons.add(save);
+        buttons.add(cancel);
+
+        dialog.getContentPane().add(fields, BorderLayout.CENTER);
+        dialog.getContentPane().add(buttons, BorderLayout.SOUTH);
+        dialog.pack();
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
     private void updateDinoPanel(DinoPanel panel, Player who) {
