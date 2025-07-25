@@ -180,6 +180,29 @@ public class MainWindow extends JFrame {
 
         panel.teamSupply.setText("Team Supply: " + who.getTotalSupply());
         panel.teamHealth.setText("Total HP: " + who.getTotalHealth());
+        java.util.List<com.mesozoic.arena.model.PersistentEffect> effectsList =
+                who.getPersistentEffects();
+        if (effectsList.isEmpty()) {
+            panel.effectsHeading.setVisible(false);
+            panel.effects.setText("");
+        } else {
+            panel.effectsHeading.setVisible(true);
+            StringBuilder eff = new StringBuilder();
+            for (int i = 0; i < effectsList.size(); i++) {
+                com.mesozoic.arena.model.PersistentEffect pe = effectsList.get(i);
+                if (i > 0) {
+                    eff.append(", ");
+                }
+                eff.append(pe.getName());
+                int remain = pe.getDuration() <= 0 ? -1 : pe.getRemaining();
+                if (remain < 0) {
+                    eff.append(" (∞)");
+                } else {
+                    eff.append(" (").append(remain).append(")");
+                }
+            }
+            panel.effects.setText(eff.toString());
+        }
 
         panel.bench.removeAll();
         for (Dinosaur dd : who.getDinosaurs()) {
@@ -461,6 +484,8 @@ public class MainWindow extends JFrame {
         final JLabel teamHeading = new JLabel("Team Stats");
         final JLabel teamSupply  = new JLabel();
         final JLabel teamHealth  = new JLabel();
+        final JLabel effectsHeading = new JLabel("Effects:");
+        final JLabel effects      = new JLabel();
         final JPanel bench   = new JPanel(new FlowLayout(FlowLayout.LEFT, 5,5));
         final JPanel moves   = new JPanel(new GridLayout(0,2,5,5));
 
@@ -477,9 +502,13 @@ public class MainWindow extends JFrame {
             teamSupply.setFont(teamSupply.getFont().deriveFont(Font.BOLD, 14f));
             teamHealth.setAlignmentX(Component.CENTER_ALIGNMENT);
             teamHealth.setFont(teamHealth.getFont().deriveFont(Font.BOLD, 14f));
+            effectsHeading.setAlignmentX(Component.CENTER_ALIGNMENT);
+            effects.setAlignmentX(Component.CENTER_ALIGNMENT);
             statsBox.add(teamHeading);
             statsBox.add(teamSupply);
             statsBox.add(teamHealth);
+            statsBox.add(effectsHeading);
+            statsBox.add(effects);
 
             JPanel top = new JPanel(new BorderLayout());
             if (isPlayer) {

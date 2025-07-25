@@ -13,6 +13,7 @@ import com.mesozoic.arena.engine.AbilityEffects;
 import com.mesozoic.arena.engine.AilmentEffects;
 import com.mesozoic.arena.engine.DamageCalculator;
 import com.mesozoic.arena.model.Ailment;
+import com.mesozoic.arena.util.PersistentEffectRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
@@ -66,8 +67,8 @@ public class Battle {
         this.playerTwo = playerTwo;
         this.opponentAI = opponentAI;
         this.moveHistory = history == null ? new ArrayList<>() : history;
-        AbilityEffects.onEntry(playerOne.getActiveDinosaur(), playerTwo.getActiveDinosaur());
-        AbilityEffects.onEntry(playerTwo.getActiveDinosaur(), playerOne.getActiveDinosaur());
+        handleEntry(playerOne, playerTwo);
+        handleEntry(playerTwo, playerOne);
     }
 
     /**
@@ -159,8 +160,8 @@ public class Battle {
         if (p1Priority != p2Priority) {
             p1First = p1Priority > p2Priority;
         } else {
-            int p1Speed = dinoOne.getEffectiveSpeed();
-            int p2Speed = dinoTwo.getEffectiveSpeed();
+            int p1Speed = playerOne.getModifiedSpeed();
+            int p2Speed = playerTwo.getModifiedSpeed();
             if (p1Speed == p2Speed) {
                 int p1Total = playerOne.getTotalHealth();
                 int p2Total = playerTwo.getTotalHealth();
@@ -204,6 +205,8 @@ public class Battle {
         AbilityEffects.endTurn(playerTwo.getActiveDinosaur());
         AilmentEffects.endTurn(playerOne.getActiveDinosaur());
         AilmentEffects.endTurn(playerTwo.getActiveDinosaur());
+        playerOne.tickPersistentEffects();
+        playerTwo.tickPersistentEffects();
 
         String p1Action = switchedOne != null ? "Switch to " + switchedOne.getName()
                 : playerOneMove == null ? "None" : playerOneMove.getName();
@@ -312,7 +315,7 @@ public class Battle {
         if (active != null && active.getHealth() <= 0) {
             player.removeDinosaur(active);
             Player opponent = player == playerOne ? playerTwo : playerOne;
-            AbilityEffects.onEntry(player.getActiveDinosaur(), opponent.getActiveDinosaur());
+            handleEntry(player, opponent);
             if (!player.hasRemainingDinosaurs()) {
                 winner = (player == playerOne) ? playerTwo : playerOne;
             }
@@ -335,7 +338,7 @@ public class Battle {
         }
         player.setActiveDinosaur(target);
         Player opponent = player == playerOne ? playerTwo : playerOne;
-        AbilityEffects.onEntry(target, opponent.getActiveDinosaur());
+        handleEntry(player, opponent);
         player.clearQueuedSwitch();
         addEvent(label + " switched to " + target.getName() + ".");
         return target;
@@ -351,7 +354,27 @@ public class Battle {
         int nextIndex = index == dinosaurs.size() - 1 ? 0 : index + 1;
         Dinosaur next = dinosaurs.get(nextIndex);
         player.setActiveDinosaur(next);
-        AbilityEffects.onEntry(next, opponent.getActiveDinosaur());
+        handleEntry(player, opponent);
+    }
+
+    private void handleEntry(Player player, Player opponent) {
+        Dinosaur entering = player.getActiveDinosaur();
+        AbilityEffects.onEntry(entering, opponent.getActiveDinosaur());
+        applyRocksDamage(player);
+    }
+
+    private void applyRocksDamage(Player player) {
+        if (!player.hasPersistentEffect("Rocks")) {
+            return;
+        }
+        Dinosaur dino = player.getActiveDinosaur();
+        if (dino == null) {
+            return;
+        }
+        int damage = Math.round(dino.getMaxHealth() * 0.125f);
+        dino.adjustHealth(-damage);
+        String label = player == playerOne ? "Player " : "NPC ";
+        addEvent(label + dino.getName() + " took " + damage + " damage from rocks.");
     }
 
 
@@ -394,6 +417,18 @@ public class Battle {
         if (MoveEffects.containsEffect(move, "bleed")) {
             Dinosaur defender = defendingPlayer.getActiveDinosaur();
             AilmentEffects.applyAilment(defender, new Ailment("Bleeding"));
+        }
+        if (MoveEffects.containsEffect(move, "tailwind")) {
+            actingPlayer.addPersistentEffect(
+                    PersistentEffectRegistry.createEffect("Tailwind"));
+            String label = actingPlayer == playerOne ? "Player" : "NPC";
+            addEvent(label + " set Tailwind.");
+        }
+        if (MoveEffects.containsEffect(move, "rocks")) {
+            defendingPlayer.addPersistentEffect(
+                    PersistentEffectRegistry.createEffect("Rocks"));
+            String label = defendingPlayer == playerOne ? "Player" : "NPC";
+            addEvent("Rocks were scattered on " + label + " side.");
         }
     }
 }
