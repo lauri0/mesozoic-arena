@@ -133,6 +133,21 @@ Euoplocephalus:
     - Regenerate
     - Stomp
 
+Lambeosaurus:
+  types: [Grazer]
+  supply: 4
+  health: 125
+  speed: 103
+  head attack: 0.73
+  body attack: 0.81
+  ability: Regenerator
+  image: assets/animals/lambeosaurus.png
+  moves:
+    - Healing Call
+    - Set Tailwind
+    - Spin Kick
+    - Tail Slam
+
 Stegosaurus:
   types: [Impaler]
   supply: 6

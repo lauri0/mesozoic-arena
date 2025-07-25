@@ -169,6 +169,15 @@ Thagomize:
   description: "Deal XX damage. YY accuracy."
   kind: body
 
+Set Rocks:
+  type: Defender
+  damage: 0
+  accuracy: 0.85
+  priority: 0
+  effects: [rocks]
+  description: "Set up rocks. YY accuracy."
+  kind: body
+
 Stomp:
   type: Landscaper
   damage: 45
@@ -185,4 +194,13 @@ Spin Kick:
   priority: 0
   effects: [switch out]
   description: "Deal XX damage. Switch out after dealing damage. YY accuracy."
+  kind: body
+
+Set Tailwind:
+  type: Runner
+  damage: 0
+  accuracy: 0.95
+  priority: 0
+  effects: [tailwind]
+  description: "Set up tailwind. YY accuracy."
   kind: body
