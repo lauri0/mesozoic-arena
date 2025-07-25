@@ -1,0 +1,6 @@
+Tailwind:
+  description: Increases the active dinosaur's speed by 50%.
+  duration: 5
+Rocks:
+  description: Damages incoming dinosaurs by 12.5% of their max HP.
+  duration: 0

@@ -1,7 +1,10 @@
 package com.mesozoic.arena.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import com.mesozoic.arena.model.PersistentEffect;
+import com.mesozoic.arena.model.PersistentEffectDefinition;
 
 /**
  * Represents a player controlling a team of dinosaurs.
@@ -10,6 +13,7 @@ public class Player {
     private final List<Dinosaur> dinosaurs;
     private Dinosaur activeDinosaur;
     private Dinosaur queuedSwitch;
+    private final List<PersistentEffect> persistentEffects = new ArrayList<>();
 
     public Player(List<Dinosaur> dinosaurs) {
         if (dinosaurs == null) {
@@ -109,6 +113,12 @@ public class Player {
                 clone.activeDinosaur = copies.get(index);
             }
         }
+        for (PersistentEffect effect : persistentEffects) {
+            clone.persistentEffects.add(
+                    new PersistentEffect(new PersistentEffectDefinition(
+                            effect.getName(), effect.getDescription(),
+                            effect.getDuration())));
+        }
         return clone;
     }
 
@@ -132,5 +142,52 @@ public class Player {
             total += dinosaur.getSupply();
         }
         return total;
+    }
+
+    public List<PersistentEffect> getPersistentEffects() {
+        return new ArrayList<>(persistentEffects);
+    }
+
+    public boolean hasPersistentEffect(String name) {
+        if (name == null) {
+            return false;
+        }
+        for (PersistentEffect effect : persistentEffects) {
+            if (name.equalsIgnoreCase(effect.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addPersistentEffect(PersistentEffect effect) {
+        if (effect == null) {
+            return;
+        }
+        persistentEffects.removeIf(e -> effect.getName().equalsIgnoreCase(e.getName()));
+        persistentEffects.add(effect);
+    }
+
+    public void tickPersistentEffects() {
+        Iterator<PersistentEffect> it = persistentEffects.iterator();
+        while (it.hasNext()) {
+            PersistentEffect e = it.next();
+            e.tick();
+            if (e.isExpired()) {
+                it.remove();
+            }
+        }
+    }
+
+    public int getModifiedSpeed() {
+        Dinosaur active = getActiveDinosaur();
+        if (active == null) {
+            return 0;
+        }
+        int speed = active.getEffectiveSpeed();
+        if (hasPersistentEffect("Tailwind")) {
+            speed = Math.round(speed * 1.5f);
+        }
+        return speed;
     }
 }
