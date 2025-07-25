@@ -7,6 +7,7 @@ import com.mesozoic.arena.model.Dinosaur;
 import com.mesozoic.arena.model.Player;
 import com.mesozoic.arena.model.Move;
 import com.mesozoic.arena.model.Effect;
+import com.mesozoic.arena.util.PersistentEffectRegistry;
 import java.util.Random;
 
 import org.junit.jupiter.api.Test;
@@ -87,5 +88,34 @@ public class GameStateTest {
 
         GameState next = state.nextState(brace, strike, new Random(0));
         assertTrue(next.getPlayerOne().getActiveDinosaur().getHealth() < 100);
+    }
+
+    @Test
+    public void testPersistentEffectDurationPreserved() {
+        Dinosaur dino = new Dinosaur("A", 100, 50, "", 1, 1, List.of(), null);
+        Player p1 = new Player(List.of(dino));
+        p1.addPersistentEffect(PersistentEffectRegistry.createEffect("Tailwind"));
+        p1.tickPersistentEffects();
+        int remaining = p1.getPersistentEffects().get(0).getRemaining();
+
+        Player p2 = new Player(List.of(dino.copy()));
+        GameState state = new GameState(p1, p2);
+        int copied = state.getPlayerOne().getPersistentEffects().get(0).getRemaining();
+        assertEquals(remaining, copied);
+    }
+
+    @Test
+    public void testHazardDamageNotRepeated() {
+        Dinosaur a = new Dinosaur("A", 100, 50, "", 1, 1, List.of(), null);
+        Player p1 = new Player(List.of(a));
+        p1.addPersistentEffect(PersistentEffectRegistry.createEffect("Rocks"));
+        Dinosaur b = new Dinosaur("B", 100, 50, "", 1, 1, List.of(), null);
+        Player p2 = new Player(List.of(b));
+        Battle battle = new Battle(p1, p2);
+        int healthAfterEntry = p1.getActiveDinosaur().getHealth();
+
+        GameState state = new GameState(p1, p2);
+        int healthInState = state.getPlayerOne().getActiveDinosaur().getHealth();
+        assertEquals(healthAfterEntry, healthInState);
     }
 }

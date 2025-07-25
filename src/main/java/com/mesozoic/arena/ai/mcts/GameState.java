@@ -44,10 +44,7 @@ public class GameState {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.history = history == null ? new ArrayList<>() : new ArrayList<>(history);
-        this.battle = new Battle(this.playerOne, this.playerTwo, this.history);
-        if (!applyEntry) {
-            revertEntryEffects();
-        }
+        this.battle = new Battle(this.playerOne, this.playerTwo, this.history, applyEntry);
     }
 
     public Player getPlayerOne() {
@@ -122,18 +119,5 @@ public class GameState {
         return battle.getWinner() == playerOne ? 1 : -1;
     }
 
-    private void revertEntryEffects() {
-        Dinosaur activeOne = playerOne.getActiveDinosaur();
-        Dinosaur activeTwo = playerTwo.getActiveDinosaur();
-        if (activeOne != null && activeOne.getAbility() != null
-                && "Intimidate".equalsIgnoreCase(activeOne.getAbility().getName())
-                && activeTwo != null) {
-            activeTwo.adjustHeadAttackStage(1);
-        }
-        if (activeTwo != null && activeTwo.getAbility() != null
-                && "Intimidate".equalsIgnoreCase(activeTwo.getAbility().getName())
-                && activeOne != null) {
-            activeOne.adjustHeadAttackStage(1);
-        }
-    }
+
 }

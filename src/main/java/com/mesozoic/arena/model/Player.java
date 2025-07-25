@@ -114,10 +114,7 @@ public class Player {
             }
         }
         for (PersistentEffect effect : persistentEffects) {
-            clone.persistentEffects.add(
-                    new PersistentEffect(new PersistentEffectDefinition(
-                            effect.getName(), effect.getDescription(),
-                            effect.getDuration())));
+            clone.persistentEffects.add(effect.copy());
         }
         return clone;
     }
