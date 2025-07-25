@@ -12,6 +12,15 @@ public class PersistentEffect {
         this.remaining = definition.getDuration();
     }
 
+    public PersistentEffect(PersistentEffect other) {
+        this.definition = other.definition;
+        this.remaining = other.remaining;
+    }
+
+    public PersistentEffect copy() {
+        return new PersistentEffect(this);
+    }
+
     public String getName() {
         return definition.getName();
     }

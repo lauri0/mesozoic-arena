@@ -51,24 +51,34 @@ public class Battle {
     }
 
     public Battle(Player playerOne, Player playerTwo) {
-        this(playerOne, playerTwo, createAgent(), new ArrayList<>());
+        this(playerOne, playerTwo, createAgent(), new ArrayList<>(), true);
     }
 
     public Battle(Player playerOne, Player playerTwo, OpponentAgent opponentAI) {
-        this(playerOne, playerTwo, opponentAI, new ArrayList<>());
+        this(playerOne, playerTwo, opponentAI, new ArrayList<>(), true);
     }
 
     public Battle(Player playerOne, Player playerTwo, List<TurnRecord> history) {
-        this(playerOne, playerTwo, createAgent(), history);
+        this(playerOne, playerTwo, createAgent(), history, true);
     }
 
     public Battle(Player playerOne, Player playerTwo, OpponentAgent opponentAI, List<TurnRecord> history) {
+        this(playerOne, playerTwo, opponentAI, history, true);
+    }
+
+    public Battle(Player playerOne, Player playerTwo, List<TurnRecord> history, boolean applyEntry) {
+        this(playerOne, playerTwo, createAgent(), history, applyEntry);
+    }
+
+    public Battle(Player playerOne, Player playerTwo, OpponentAgent opponentAI, List<TurnRecord> history, boolean applyEntry) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
         this.opponentAI = opponentAI;
         this.moveHistory = history == null ? new ArrayList<>() : history;
-        handleEntry(playerOne, playerTwo);
-        handleEntry(playerTwo, playerOne);
+        if (applyEntry) {
+            handleEntry(playerOne, playerTwo);
+            handleEntry(playerTwo, playerOne);
+        }
     }
 
     /**
