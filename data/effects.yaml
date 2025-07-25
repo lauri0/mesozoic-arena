@@ -13,3 +13,5 @@ fatigue: Lowers your attack by one stage after use.
 recoil: Deals 25% of the damage dealt back to the user.
 big drain: Heals the user for 50% of the damage dealt.
 small drain: Heals the user for 25% of the damage dealt.
+tailwind: Sets Tailwind on your side to boost speed for 5 turns.
+rocks: Scatters rocks on the opponent's side, damaging entrants.
